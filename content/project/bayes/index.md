@@ -1,7 +1,5 @@
 ---
 title: "Bayes's Rule and Disease Testing"
-authors:
-- admin
 date: "2016-04-27T00:00:00Z"
 image:
   caption: Photo by rawpixel on Unsplash
@@ -16,4 +14,4 @@ title: Bayes’s Rule and Disease Testing
 Open in the new window at [shinyapps.io](https://ruslankl.shinyapps.io/bayes_rule/)
 
 
-<iframe src=" https://ruslankl.shinyapps.io/bayes_rule/" width=1000 height=700" frameborder="0"></iframe>
+<iframe src="https://ruslankl.shinyapps.io/bayes_rule/" width=1000 height=900" frameborder="0"></iframe>
