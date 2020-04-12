@@ -176,7 +176,7 @@ First of all the ratio of Lesbians/Gays/Bisexuals/Transgenders are not equal amo
 Final `Subset Weight` values look like this:
 
 
-<iframe src="plotly-output/1.html" width="900" height="450" frameborder="0"></iframe>
+<iframe src="plotly-output/1.html" width="800" height="450" frameborder="0"></iframe>
 
 
 After calculating the `Subset Weight` values I am going to get new value of `Percent` of responses for each subset by multiplying the original `Percent` value by the `Subset Weight`.
@@ -236,7 +236,7 @@ So the `Total Block Score` for this block is going to be $\frac{-0.25 -.075 + 0.
 Let's start with `Daily Life` questions block where subjects answered questions about day to day living as a lesbian, gay, bisexual or transgender person.
 
 
-<iframe src="plotly-output/2.html" width="900" height="450" frameborder="0"></iframe>
+<iframe src="plotly-output/2.html" width="700" height="450" frameborder="0"></iframe>
 
 * The first place goes to **Netherlands**🇳🇱 (which means that the responses about daily life for this country were more positive comparing to other countries).
 * The last place goes to **Cyprus**🇨🇾.
@@ -244,7 +244,7 @@ Let's start with `Daily Life` questions block where subjects answered questions 
 ## <a id='ra'>3.3. Right Awareness</a>
 
 
-<iframe src="plotly-output/3.html" width="900" height="450" frameborder="0"></iframe>
+<iframe src="plotly-output/3.html" width="700" height="450" frameborder="0"></iframe>
 
 * The first place goes to **Sweden🇸🇪** (which means that the people from the LGBT community are much more aware about their rights in that country comparing to other).
 * The last place goes to **Greece**🇬🇷.
@@ -252,7 +252,7 @@ Let's start with `Daily Life` questions block where subjects answered questions 
 ## <a id='disc'>3.4. Discrimination</a>
 
 
-<iframe src="plotly-output/4.html" width="900" height="450" frameborder="0"></iframe>
+<iframe src="plotly-output/4.html" width="700" height="450" frameborder="0"></iframe>
 
 
 * The first place goes to **Malta**🇲🇹 (which means that the people from the LGBT feel less discriminated in that country comparing to other countries).
@@ -261,7 +261,7 @@ Let's start with `Daily Life` questions block where subjects answered questions 
 ## <a id='vah'>3.5. Violence and Harassment</a>
 
 
-<iframe src="plotly-output/5.html" width="900" height="450" frameborder="0"></iframe>
+<iframe src="plotly-output/5.html" width="700" height="450" frameborder="0"></iframe>
 
 
 * The first place goes to **Finland🇫🇮** (which means that the people from the LGBT are beinge the subject of harassment or violation less often in that country comparing to other countries).
@@ -272,7 +272,7 @@ Let's start with `Daily Life` questions block where subjects answered questions 
 By taking the average of 4 scores we can rescale that values to get the final `Total Rank`.
 
 
-<iframe src="plotly-output/6.html" width="900" height="450" frameborder="0"></iframe>
+<iframe src="plotly-output/6.html" width="700" height="450" frameborder="0"></iframe>
 
 
 So!
@@ -291,10 +291,10 @@ After I got the `Total Rank` for each country I want to look at some particular 
 There was a question "**All things considered, how satisfied would you say you are with your life these days?**" in Daily Life questions block where subjects could pick a value from 0 to 10 (10 being the most satisfied) of how satisfied they feel. Using the same methodology I am going to find a score for this single question and compare it to the `Total Rank` from previous section.
 
 
-<iframe src="plotly-output/7.html" width="900" height="550" frameborder="0"></iframe>
+<iframe src="plotly-output/7.html" width="700" height="550" frameborder="0"></iframe>
 
 
-<iframe src="plotly-output/8.html" width="900" height="450" frameborder="0"></iframe>
+<iframe src="plotly-output/8.html" width="700" height="450" frameborder="0"></iframe>
 
 
 \begin{align*}
@@ -308,16 +308,16 @@ In such way, `-` sign in `Satisfaction Rank` column means that LGBT community fe
 Next question "**4 levels of being open about LGBT background**" from Daiy Life questions block allow to see how open the LGBT community is in the country they live in. The possible answers are Never Open, Rarerly Open, Fairly Open, Very Open.
 
 
-<iframe src="plotly-output/9.html" width="900" height="600" frameborder="0"></iframe>
+<iframe src="plotly-output/9.html" width="800" height="600" frameborder="0"></iframe>
 
 
 The countries in the plot are sorted by the `Total Rank` (the top countries have the highest rank, the bottom countries have the lowest rank). You can notice how the 'openess ratio' is correlated with country `Total Rank` - the higher the rank, the higher is the ratio of 'open' people.
 
 
-<iframe src="plotly-output/10.html" width="900" height="500" frameborder="0"></iframe>
+<iframe src="plotly-output/10.html" width="700" height="500" frameborder="0"></iframe>
 
 
-<iframe src="plotly-output/11.html" width="900" height="450" frameborder="0"></iframe>
+<iframe src="plotly-output/11.html" width="700" height="450" frameborder="0"></iframe>
 
 
 * Gay Men have the highest `Very Open` rate (23%) while Bisexual Men have the highest `Never Open` rate (75%).
@@ -327,16 +327,17 @@ The countries in the plot are sorted by the `Total Rank` (the top countries have
 
 There were a series of questions "**What would allow you to be more comfortable living as a LGB person?**" with 8 different options that allow to explore what is missing in current situation in the country for the LGBT community to feel better.
 
+<br>
 
-<iframe src="plotly-output/12.html" width="900" height="600" frameborder="0"></iframe>
+<iframe src="plotly-output/12.html" width="900" height="600" frameborder=80"></iframe>
 
 <br>
 
-<iframe src="plotly-output/13.html" width="900" height="450" frameborder="0"></iframe>
+<iframe src="plotly-output/13.html" width="700" height="450" frameborder="0"></iframe>
 
 <br>
 
-<iframe src="plotly-output/14.html" width="900" height="550" frameborder="0"></iframe>
+<iframe src="plotly-output/14.html" width="700" height="550" frameborder="0"></iframe>
 
 
 * High ratio of people (88%) agreed that **Measures implemented at school to respect LGB people** would improve the situation (especially in Italy🇮🇹 with 78%)
