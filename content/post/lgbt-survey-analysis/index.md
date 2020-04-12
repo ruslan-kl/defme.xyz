@@ -5,7 +5,7 @@ summary: Analysis of a survey among LGBT representatives in EU in 2012.
 image:
   caption: 'Image by <a href="https://pixabay.com/users/Wokandapix-614097/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2495948">Wokandapix</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2495948">Pixabay</a>'
   focal_point: ""
-  placement: 2
+  placement: 3
   preview_only: false
 categories: ["Data Visualization"]
 tags: ["Data Visualization", "Survey Analysis", "Python"]

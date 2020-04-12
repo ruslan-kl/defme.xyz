@@ -5,7 +5,7 @@ summary: How to get maximum performance of your A/B test when you have any prior
 image:
   caption: 'Image by <a href="https://pixabay.com/users/AidanHowe-15857243/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=5012428">Aidan Howe</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=5012428">Pixabay</a>'
   focal_point: ""
-  placement: 2
+  placement: 3
   preview_only: false
 categories: ["Probability"]
 tags: ["A/B testing", "Probability", "Python"]
