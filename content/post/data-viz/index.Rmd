@@ -1,0 +1,594 @@
+---
+title: "Hello R, meet plotly!"
+subtitle: "Part 1. Basic Charts"
+date: "2020-04-11"
+image:
+  caption: 'Image by <a href="https://pixabay.com/users/janjf93-3084263/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2311261">janjf93</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2311261">Pixabay</a>'
+summary: Create interactive plots using plotly library in R.
+categories: ["Data Visualization"]
+tags: ["Data Visualization", "R", "plotly"]
+---
+
+```{r message=FALSE}
+library(knitr)
+library(tidyverse)
+library(plotly)
+```
+
+# Table of contents
+
+- [What is `plotly`](#plotly) 
+- [What is Data Visualization](#data-viz)
+- [Chart Types](#chart-types)
+  - [Line Chart](#line-chart)
+  - [Area Chart](#area-chart)
+    - [Stacked Area Chart](#stacked-area-chart)
+  - [Bar Chart](#bar-chart)
+    - [Grouped Bar Chart](#grouped-bar-chart)
+    - [Stacked Bar Chart](#stacked-bar-chart)
+  - [Scatter Plot](#scatter-plot)
+    - [Bubble Chart](#bubble-chart)
+  - [Pie chart](#pie-chart)
+  - [Heatmap](#heatmap)
+- [Rule of Thumb](#thumb-rule)
+- [References](#references)
+
+# <a name="plotly">What is `plotly`</a>
+
+<center><img src="https://raw.githubusercontent.com/cldougl/plot_images/add_r_img/plotly_2017.png" width="400"></img></center>
+
+Plotly's R graphing library makes interactive, publication-quality graphs. Examples of how to make line plots, scatter plots, area charts, bar charts, error bars, box plots, histograms, heatmaps, subplots, multiple-axes, and 3D (WebGL based) charts.
+
+Plotly.R is free and open source and you can view the source, report issues or contribute on GitHub.
+
+**[Website](https://plotly.com/)** | **[GitHub](https://github.com/plotly)** | **[Gallery](https://plotly.com/r/)**
+
+# <a name="data-viz">What is Data Visualization</a>
+
+First of all, let's start with the definiton what is "Data Visualization". Wikidepia defines it as:
+
+> **Data visualization** is the graphic representation of data. It involves producing images that communicate relationships among the represented data to viewers of the images. This communication is achieved through the use of a systematic mapping between graphic marks and data values in the creation of the visualization. This mapping establishes how data values will be represented visually, determining how and to what extent a property of a graphic mark, such as size or color, will change to reflect change in the value of a datum. [[1]](#1)
+
+Simply saying, data visualization is the set of techniques in order to create a graphical representation of a raw data. I personally believe that a lot of Data Scientists don't really understand the power of a simple plot. Making plots of the data can help you to find hidden patterns and insights before applying any fancy machine learning stuff. 
+
+Consider a simple example. You run a marketing campaigns through different channels (let's say Google Ads, Facebook, Twitter, Email and Offline). You have a set of values that indicate the performance of the campaign for a specific month.
+
+```{r}
+set.seed(27)
+temp_df <- data.frame(
+  campaign = c("Google Ads", "Facebook", "Twitter", "Email", "Offline"),
+  revenue = round(runif(n = 5, min = 1000, max = 3000), 2))
+kable(temp_df)
+```
+
+Sure you can sort it and see which campaign performed better/worse. Like this:
+
+```{r}
+temp_df %>% 
+  arrange(desc(revenue)) %>% 
+  kable()
+```
+
+However, you cannot lie that this representation makes it easy to "read" the data:
+
+```{r eval=FALSE}
+temp_df %>% 
+  ## reorder the factor values of `campaign` according to 
+  ## the `revenue` values
+  mutate(campaign = fct_reorder(campaign, revenue)) %>% 
+  plot_ly(
+    ## ~ sign tells plotly to look for a column with such name 
+    ## in a dataframe provided
+    x = ~revenue, 
+    y = ~campaign, 
+    type = 'bar', 
+    orientation = 'h',
+    # setting the color of bars
+    marker = list(color = 'rgba(158,202,225, 0.8)')) %>% 
+  # adding titles
+  layout(title = "<b>Campaigns' Revenue for a Month</b>",
+         xaxis = list(title = "<b>Revenue</b>"),
+         yaxis = list(title = "<b>Campaign</b>"),
+         # set the top margin so the plot helper buttons don't cover the title
+         margin = list(t = 70))
+```
+
+<iframe src="1.html" width="700" height="450" frameborder="0"></iframe>
+
+In such way it's easier to spot the difference between campaigns. For example, we can see that Google Ads are bringing almost twice as high as Email campaign without doing any math. 
+
+You could see already some `plotly` magic. Some key points so far:
+
+* `plotly` doesn't do any sorting for bars so you have to provide the sorted data frame;
+* `plotly` works with pipes `%>%`;
+* you can provide html tags like `<b>` inside the text layout.
+
+For the further introduction to Data Visualization we are going to use the data set of Nobel Prize Laureates found at [kaggle.com](https://www.kaggle.com/nobelfoundation/nobel-laureates). Ddataset includes a record for every individual or organization that was awarded the Nobel Prize since 1901.
+
+```{r message=FALSE, warning=FALSE}
+nobel_df <- read_csv("archive.csv")
+nobel_df %>% 
+  select(-Motivation) %>% 
+  head() %>% 
+  kable()
+```
+
+# <a name="chart-types">Chart Types</a>
+
+## <a name="line-chart">Line Chart</a>
+
+Let's start with the most basic chart line chart. 
+
+> **A line chart** or line plot or line graph or curve chart is a type of chart which displays information as a series of data points called 'markers' connected by straight line segments. [[2]](#2)
+
+**A big note** here: line chart requires a **continuous** relationship for `x` variable (like timeseries). The `nobel_df` has a `Year` column that could be used as a `x` value. Let's consider how many awards were given for each year.
+
+```{r eval=FALSE}
+nobel_df %>% 
+  group_by(Year) %>% 
+  summarise(`Total Awards` = n()) %>% 
+  plot_ly(
+    x = ~Year, y = ~`Total Awards`, name = "",
+    type = 'scatter', mode = 'lines+markers',
+     hovertemplate = paste(
+      '<i>Year</i>: %{x}',
+      '<br><i>Awards</i>: %{y}')) %>% 
+  layout(
+    title = "<b>Total Awards by Year</b>",
+    xaxis = list(title = "<b>Year</b>"),
+    yaxis = list(title = "<b>Total Awards</b>"),
+    margin = list(t = 70))
+```
+
+<iframe src="2.html" width="700" height="450" frameborder="0"></iframe>
+
+Note the use of `hovertemplate` in `plot_ly()` function. This argument allows to set custom text when hovering over plot points. We set `name` to empty string since it is not really needed for now. It might be of better use when we have nultiple objects on the plot to show a legend. 
+
+As a summary we can say that line chart usually is used to show the connection between two variables:
+
+* `x axis` - **numerical** variable (usually **time series**)
+* `y axis` - **numerical** variable
+
+You can add more **categorical** variables as the new line charts (for example, you could a new line a line of total awards for Peace category, so your plot would show the relationship for two categories - `Total Awards` and `Awards for Peace Category`).
+
+## <a name="area-chart">Area Chart</a>
+
+A slight modification of the line chart would be **the area chart**.
+
+> **An area chart** or area graph displays graphically quantitative data. It is based on the line chart. The area between axis and line are commonly emphasized with colors, textures and hatchings. Commonly one compares two or more quantities with an area chart. [[3]](#3)
+
+The difference from the basic line chart is that we color the area under the line. We can set this up just adding `fill` parameter to the previous code.
+
+```{r eval=FALSE}
+nobel_df %>% 
+  group_by(Year) %>% 
+  summarise(`Total Awards` = n()) %>% 
+  plot_ly(
+    x = ~Year, y = ~`Total Awards`, name = "",
+    type = 'scatter', mode = 'lines',
+    fill = 'tozeroy', # color the area under the line
+    fillcolor = "rgba(158,202,225, 0.6)",
+    hovertemplate = paste(
+      '<i>Year</i>: %{x}',
+      '<br><i>Awards</i>: %{y}')) %>% 
+  layout(
+    title = "<b>Total Awards by Year</b>",
+    xaxis = list(title = "<b>Year</b>"),
+    yaxis = list(title = "<b>Total Awards</b>"),
+    margin = list(t = 70))
+```
+
+<iframe src="3.html" width="700" height="450" frameborder="0"></iframe>
+
+### <a name="stacked-area-chart">Stacked Area Chart</a>
+
+As you can see that previous example was not really different from the regular line plot. However, there is a modification of area chart called **stacked area chart** that is way more useful. It is used to show the difference when two or more labels are included in the plot. When multiple attributes are included, the first attribute is plotted as a line with color fill followed by the second attribute, and so on. For example, let's take a look on how amount of awards differs among men and women for each year.
+
+However, this requires some manual manipulation with the data frame.
+
+```{r}
+# select count for women by all years
+female_df <- nobel_df %>% 
+  filter(Sex == "Female") %>% 
+  group_by(Year) %>% 
+  summarise(female = n())
+
+# select count for men by all years
+male_df <- nobel_df %>% 
+  filter(Sex == "Male") %>% 
+  group_by(Year) %>% 
+  summarise(male = n())
+
+## since there migh be years when just women/just men got the award
+## we need to join previous dfs with *all* years available in the data set
+## and replace missing values by 0s.
+joint_df <- nobel_df %>% 
+  select(Year) %>% 
+  distinct(Year) %>% 
+  left_join(female_df, by = "Year") %>% 
+  left_join(male_df, by = "Year") %>% 
+  mutate(female = replace_na(female, 0),
+         male = replace_na(male, 0))
+
+kable(head(joint_df))
+```
+
+```{r}
+fig1 <- joint_df %>% 
+  plot_ly(
+    x = ~Year, y = ~male, 
+    name = 'Male', stackgroup = 'one', # specify that this is stacked chart
+    type = 'scatter', mode = "none",
+    legendgroup = 'Male', # legend group name
+    fillcolor = 'rgba(158,202,225, 0.7)',
+    hovertemplate = paste('<i>Year</i>: %{x}',
+                          '<br><i>Awards</i>: %{y}'))
+
+fig1 <- fig1 %>% 
+  add_trace(
+    y = ~female, name = 'Female',  
+    fillcolor = 'rgba(255, 188, 101, 0.8)',
+    legendgroup = 'Female', # legend group name
+    hovertemplate = paste('<i>Year</i>: %{x}',
+                          '<br><i>Awards</i>: %{y}'))
+```
+
+Also, stacked chart can be used to show the **normalized** data (ratio) foe each label. It can be done by simply adding `groupnorm = 'percent'` to `plot_ly` function.
+
+```{r}
+fig2 <- joint_df %>% 
+  plot_ly(
+    x = ~Year, y = ~male, 
+    name = 'Male', stackgroup = 'one', 
+    type = 'scatter', mode = "none", showlegend = FALSE,
+    groupnorm = 'percent', legendgroup = 'Male',
+    fillcolor = 'rgba(158,202,225, 0.7)',
+    hovertemplate = paste('<i>Year</i>: %{x}',
+                          '<br><i>Ratio</i>: %{y: .2f}%'))
+
+fig2 <- fig2 %>% 
+  add_trace(y = ~female, name = 'Female',  
+            legendgroup = 'Female', showlegend = FALSE,
+            fillcolor = 'rgba(255, 188, 101, 0.8)',
+            hovertemplate = paste('<i>Year</i>: %{x}',
+                                  '<br><i>Ratio</i>: %{y: .2f}%'))
+```
+
+Now we have two objects `fig1` (stacked area chart) and `fig2` (normalized stacked area chart). We can show them on one plot using **sublots**. The reason why we used `showlegend = FALSE` in `fig2` object is that we grouped two legends for subplot by adding `legendgroup` and we don't need to show the same lagend twice. 
+
+```{r eval=FALSE}
+# `shareX` means that `x` axis will be the same for both plots
+subplot(fig1, fig2, nrows = 2, shareX = TRUE) %>% 
+  layout(title = "<b>Total Awards by Year by Gender</b>",
+         xaxis = list(title = "<b>Year</b>"),
+         yaxis = list(title = "<b>Number of Awards</b>"),
+         yaxis2 = list(title = "<b>Ratio of Awards (%)</b>"),
+         margin = list(t = 70))
+```
+
+<iframe src="4.html" width="700" height="450" frameborder="0"></iframe>
+
+**Summary**:
+
+The idea for area chart stays the same as for line chart - `x` variable should be *continuous*:
+
+* `x axis` - **numerical** variable (usually **time series**)
+* `y axis` - **numerical** variable
+
+You can add more **categorical** variables as new area charts.
+
+What if we wanted to see how the number of awards by `Category` (categorical variable) on `x` axis rather then by `Year`? We couldn't use line chart, however, we could use the **bar chart**.
+
+## <a name="bar-chart">Bar chart</a>
+
+> **A bar chart** or bar graph is a chart or graph that presents categorical data with rectangular bars with heights or lengths proportional to the values that they represent. The bars can be plotted vertically or horizontally. A vertical bar chart is sometimes called a column chart. [[4]](#4)
+
+We have seen the example of bar chart in the [example](#data-viz) section. So we can jump straight forward to bar chart modifications.
+
+### <a name="grouped-bar-chart">Grouped Bar chart</a>
+
+> In **a grouped bar chart**, for each categorical group there are two or more bars. These bars are color-coded to represent a particular grouping. example, a business owner with two stores might make a grouped bar chart with different colored bars to represent each store: the horizontal axis would show the months of the year and the vertical axis would show the revenue. [[4]](#4)
+
+This is useful for side-by-side comparison among categories.
+
+### <a name="stacked-bar-chart">Stacked Bar Chart</a>
+
+> **The stacked bar chart** stacks bars that represent different groups on top of each other. The height of the resulting bar shows the combined result of the groups. However, stacked bar charts are not suited to data sets where some groups have negative values. In such cases, grouped bar chart are preferable.
+>
+< Grouped bar graphs usually present the information in the same order in each grouping. Stacked bar graphs present the information in the same sequence on each bar. [[4]](#4)
+
+The idea is similar to stacked area chart. For each `x` value (or `y` if we use horizontal bar chart) we stack a value of the label on top of each other. 
+
+```{r eval=FALSE}
+grouped_bc <- plot_ly()
+grouped_bc <- grouped_bc %>% 
+  add_trace(
+    ## some manipulations with the data:
+    ## first plotly object will have the count of 
+    ## awards by categories for men only
+    data = nobel_df %>%
+      filter(Sex == "Male") %>% 
+      group_by(Category) %>% 
+      summarise(awards = n()),
+    x = ~Category, y = ~awards,
+    name = "Men", type = "bar", legendgroup = 'Male',
+    # change the color of bar
+    marker = list(color = 'rgba(158,202,225, 0.9)'),
+    hovertemplate = paste('<i>Category</i>: %{x}',
+                          '<br><i>Awards</i>: %{y}')) %>% 
+  add_trace(
+    ## second plotly object will have the count of 
+    ## awards by categories for women only
+    data = nobel_df %>%
+      filter(Sex == "Female") %>% 
+      group_by(Category) %>% 
+      summarise(awards = n()),
+    x = ~Category, y = ~awards,
+    name = "Women", type = "bar", legendgroup = 'Female',
+    marker = list(color = 'rgba(255, 188, 101, 0.9)'),
+    hovertemplate = paste('<i>Category</i>: %{x}',
+                          '<br><i>Awards</i>: %{y}')) %>% 
+  layout(title = paste0("<b>Total awards by Category and Gender</b><br>",
+                        "<i>Grouped Bar Chart</i>"),
+         barmode = 'group', # set the type of bar chart
+         xaxis = list(title = "<b>Category</b>"),
+         yaxis = list(title = "<b>Number of Awards</b>"),
+         margin = list(t = 70))
+
+grouped_bc
+```
+
+<iframe src="5.html" width="700" height="450" frameborder="0"></iframe>
+
+
+```{r eval=FALSE}
+stacked_bc <- plot_ly()
+
+stacked_bc <- stacked_bc %>% 
+  add_trace(
+    data = nobel_df %>%
+      filter(Sex == "Male") %>% 
+      group_by(Category) %>% 
+      summarise(awards = n()),
+    x = ~Category, y = ~awards,
+    name = "Men", type = "bar", legendgroup = 'Male',
+    marker = list(color = 'rgba(158,202,225, 0.9)'),
+    hovertemplate = paste('<i>Category</i>: %{x}',
+                          '<br><i>Awards</i>: %{y}')) %>% 
+  add_trace(
+    data = nobel_df %>%
+      filter(Sex == "Female") %>% 
+      group_by(Category) %>% 
+      summarise(awards = n()),
+    x = ~Category, y = ~awards,
+    name = "Female", type = "bar", legendgroup = 'Female',
+    marker = list(color = 'rgba(255, 188, 101, 0.9)'),
+    hovertemplate = paste('<i>Category</i>: %{x}',
+                          '<br><i>Awards</i>: %{y}')) %>% 
+  layout(title = paste0("<b>Total awards by Category and Gender</b><br>",
+                        "<i>Stacked Bar Chart</i>"),
+         barmode = 'stack', # set the type of bar chart
+         xaxis = list(title = "<b>Category</b>"),
+         yaxis = list(title = "<b>Number of Awards</b>"),
+         margin = list(t = 70))
+
+stacked_bc
+```
+
+<iframe src="6.html" width="700" height="450" frameborder="0"></iframe>
+
+Note, that it would be still ok to plot `total awards` by `year` using bar chart. 
+
+**Summary**:
+
+* For **horizontal** bar chart:
+  * `x axis` - numerical variable
+  * `y axis` - categorical variable
+* For **vertical** bar chart:
+  * `x axis` - categorical variable
+  * `y axis` - numerical variable
+* For side-by-side comparison among different **categorical** variables you can use **grouped bar chart**.
+* If you are interested in total proportion of each **categorical** variable for each `x` values (for vertical bar chart) you can use **stacked bar chart** (or **normalized stacked bar chart**).
+
+## <a name="scatter-plot">Scatter Plot</a>
+
+What if you had two numerical variables, but none of them is in "datetime" format so it makes no sence for a line chart? Bar charts are also not useful for such type of problem since you would have dozens of bars for each of the numerical variable you put on `x` axis. In such case **scatter plots** might help.
+
+> **A scatter plot** (also called a scatterplot, scatter graph, scatter chart, scattergram, or scatter diagram) is a type of plot or mathematical diagram using Cartesian coordinates to display values for typically two variables for a set of data. If the points are coded (color/shape/size), one additional variable can be displayed. The data are displayed as a collection of points, each having the value of one variable determining the position on the horizontal axis and the value of the other variable determining the position on the vertical axis. [[5]](#5)
+
+Nobel Prize Winners data set doesn't really have columns to use for a scatter plot, so for this example I am going to use data set of Education Indicators for 107 countries for 2014 found at [kaggle.com](https://www.kaggle.com/denisadutca/education-indicators-2014-worldwide).
+
+```{r message=FALSE, warning=FALSE}
+edindex_df <- read_csv("EducationIndicators2014.csv")
+kable(head(edindex_df))
+```
+
+Columns codes are:
+
+* `PPT`: Population
+* `GDP`: Gross domestic product
+* `PRPE`: Percentage of repeaters in Primary Education
+* `OOCP`: Out-of-school children of Primary School
+* `ESE`: Enrolment in Secondary Education
+* `EPE`: Enrolment in Primary Education
+* `UNEMP`: Unemployment Rate
+* `LEB`: Life expectancy at birth
+* `TDP`: Theoretical Duration of Primary Education
+
+We would like to see the relatioship between `Gross domestic product` and `Out-of-school children of Primary School`.
+
+```{r eval=FALSE}
+edindex_df %>% 
+  plot_ly(
+    x = ~GDP, y = ~OOCP,
+    text = ~`Country Name`, name = "",
+    type = "scatter", mode = 'markers',
+    marker = list(color = 'rgba(158,202,225, 0.9)'),
+    hovertemplate = paste0(
+      '<b>Country</b>: %{text}',
+      '<br><b>Gross domestic product</b>: %{y}<br>',
+      '<b>Out-of-school children of Primary School</b>: %{x}')) %>% 
+  layout(
+    title = "<b>GDP vs Out-of-school children of Primary School</b>",
+    xaxis = list(title = "<b>Gross domestic product</b>"),
+    yaxis = list(title = "<b>Out-of-school children of Primary School</b>"),
+    margin = list(t = 70))
+```
+
+<iframe src="7.html" width="700" height="450" frameborder="0"></iframe>
+
+
+Note how easy it is to spot outliers:
+
+* **Germany** has the highest value of `GDP` and lowest value of `OOCP`;
+* **Pakistan** has the lowest value of `GDP` and highest value of `OOCP`.
+
+Scatter plots are useful to see the shape of relationship between variables (linear, exponential, etc.) and for visual evaluation of correlation [[6]](#6).
+
+You can also add a third **numerical** variable for comparison. This type of plots are usually called **bubble chart**.
+
+### <a name="bubble-chart">Bubble Chart</a>
+
+> **A bubble chart** is a type of chart that displays three dimensions of data. Each entity with its triplet of associated data is plotted as a disk that expresses two of the vi values through the disk's xy location and the third through its size. Bubble charts can facilitate the understanding of social, economical, medical, and other scientific relationships. [[7]](#7)
+
+We will slghtly modify previous plot to add unemployment rate as a third variable:
+
+```{r eval=FALSE}
+edindex_df %>% 
+  plot_ly(
+    x = ~GDP, y = ~OOCP,
+    color = ~UNEMP,  colors = "Blues", # adding colors
+    text = ~`Country Name`, name = "",
+    type = "scatter", mode = 'markers',
+    marker = list(size = ~UNEMP), # add `UNEMP` variable as a size of a point
+    hovertemplate = paste0(
+      '<b>Country</b>: %{text}',
+      '<br><b>Gross domestic product</b>: %{y}<br>',
+      '<b>Out-of-school children of Primary School</b>: %{x}<br>')) %>% 
+  layout(
+    title = "<b>GDP vs Out-of-school children of Primary School</b>",
+    xaxis = list(title = "<b>Gross domestic product</b>"),
+    yaxis = list(title = "<b>Out-of-school children of Primary School</b>"),
+    margin = list(t = 70)) %>% 
+  # change name of color scale
+  colorbar(title = '<b>Unemployment<br>Rate</b>')
+```
+
+<iframe src="8.html" width="700" height="450" frameborder="0"></iframe>
+
+We could also add a third **categorical** variable, for example we could add a column `pop_size` with three labels - `less than 10m`, `less than 20m`, `greater than 20m`.
+
+```{r eval=FALSE}
+edindex_df %>% 
+  mutate(pop_size = case_when(PPT < 10*10^6 ~ "less than 10m",
+                              PPT < 20*10^6 ~ "less than 20m",
+                              TRUE ~ "greater than 20m")) %>% 
+  plot_ly(
+    x = ~GDP, y = ~OOCP,
+    color = ~pop_size,  
+    text = ~`Country Name`, 
+    marker = list(size = ~UNEMP),
+    type = "scatter", mode = 'markers',
+    hovertemplate = paste0(
+      '<b>Country</b>: %{text}',
+      '<br><b>Gross domestic product</b>: %{y}<br>',
+      '<b>Out-of-school children of Primary School</b>: %{x}<br>')) %>% 
+  layout(
+    title = "<b>GDP vs Out-of-school children of Primary School</b>",
+    xaxis = list(title = "<b>Gross domestic product</b>"),
+    yaxis = list(title = "<b>Out-of-school children of Primary School</b>"),
+    margin = list(t = 70))
+```
+
+<iframe src="9.html" width="700" height="450" frameborder="0"></iframe>
+
+**Summary**:
+
+* `x axis` - numerical variable
+* `y axis` - numerical variable
+* Third **continuous** varialbe can be added as a **size** of a point.
+* Third **categorical** varialbe can be added as a **color/shape** of a point.
+
+## <a name="pie-chart">Pie chart</a>
+
+Next type of chat is a bit controversial since it has been criticized among specialist since it can be hard to ompare different sections of a given chart, or to compare data across different charts.
+
+> **A pie chart** (or a circle chart) is a circular statistical graphic, which is divided into slices to illustrate numerical proportion. In a pie chart, the arc length of each slice (and consequently its central angle and area), is proportional to the quantity it represents. While it is named for its resemblance to a pie which has been sliced, there are variations on the way it can be presented. [[8]](#8)
+
+Simply saying pie chart show the **normalized proportion** of each **categorical** variable label. Looking back at Nobel Prize Winners data set let's take a look at the overall proportion of each category that was awarded in.
+
+```{r eval=FALSE}
+nobel_df %>% 
+  group_by(Category) %>% 
+  summarise(Awards = n()) %>% 
+  plot_ly(
+    labels = ~Category, values = ~Awards,
+    type = 'pie', showlegend = FALSE,
+    textposition = 'inside', textinfo = 'label+percent') %>% 
+  layout(title = "<b>Overall Proportion of Winning Categories</b>")
+```
+
+<iframe src="10.html" width="700" height="450" frameborder="0"></iframe>
+
+
+It seems readable since we have jsut 6 categories but imageine what would happen if we had 15+ labels.
+
+**Summary**:
+
+* pie chart shows the normalized propotion of a **categorical** variable.
+
+## <a name="heatmap">Heatmap</a>
+
+> **A heat map** (or heatmap) is a data visualization technique that shows magnitude of a phenomenon as color in two dimensions. The variation in color may be by hue or intensity, giving obvious visual cues to the reader about how the phenomenon is clustered or varies over space. [[9]](9)
+
+As for me, the simpliest way of thinging about heat map is to image pivot table with colored cells according to its value. Let's take a look of amount of awards for each year and category. In order to create a pivot table we can use `table()` function.
+
+```{r eval=FALSE}
+# pivot table
+pt <- table(nobel_df$Year, nobel_df$Category)
+
+plot_ly(
+  x = colnames(pt), y = rownames(pt), name = "",
+  z = pt, type = "heatmap", colors = "Blues",
+  hovertemplate = paste0('<b>Year</b>: %{y}',
+                          '<br><b>Category</b>: %{x}<br>',
+                          '<b>Awards</b>: %{z}<br>')) %>% 
+  layout(
+    title = "<b>Amount of Awards by Year and Category</b>",
+    xaxis = list(title = "<b>Category</b>"),
+    yaxis = list(title = "<b>Year</b>"),
+    margin = list(t = 70))
+```
+
+<iframe src="11.html" width="700" height="450" frameborder="0"></iframe>
+
+**Summary**:
+
+* `x axis` - **categorical** variable
+* `y axis` - **categorical** variable
+* `z axis` - **numerical** variable (*`z` is the intersection value between `x` and `y` axis*)
+
+This is it for now. In the next part I want to show the examples of map chart, custom buttons/sliders and animations. 
+
+# <a name="thumb-rule">Rule of Thumb</a>
+
+To sum up, here are some guidelines for creating a good chart no matter what library you are using (`plotly`, `ggplot`, etc.):
+
+1. Think about what answer should you visualization answer (do you want to show the trend? distribution?).
+2. Choose the right chart for your data (what type of variables to you have?).
+3. Make it clear and human readable.
+4. Don't put to much information on one chart (one research question ~ one chart).
+5. Describe it with titles, labels and annotations.
+6. Don’t go crazy with colors.
+
+# <a name="references">References</a>
+
+* <a name="1">[1]</a>: https://en.wikipedia.org/wiki/Data_visualization
+* <a name="2">[2]</a>: https://en.wikipedia.org/wiki/Line_chart
+* <a name="3">[3]</a>: https://en.wikipedia.org/wiki/Area_chart
+* <a name="4">[4]</a>: https://en.wikipedia.org/wiki/Bar_chart
+* <a name="5">[5]</a>: https://en.wikipedia.org/wiki/Scatter_plot
+* <a name="6">[6]</a>: https://en.wikipedia.org/wiki/Correlation_and_dependence
+* <a name="7">[7]</a>: https://en.wikipedia.org/wiki/Bubble_chart
+* <a name="8">[8]</a>: https://en.wikipedia.org/wiki/Pie_chart
+* <a name="9">[9]</a>: https://en.wikipedia.org/wiki/Heat_map

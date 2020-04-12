@@ -30,7 +30,7 @@ date_format = "Jan 2006"
   * Probability and Statistics
   * Data Visualization and BI Systems
   * Databases and SQL Queries
-  * Classfication Models (Decision Tree, Linear Regression)
+  * Classfication Models (Decision Tree, Linear Regression, etc.)
   """
 
 [[experience]]
