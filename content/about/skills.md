@@ -35,7 +35,7 @@ subtitle = ""
 [[feature]]
   icon = "brain"
   icon_pack = "fas"
-  name = "Neruscience"
+  name = "Neuroscience"
   description = ""
   
 [[feature]]
