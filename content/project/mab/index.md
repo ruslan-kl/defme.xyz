@@ -1,6 +1,6 @@
 ---
 date: "2019-02-01"
-external_link: /home/ruslan/Projects/defme.xyz/content/project/asl/index.md
+external_link: https://mab-problem.herokuapp.com/
 summary: " "
 image:
   focal_point: Smart
