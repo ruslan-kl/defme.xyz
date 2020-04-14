@@ -8,7 +8,7 @@ image:
   placement: 3
   preview_only: false
 categories: ["Probability"]
-tags: ["A/B testing", "Probability", "Python"]
+tags: ["A/B Testing", "Probability", "Python"]
 ---
 
 *by Ruslan Klymentiev and [Zank Bennett](https://github.com/zankbennett)*
