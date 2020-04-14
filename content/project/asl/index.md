@@ -1,5 +1,5 @@
 ---
-date: "2012-05-22"
+date: "2019-05-22"
 external_link: https://github.com/ruslan-kl/asl_recognition
 summary: " "
 image:
