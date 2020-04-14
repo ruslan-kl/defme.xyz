@@ -1,5 +1,5 @@
 ---
-title: Normal Approximation to Binomial Bistribution
+title: Normal Approximation to Binomial Distribution
 date: "2020-04-14"
 image:
   focal_point: Smart

@@ -1,7 +1,7 @@
 ---
 date: "2019-02-01"
 external_link: https://mab-problem.herokuapp.com/
-summary: " "
+s ummary: " "
 image:
   focal_point: Smart
 categories: ["Probability"]
