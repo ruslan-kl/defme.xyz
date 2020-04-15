@@ -17,36 +17,19 @@ subtitle = ""
 [[feature]]
   icon = "r-project"
   icon_pack = "fab"
-  name = "R"
+  name = "Coding"
   description = ""
   
-[[feature]]
-  icon = "python"
-  icon_pack = "fab"
-  name = "Python"
-  description = ""  
-  
-[[feature]]
-  icon = "chart-bar"
-  icon_pack = "fas"
-  name = "Statistics"
-  description = ""
-
 [[feature]]
   icon = "brain"
   icon_pack = "fas"
-  name = "Neuroscience"
+  name = "Neuroscience & AI Intersection"
   description = ""
   
-[[feature]]
-  icon = "heartbeat"
-  icon_pack = "fas"
-  name = "Healthcare"
-  description = ""
-  
+
 [[feature]]
   icon = "hiking"
   icon_pack = "fas"
-  name = "Hiking"
+  name = "Hiking & Climbing"
   description = ""
 +++

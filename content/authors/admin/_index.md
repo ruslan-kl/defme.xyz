@@ -2,19 +2,7 @@
 authors:
 - admin
 bio: My life credo is "Never stop learning". When I am not learning, I am travelling or hiking.
-education:
-  courses:
-  - course: Master in Electronic Instruments and Devices
-    institution: Odessa National Polytechnic University
-    year: 2015
-  - course: Bachelor in Radioelectronic Apparatuses
-    institution: Odessa National Polytechnic University
-    year: 2014
 email: "rklymentiev@gmail.com"
-interests:
-- Statistical Modelling
-- Computational Neuroscience
-- Data Visualization
 name: Ruslan Klymentiev
 organizations:
 - name: ""
@@ -34,3 +22,29 @@ superuser: true
 ---
 
 I have been working in the Data Science field for almost three years. Have experience with Python, R, SQL, statistical analysis, data visualization, classification/regression models, computer vision. Feel passionate about the combination of neuroscience domain and data science. My life credo is "Never stop learning". When I am not learning, I am travelling or hiking.
+
+<style>
+.button {
+  background-color: white;
+  border: 2px solid red;
+  color: black;
+  padding: 15px 25px;
+  text-align: center;
+  border-radius: 14px;
+  font-size: 16px;
+  cursor: pointer;
+  transition-duration: 0.4s;
+}
+
+.button:hover {
+  background-color: red;
+}
+</style>
+
+<center>
+<a class="btn" href="CV_Klymentiev.pdf">
+<button class="button">Open CV</button>
+</a>
+</center>
+
+
