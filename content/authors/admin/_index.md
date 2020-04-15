@@ -42,7 +42,7 @@ I have been working in the Data Science field for almost three years. Have exper
 </style>
 
 <center>
-<a class="btn" href="CV_Klymentiev.pdf">
+<a class="btn" href="CV_Klymentiev.pdf" target="_blank">
 <button class="button">Open CV</button>
 </a>
 </center>
