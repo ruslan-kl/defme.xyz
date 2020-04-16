@@ -1,5 +1,5 @@
 ---
-title: Bayes's Rule and Disease Testing
+title: Bayes's Rule Calculator
 date: "2020-03-31"
 image:
   caption: Photo by rawpixel on Unsplash
