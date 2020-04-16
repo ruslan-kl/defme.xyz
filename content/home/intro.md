@@ -52,7 +52,6 @@ subtitle = ""
 
 This is the place where I post stuff related to:
 
-* Data Science
 * Machine Learning
 * Probability & Statistics
 * Data Visualization
