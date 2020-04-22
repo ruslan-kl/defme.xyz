@@ -47,7 +47,6 @@ use_python("/home/ruslan/anaconda3/bin/python3.7")
 # python import
 import pandas as pd
 from sklearn import tree
-from sklearn.tree import _tree
 import matplotlib.pyplot as plt
 ```
 
