@@ -145,10 +145,10 @@ $$H(X) = - \sum_{i=1}^{n} p(x_i) \cdot log_2 [p(x_i)]$$
 
 Entropy for the unfair coin:
 
-$$H(\text{unfair}) = - \left( \frac{4}{5} \cdot log_2 \frac{4}{5} + \frac{1}{5} \cdot log_2 \frac{1}{5} \right) \approx 0.72$$
+$$H(\text{unfair}) = - \left( \frac{4}{5} \cdot log_2 \frac{4}{5} + \frac{1}{5} \cdot log_2 \frac{1}{5} \right) \\ \approx 0.72$$
 Entropy for the fair coin:
 
-$$H(\text{fair}) = - \left( \frac{1}{2} \cdot log_2 \frac{1}{2} + \frac{1}{2} \cdot log_2 \frac{1}{2} \right) = 1$$
+$$H(\text{fair}) = - \left( \frac{1}{2} \cdot log_2 \frac{1}{2} + \frac{1}{2} \cdot log_2 \frac{1}{2} \right) \\ = 1$$
 
 ```{r collapse=T}
 entropy <- function(p) {
@@ -191,7 +191,7 @@ $$H(X) = -\left( p(A) \cdot log_2 p(A) +  p(B) \cdot log_2 p(B) \right)$$
 * $p(A)$ - probability of Drug A. Since there are 7 observations out of 15 with the Drug A $p(A) = \frac{7}{15} \approx 0.47$
 * $p(B)$ - probability of Drug B. Since there are 8 observations out of 15 with the Drug A $p(B) = \frac{8}{15} \approx 0.53$
 
-$$H(X) = -\left(0.47 \cdot log_2 0.47 +  0.53 \cdot log_2 0.53 \right) \approx 0.997$$
+$$H(X) = -\left(0.47 \cdot log_2 0.47 +  0.53 \cdot log_2 0.53 \right) \\ \approx 0.997$$
 
 ```{r}
 temp_df <- train_df %>% 
@@ -227,14 +227,14 @@ Calculate the entropy for each gender label:
 
 Now we would like to know how much information did we gain after the split.
 
-$$\text{Information Gain} = \text{Entropy before the split} - \text{Weighted entropy after the split}$$
+<center>*Information Gain = Entropy before the split - Weighted entropy after the split*</center>
 
 * Entropy before the split is the entropy at the root in this case
 * Weighted entropy is defined as entropy times the label proportion. For example, weighted entropy for the Male patients is equals to:
 
-$$\text{Weighted entropy (M)} = \frac{\text{# Male patients}}{\text{# All patients}} \cdot H(M)$$ 
+$$\text{Weighted Entropy (M)} = \frac{\text{# Male patients}}{\text{# All patients}} \cdot H(M)$$ 
 
-$$\text{Weighted entropy (M)} = \frac{8}{15} \cdot 0.811 = 0.433$$
+$$\text{Weighted Entropy (M)} = \frac{8}{15} \cdot 0.811 = 0.433$$
 
 | Gender Label | Drug A | Drug B | P(A) | P(B) | Entropy | Weight | Weighted Entropy | 
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -243,7 +243,7 @@ $$\text{Weighted entropy (M)} = \frac{8}{15} \cdot 0.811 = 0.433$$
 
 Now we can calculate the information gain:
 
-$$\text{Information Gain} = 0.997 - (0.433 + 0.276) = 0.288$$
+$$\text{IG} = 0.997 - (0.433 + 0.276) = 0.288$$
 
 #### BMI
 
@@ -254,7 +254,7 @@ Repeat the previous steps for the `BMI` feature. We have two labels: `normal` an
 | normal | 3 | 3 | $\frac{3}{6}$ | $\frac{3}{6}$ | 1 | $\frac{6}{15}$ | 0.4 |
 | not normal | 4 | 5 | $\frac{4}{9}$ | $\frac{5}{9}$ | 0.991 | $\frac{9}{15}$ | 0.595 |
 
-$$\text{Information Gain} = 0.997 - (0.4 + 0.595) = 0.002$$
+$$\text{IG} = 0.997 - (0.4 + 0.595) = 0.002$$
 
 #### Blood Pressure
 
@@ -265,7 +265,7 @@ And the same for `BP` column (labels are the same: `normal` and `not normal`):
 | normal | 0 | 6 | $\frac{0}{6}$ | $\frac{6}{6}$ | 0 | $\frac{6}{15}$ | 0 |
 | not normal | 7 | 2 | $\frac{7}{9}$ | $\frac{2}{9}$ | 0.764 | $\frac{9}{15}$ | 0.459 |
 
-$$\text{Information Gain} = 0.997 - (0 + 0.459) = 0.538$$
+$$\text{IG} = 0.997 - (0 + 0.459) = 0.538$$
 
 #### Node Summary
 
@@ -341,7 +341,7 @@ Now we consider this set as "initial set". Entropy of target distribution at thi
 | M | 6 | 1 | $\frac{6}{7}$ | $\frac{1}{7}$ | 0.592 | $\frac{7}{9}$ | 0.46 |
 | F | 1 | 1 | $\frac{1}{2}$ | $\frac{1}{2}$ | 1 | $\frac{2}{9}$ | 0.222 |
 
-$$\text{Information Gain} = 0.764 - (0.46 + 0.222) = 0.082$$
+$$\text{IG} = 0.764 - (0.46 + 0.222) = 0.082$$
 
 #### BMI
 
@@ -350,7 +350,7 @@ $$\text{Information Gain} = 0.764 - (0.46 + 0.222) = 0.082$$
 | normal | 4 | 1 | $\frac{4}{5}$ | $\frac{1}{5}$ | 0.722 | $\frac{5}{9}$ | 0.401 |
 | not normal | 3 | 1 | $\frac{3}{4}$ | $\frac{1}{4}$ | 0.811 | $\frac{4}{9}$ | 0.361 |
 
-$$\text{Information Gain} = 0.764 - (0.401 + 0.361) = 0.002$$
+$$\text{IG} = 0.764 - (0.401 + 0.361) = 0.002$$
 
 #### Node Summary 
 
@@ -627,7 +627,7 @@ As told before, for classification problem you can also use **Gini impurity** as
 $$G(X) = 1 - \sum_{i=1}^{n} p(x_i)^2$$
 After calculating Gini impurity value for each feature we would calculate the gain and chose the feature that has **the highest** gain.
 
-$$\text{Gain} = \text{Gini impurity before the split} - \text{Weighted Gini impurity after the split}$$
+<center>*Gain = Gini impurity before the split - Weighted Gini impurity after the split*</center>
 
 ### <a name="variance">Variance Reduction</a>
 
@@ -636,7 +636,7 @@ If we are dealing with regression problem (predicting numerical variable, rather
 $$Var(x) = \frac{\sum_{i=1}^n(x_i- \bar x)^2}{n-1}$$
 And in the same way we are looking for a variable that has **the highest** variance reduction, or in other words variance in target variable becomes lower after the split.
 
-$$\text{Variance Reduction} = \text{Variance before the split} - \text{Weighted variance after the split}$$
+<center>*Variance Reduction = Variance before the split - Weighted variance after the split*</center>
 
 ## <a name="summary">Summary</a>
 

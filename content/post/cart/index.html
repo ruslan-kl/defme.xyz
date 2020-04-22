@@ -52,7 +52,6 @@ use_python(&quot;/home/ruslan/anaconda3/bin/python3.7&quot;)</code></pre>
 <pre class="python"><code># python import
 import pandas as pd
 from sklearn import tree
-from sklearn.tree import _tree
 import matplotlib.pyplot as plt</code></pre>
 </div>
 <div id="what-is-cart" class="section level2">
@@ -397,9 +396,9 @@ not normal
 <li><span class="math inline">\(log_2\)</span> is the logarithm with base 2 (<span class="math inline">\(log_2 2 = 1\)</span>, <span class="math inline">\(log_2 4 = 2\)</span>, etc)</li>
 </ul>
 <p>Entropy for the unfair coin:</p>
-<p><span class="math display">\[H(\text{unfair}) = - \left( \frac{4}{5} \cdot log_2 \frac{4}{5} + \frac{1}{5} \cdot log_2 \frac{1}{5} \right) \approx 0.72\]</span>
+<p><span class="math display">\[H(\text{unfair}) = - \left( \frac{4}{5} \cdot log_2 \frac{4}{5} + \frac{1}{5} \cdot log_2 \frac{1}{5} \right) \\ \approx 0.72\]</span>
 Entropy for the fair coin:</p>
-<p><span class="math display">\[H(\text{fair}) = - \left( \frac{1}{2} \cdot log_2 \frac{1}{2} + \frac{1}{2} \cdot log_2 \frac{1}{2} \right) = 1\]</span></p>
+<p><span class="math display">\[H(\text{fair}) = - \left( \frac{1}{2} \cdot log_2 \frac{1}{2} + \frac{1}{2} \cdot log_2 \frac{1}{2} \right) \\ = 1\]</span></p>
 <pre class="r"><code>entropy &lt;- function(p) {
   return(-sum(p*log(p, base = 2)))
 }
@@ -439,7 +438,7 @@ test_df &lt;- patients_df[16, ]</code></pre>
 <li><span class="math inline">\(p(A)\)</span> - probability of Drug A. Since there are 7 observations out of 15 with the Drug A <span class="math inline">\(p(A) = \frac{7}{15} \approx 0.47\)</span></li>
 <li><span class="math inline">\(p(B)\)</span> - probability of Drug B. Since there are 8 observations out of 15 with the Drug A <span class="math inline">\(p(B) = \frac{8}{15} \approx 0.53\)</span></li>
 </ul>
-<p><span class="math display">\[H(X) = -\left(0.47 \cdot log_2 0.47 +  0.53 \cdot log_2 0.53 \right) \approx 0.997\]</span></p>
+<p><span class="math display">\[H(X) = -\left(0.47 \cdot log_2 0.47 +  0.53 \cdot log_2 0.53 \right) \\ \approx 0.997\]</span></p>
 <pre class="r"><code>temp_df &lt;- train_df %&gt;% 
   group_by(Drug) %&gt;% 
   summarise(n = n(),
@@ -546,13 +545,15 @@ Drug B
 </tbody>
 </table>
 <p>Now we would like to know how much information did we gain after the split.</p>
-<p><span class="math display">\[\text{Information Gain} = \text{Entropy before the split} - \text{Weighted entropy after the split}\]</span></p>
+<center>
+<em>Information Gain = Entropy before the split - Weighted entropy after the split</em>
+</center>
 <ul>
 <li>Entropy before the split is the entropy at the root in this case</li>
 <li>Weighted entropy is defined as entropy times the label proportion. For example, weighted entropy for the Male patients is equals to:</li>
 </ul>
-<p><span class="math display">\[\text{Weighted entropy (M)} = \frac{\text{# Male patients}}{\text{# All patients}} \cdot H(M)\]</span></p>
-<p><span class="math display">\[\text{Weighted entropy (M)} = \frac{8}{15} \cdot 0.811 = 0.433\]</span></p>
+<p><span class="math display">\[\text{Weighted Entropy (M)} = \frac{\text{# Male patients}}{\text{# All patients}} \cdot H(M)\]</span></p>
+<p><span class="math display">\[\text{Weighted Entropy (M)} = \frac{8}{15} \cdot 0.811 = 0.433\]</span></p>
 <table>
 <thead>
 <tr class="header">
@@ -590,7 +591,7 @@ Drug B
 </tbody>
 </table>
 <p>Now we can calculate the information gain:</p>
-<p><span class="math display">\[\text{Information Gain} = 0.997 - (0.433 + 0.276) = 0.288\]</span></p>
+<p><span class="math display">\[\text{IG} = 0.997 - (0.433 + 0.276) = 0.288\]</span></p>
 </div>
 <div id="bmi" class="section level4">
 <h4>BMI</h4>
@@ -631,7 +632,7 @@ Drug B
 </tr>
 </tbody>
 </table>
-<p><span class="math display">\[\text{Information Gain} = 0.997 - (0.4 + 0.595) = 0.002\]</span></p>
+<p><span class="math display">\[\text{IG} = 0.997 - (0.4 + 0.595) = 0.002\]</span></p>
 </div>
 <div id="blood-pressure" class="section level4">
 <h4>Blood Pressure</h4>
@@ -672,7 +673,7 @@ Drug B
 </tr>
 </tbody>
 </table>
-<p><span class="math display">\[\text{Information Gain} = 0.997 - (0 + 0.459) = 0.538\]</span></p>
+<p><span class="math display">\[\text{IG} = 0.997 - (0 + 0.459) = 0.538\]</span></p>
 </div>
 <div id="node-summary" class="section level4">
 <h4>Node Summary</h4>
@@ -1017,7 +1018,7 @@ Drug B
 </tr>
 </tbody>
 </table>
-<p><span class="math display">\[\text{Information Gain} = 0.764 - (0.46 + 0.222) = 0.082\]</span></p>
+<p><span class="math display">\[\text{IG} = 0.764 - (0.46 + 0.222) = 0.082\]</span></p>
 </div>
 <div id="bmi-1" class="section level4">
 <h4>BMI</h4>
@@ -1057,7 +1058,7 @@ Drug B
 </tr>
 </tbody>
 </table>
-<p><span class="math display">\[\text{Information Gain} = 0.764 - (0.401 + 0.361) = 0.002\]</span></p>
+<p><span class="math display">\[\text{IG} = 0.764 - (0.401 + 0.361) = 0.002\]</span></p>
 </div>
 <div id="node-summary-1" class="section level4">
 <h4>Node Summary</h4>
@@ -1674,14 +1675,18 @@ model.predict_proba(unknown_drug)
 <p>As told before, for classification problem you can also use <strong>Gini impurity</strong> as a way to find the best splitting feature. The idea stays the same. The only difference is that instead of Entropy formula we are using Gini formula:</p>
 <p><span class="math display">\[G(X) = 1 - \sum_{i=1}^{n} p(x_i)^2\]</span>
 After calculating Gini impurity value for each feature we would calculate the gain and chose the feature that has <strong>the highest</strong> gain.</p>
-<p><span class="math display">\[\text{Gain} = \text{Gini impurity before the split} - \text{Weighted Gini impurity after the split}\]</span></p>
+<center>
+<em>Gain = Gini impurity before the split - Weighted Gini impurity after the split</em>
+</center>
 </div>
 <div id="variance-reduction" class="section level3">
 <h3><a name="variance">Variance Reduction</a></h3>
 <p>If we are dealing with regression problem (predicting numerical variable, rather than a class) we would use <strong>variance reduction</strong>. Instead of calculating the probabilities of target variable we calculate its variance:</p>
 <p><span class="math display">\[Var(x) = \frac{\sum_{i=1}^n(x_i- \bar x)^2}{n-1}\]</span>
 And in the same way we are looking for a variable that has <strong>the highest</strong> variance reduction, or in other words variance in target variable becomes lower after the split.</p>
-<p><span class="math display">\[\text{Variance Reduction} = \text{Variance before the split} - \text{Weighted variance after the split}\]</span></p>
+<center>
+<em>Variance Reduction = Variance before the split - Weighted variance after the split</em>
+</center>
 </div>
 </div>
 <div id="summary" class="section level2">
