@@ -19,7 +19,7 @@ tags: ["Machine Learning", "Decision Trees"]
 - [Growing a Tree](#grow)
   - [Final Tree](#final-tree)
   - [Prediction](#prediction)
-- [Using Software](#soft)
+- [Let Computer Do the Math](#soft)
   - [R](#r)
   - [Python](#python)
 - [Numerical Explanatory Variables](#numerical)
@@ -271,7 +271,7 @@ $$\text{IG} = 0.997 - (0 + 0.459) = 0.538$$
 
 As we can see `BP` gives the **highest** information gain, or in other words, if we split the data by this column we will be **more** certain about the target variable distribution. So our first split will look like this:
 
-```{r}
+```{r echo=FALSE}
 node0 <- "Blood Pressure"
 node1 <- "(normal node)"
 node2 <- "(not normal node)"
@@ -304,7 +304,7 @@ train_df %>%
 
 As we can see, there is no Drug A for this node and entropy is already 0. This node is going to be last for this branch with the drug B as an output with probability = 1.
 
-```{r}
+```{r echo=FALSE}
 node0 <- "Blood Pressure"
 node1 <- "Drug B (P=1.)"
 node2 <- "(not normal node)"
@@ -356,7 +356,7 @@ $$\text{IG} = 0.764 - (0.401 + 0.361) = 0.002$$
 
 Gender gives the most information gain after splitting the data. Now tree will look like this:
 
-```{r}
+```{r echo=FALSE}
 node0 <- "Blood Pressure"
 node1 <- "Drug B (P=1.)"
 node2 <- "Gender"
@@ -397,7 +397,7 @@ There is just one feature left `BMI`. Since we have no more features apart from 
 
 For the `BMI:normal` node the predicted class is going to be Drug A, since its probability is higher. The same applies for `BMI:not normal` node. 
 
-```{r}
+```{r echo=FALSE}
 node0 <- "Blood Pressure"
 node1 <- "Drug B (P=1.)"
 node2 <- "Gender"
@@ -496,7 +496,7 @@ To make a prediction we just need to move top to bottom by the branches of our t
 
 The predicted value is going to be `Drug A` with the probability of 1.0.
 
-## <a name="soft">Using Software</a>
+## <a name="soft">Let Computer Do the Math</a>
 
 ### <a name="r">R</a>
 
