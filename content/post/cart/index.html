@@ -1,0 +1,1700 @@
+---
+title: "How do CART models work"
+subtitle: "Example for binary classification problem"
+summary: Overview of how classification and regression trees work behind the scenes using binary classification example.
+image:
+  caption: 'Image credit: <a style="background-color:black;color:white;text-decoration:none;padding:4px 6px;font-family:-apple-system, BlinkMacSystemFont, &quot;San Francisco&quot;, &quot;Helvetica Neue&quot;, Helvetica, Ubuntu, Roboto, Noto, &quot;Segoe UI&quot;, Arial, sans-serif;font-size:12px;font-weight:bold;line-height:1.2;display:inline-block;border-radius:3px" href="https://unsplash.com/@elliottengelmann?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge" target="_blank" rel="noopener noreferrer" title="Download free do whatever you want high-resolution photos from Elliott Engelmann"><span style="display:inline-block;padding:2px 3px"><svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:auto;position:relative;vertical-align:middle;top:-2px;fill:white" viewBox="0 0 32 32"><title>unsplash-logo</title><path d="M10 9V0h12v9H10zm12 5h10v18H0V14h10v9h12v-9z"></path></svg></span><span style="display:inline-block;padding:2px 3px">Elliott Engelmann</span></a>'
+  focal_point: ""
+  placement: 3
+  preview_only: false
+date: "2020-04-22"
+categories: ["Machine Learning"]
+tags: ["Machine Learning", "Decision Trees"]
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="table-of-contents" class="section level2">
+<h2>Table of contents</h2>
+<ul>
+<li><a href="#cart">What is CART?</a></li>
+<li><a href="#entropy">Information Gain and Entropy</a></li>
+<li><a href="#grow">Growing a Tree</a>
+<ul>
+<li><a href="#final-tree">Final Tree</a></li>
+<li><a href="#prediction">Prediction</a></li>
+</ul></li>
+<li><a href="#soft">Using Software</a>
+<ul>
+<li><a href="#r">R</a></li>
+<li><a href="#python">Python</a></li>
+</ul></li>
+<li><a href="#numerical">Numerical Explanatory Variables</a></li>
+<li><a href="#metrics">Other Splitting Metrics</a>
+<ul>
+<li><a href="#gini">Gini Impurity</a></li>
+<li><a href="#variance">Variance Reduction</a></li>
+</ul></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#ref">References</a></li>
+</ul>
+<pre class="r"><code># r import
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(Rgraphviz)
+library(rpart)
+library(rattle)
+library(reticulate)
+
+use_python(&quot;/home/ruslan/anaconda3/bin/python3.7&quot;)</code></pre>
+<pre class="python"><code># python import
+import pandas as pd
+from sklearn import tree
+from sklearn.tree import _tree
+import matplotlib.pyplot as plt</code></pre>
+</div>
+<div id="what-is-cart" class="section level2">
+<h2><a name="cart">What is CART?</a></h2>
+<p><strong>C</strong>lassification <strong>a</strong>nd <strong>R</strong>egression <strong>T</strong>rees (or <strong>CART</strong> for short) is a type of supervised learning algorithm <a href="#1">[1]</a> that is mostly used in classification problems<a href="#2">[2]</a>, but can be applied for regression problems <a href="#3">[3]</a> as well. It can handle both categorical and numerical input variables.</p>
+<p>In this tutorial we are going to look at the <strong>classification</strong> problem.</p>
+<p>Let’s start with a simple example. Image that we have medical data about patients and we have two drugs (Drug A and Drug B) which work differently for each patient based on his health metrics. We have historical data about 15 patients and what drug have worked better for them. Now 16-th patient comes to us and we want to assign a drug to him based on this historical data. You can load the sample data set <a href="DecisionTree_SampleData.csv">here</a>.</p>
+<pre class="r"><code>patients_df &lt;- read_csv(&quot;DecisionTree_SampleData.csv&quot;)
+kable(patients_df, format = &quot;html&quot;, caption = &quot;&lt;b&gt;Patients Data&lt;/b&gt;&quot;) %&gt;%
+  kable_styling(bootstrap_options = &quot;condensed&quot;)</code></pre>
+<table class="table table-condensed" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-3">Table 1: </span><b>Patients Data</b>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Patient ID
+</th>
+<th style="text-align:left;">
+Gender
+</th>
+<th style="text-align:left;">
+BMI
+</th>
+<th style="text-align:left;">
+BP
+</th>
+<th style="text-align:left;">
+Drug
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+p01
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p02
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p03
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p04
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p05
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p06
+</td>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p07
+</td>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p08
+</td>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p09
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p10
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p11
+</td>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p12
+</td>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p13
+</td>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p14
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p15
+</td>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p16
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+???
+</td>
+</tr>
+</tbody>
+</table>
+<p>Our decision tree is going to look something like this:</p>
+<p><img src="/post/cart/index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>It doesn’t look exactly like a “normal tree” we are used to see in a real life. The trick is that this tree is growing from top to down.</p>
+<center>
+<img src="trees.jpg"></img>
+</center>
+<p>Image that all our data is located at the <strong>root node</strong> of the tree. Now we want to do is to <strong>split</strong> the data by most significant features (that will create new <strong>decision nodes</strong>) until we reach the <strong>leaf nodes</strong> with the <strong>most homogeneous target</strong> possible (meaning that ideally just one class is present in each leaf node).</p>
+<p>Now the question is how do we split the data at each node?</p>
+</div>
+<div id="information-gain-and-entropy" class="section level2">
+<h2><a name="entropy">Information Gain and Entropy</a></h2>
+<p>The main metrics to use for dealing with classification problem are <strong>Information gain</strong> and <strong>Gini impurity</strong>. And <strong>variance reduction</strong> is most commonly used for dealing with regression tasks. We are going to use Information gain for this tutorial but at the end there will be formulas provided how to use other metrics since they have the same idea.</p>
+<p><strong>Information gain</strong> is based on the concept of <strong>entropy</strong> <a href="#4">[4]</a> and information content from information theory <a href="#5">[5]</a>. First of all, let’s build an intuition behind the entropy. Simply saying, entropy is the measure of chaos or uncertainty in the data.</p>
+<p>Image that I asked you to play in a following simple game: I have two coins, one coin is unfair (<span class="math inline">\(P(\text{Heads}) = \frac{4}{5}\)</span>), the other one is fair (<span class="math inline">\(P(\text{Heads}) = \frac{1}{2}\)</span>). You can peak a coin and flip it. If it comes up Heads I will give you $1. Which coin would you choose?</p>
+<p>Well, I hope that you would choose unfair coin. In this case you are <strong>more certain</strong> about the outcome of the coin flip (on average it will come up Heads in <span class="math inline">\(80\%\)</span> of the time). For the fair coin you have the highest level of uncertainty, meaning that Heads and Tails can occur equally likely. Probability mass functions for both coins look as:</p>
+<p><span class="math display">\[\begin{equation}
+  p_{\text{unfair}} =
+    \begin{cases}
+      \frac{4}{5} &amp; \text{Heads}\\
+      \frac{1}{5} &amp; \text{Tails}\\
+    \end{cases}       
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+  p_{\text{fair}} =
+    \begin{cases}
+      \frac{1}{2} &amp; \text{Heads}\\
+      \frac{1}{2} &amp; \text{Tails}\\
+    \end{cases}       
+\end{equation}\]</span></p>
+<p>We can calculate the entropy using the formula:</p>
+<p><span class="math display">\[H(X) = - \sum_{i=1}^{n} p(x_i) \cdot log_2 [p(x_i)]\]</span></p>
+<ul>
+<li><span class="math inline">\(n\)</span> is the number of all possible outcomes for random variable <span class="math inline">\(X\)</span></li>
+<li><span class="math inline">\(log_2\)</span> is the logarithm with base 2 (<span class="math inline">\(log_2 2 = 1\)</span>, <span class="math inline">\(log_2 4 = 2\)</span>, etc)</li>
+</ul>
+<p>Entropy for the unfair coin:</p>
+<p><span class="math display">\[H(\text{unfair}) = - \left( \frac{4}{5} \cdot log_2 \frac{4}{5} + \frac{1}{5} \cdot log_2 \frac{1}{5} \right) \approx 0.72\]</span>
+Entropy for the fair coin:</p>
+<p><span class="math display">\[H(\text{fair}) = - \left( \frac{1}{2} \cdot log_2 \frac{1}{2} + \frac{1}{2} \cdot log_2 \frac{1}{2} \right) = 1\]</span></p>
+<pre class="r"><code>entropy &lt;- function(p) {
+  return(-sum(p*log(p, base = 2)))
+}
+
+p_unfair &lt;- c(4/5, 1/5)
+p_fair &lt;- c(1/2, 1/2)
+
+entropy(p_unfair)
+## [1] 0.7219281
+entropy(p_fair)
+## [1] 1</code></pre>
+<p>As you can see, entropy for the fair coin is <strong>higher</strong> meaning that the level of uncertainty is also <strong>higher</strong>. Note that entropy cannot be negative and the minimum value is <span class="math inline">\(0\)</span> which means the highest level of certainty. For example, image unfair coin with the probability <span class="math inline">\(P(\text{Heads}) = 1\)</span> and <span class="math inline">\(P(\text{Tails}) = 0\)</span>. In such way you are sure that coin will come up Heads and entropy is equal to zero.</p>
+<p>Coming back to our decision tree problem we want to split out data into nodes that have <strong>reduced</strong> the level of uncertainty (or in other words <strong>increasing the information gain</strong>). Basic algorithm look as following:</p>
+<ol style="list-style-type: decimal">
+<li>For each node:</li>
+</ol>
+<ul>
+<li>Choose a feature from the data set.</li>
+<li>Calculate the significance (information gain) of that feature in splitting of data.</li>
+<li>Repeat for each feature.</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>Split the data by the feature that is the most significant splitter (highest information gain).</li>
+<li>Repeat until there are no features left.</li>
+</ol>
+</div>
+<div id="growing-a-tree" class="section level2">
+<h2><a name="grow">Growing a Tree</a></h2>
+<p>As always for machine learning task we are going to split the data on training (first 15 patients) and test (16-th patient) sets.</p>
+<pre class="r"><code>train_df &lt;- patients_df[-16, ]
+test_df &lt;- patients_df[16, ]</code></pre>
+<div id="root-node" class="section level3">
+<h3>Root Node</h3>
+<p>The initial entropy of the distribution of target variable (<code>Drug</code>) is:</p>
+<p><span class="math display">\[H(X) = -\left( p(A) \cdot log_2 p(A) +  p(B) \cdot log_2 p(B) \right)\]</span></p>
+<ul>
+<li><span class="math inline">\(p(A)\)</span> - probability of Drug A. Since there are 7 observations out of 15 with the Drug A <span class="math inline">\(p(A) = \frac{7}{15} \approx 0.47\)</span></li>
+<li><span class="math inline">\(p(B)\)</span> - probability of Drug B. Since there are 8 observations out of 15 with the Drug A <span class="math inline">\(p(B) = \frac{8}{15} \approx 0.53\)</span></li>
+</ul>
+<p><span class="math display">\[H(X) = -\left(0.47 \cdot log_2 0.47 +  0.53 \cdot log_2 0.53 \right) \approx 0.997\]</span></p>
+<pre class="r"><code>temp_df &lt;- train_df %&gt;% 
+  group_by(Drug) %&gt;% 
+  summarise(n = n(),
+            p = round(n() / dim(train_df)[1], 2))
+
+kable(temp_df, format = &quot;html&quot;) %&gt;%
+  kable_styling(bootstrap_options = &quot;striped&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Drug
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Drug A
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0.47
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Drug B
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+0.53
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>entropy(temp_df$p)</code></pre>
+<pre><code>## [1] 0.9974016</code></pre>
+<p>For the next step we are going to split the data by <strong>each</strong> feature (<code>Gender</code>, <code>BMI</code>, <code>BP</code>), calculate the entropy and check which split variant gives the highest information gain.</p>
+<div id="gender" class="section level4">
+<h4>Gender</h4>
+<p>Let’s start with <strong>Gender</strong>. We have two labels in the data set: <code>M</code> and <code>F</code>. After splitting the data we end up with following proportions:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Gender Label</th>
+<th align="center">Drug A</th>
+<th align="center">Drug B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">M</td>
+<td align="center">6</td>
+<td align="center">2</td>
+</tr>
+<tr class="even">
+<td align="center">F</td>
+<td align="center">1</td>
+<td align="center">6</td>
+</tr>
+</tbody>
+</table>
+<p>Meaning that among 15 patients 6 men were assigned to drug A and 2 were assigned to drug B whereas 1 woman was assigned to drug A and 6 women were assigned to drug B.</p>
+<p>Calculate the entropy for each gender label:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Gender Label</th>
+<th align="center">Drug A</th>
+<th align="center">Drug B</th>
+<th align="center">P(A)</th>
+<th align="center">P(B)</th>
+<th align="center">Entropy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">M</td>
+<td align="center">6</td>
+<td align="center">2</td>
+<td align="center"><span class="math inline">\(\frac{6}{8}\)</span></td>
+<td align="center"><span class="math inline">\(\frac{2}{8}\)</span></td>
+<td align="center">0.811</td>
+</tr>
+<tr class="even">
+<td align="center">F</td>
+<td align="center">1</td>
+<td align="center">6</td>
+<td align="center"><span class="math inline">\(\frac{1}{6}\)</span></td>
+<td align="center"><span class="math inline">\(\frac{5}{6}\)</span></td>
+<td align="center">0.592</td>
+</tr>
+</tbody>
+</table>
+<p>Now we would like to know how much information did we gain after the split.</p>
+<p><span class="math display">\[\text{Information Gain} = \text{Entropy before the split} - \text{Weighted entropy after the split}\]</span></p>
+<ul>
+<li>Entropy before the split is the entropy at the root in this case</li>
+<li>Weighted entropy is defined as entropy times the label proportion. For example, weighted entropy for the Male patients is equals to:</li>
+</ul>
+<p><span class="math display">\[\text{Weighted entropy (M)} = \frac{\text{# Male patients}}{\text{# All patients}} \cdot H(M)\]</span></p>
+<p><span class="math display">\[\text{Weighted entropy (M)} = \frac{8}{15} \cdot 0.811 = 0.433\]</span></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Gender Label</th>
+<th align="center">Drug A</th>
+<th align="center">Drug B</th>
+<th align="center">P(A)</th>
+<th align="center">P(B)</th>
+<th align="center">Entropy</th>
+<th align="center">Weight</th>
+<th align="center">Weighted Entropy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">M</td>
+<td align="center">6</td>
+<td align="center">2</td>
+<td align="center"><span class="math inline">\(\frac{6}{8}\)</span></td>
+<td align="center"><span class="math inline">\(\frac{2}{8}\)</span></td>
+<td align="center">0.811</td>
+<td align="center"><span class="math inline">\(\frac{8}{15}\)</span></td>
+<td align="center">0.433</td>
+</tr>
+<tr class="even">
+<td align="center">F</td>
+<td align="center">1</td>
+<td align="center">6</td>
+<td align="center"><span class="math inline">\(\frac{1}{6}\)</span></td>
+<td align="center"><span class="math inline">\(\frac{5}{6}\)</span></td>
+<td align="center">0.592</td>
+<td align="center"><span class="math inline">\(\frac{7}{15}\)</span></td>
+<td align="center">0.276</td>
+</tr>
+</tbody>
+</table>
+<p>Now we can calculate the information gain:</p>
+<p><span class="math display">\[\text{Information Gain} = 0.997 - (0.433 + 0.276) = 0.288\]</span></p>
+</div>
+<div id="bmi" class="section level4">
+<h4>BMI</h4>
+<p>Repeat the previous steps for the <code>BMI</code> feature. We have two labels: <code>normal</code> and <code>not normal</code>.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">BMI Label</th>
+<th align="center">Drug A</th>
+<th align="center">Drug B</th>
+<th align="center">P(A)</th>
+<th align="center">P(B)</th>
+<th align="center">Entropy</th>
+<th align="center">Weight</th>
+<th align="center">Weighted Entropy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">normal</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center"><span class="math inline">\(\frac{3}{6}\)</span></td>
+<td align="center"><span class="math inline">\(\frac{3}{6}\)</span></td>
+<td align="center">1</td>
+<td align="center"><span class="math inline">\(\frac{6}{15}\)</span></td>
+<td align="center">0.4</td>
+</tr>
+<tr class="even">
+<td align="center">not normal</td>
+<td align="center">4</td>
+<td align="center">5</td>
+<td align="center"><span class="math inline">\(\frac{4}{9}\)</span></td>
+<td align="center"><span class="math inline">\(\frac{5}{9}\)</span></td>
+<td align="center">0.991</td>
+<td align="center"><span class="math inline">\(\frac{9}{15}\)</span></td>
+<td align="center">0.595</td>
+</tr>
+</tbody>
+</table>
+<p><span class="math display">\[\text{Information Gain} = 0.997 - (0.4 + 0.595) = 0.002\]</span></p>
+</div>
+<div id="blood-pressure" class="section level4">
+<h4>Blood Pressure</h4>
+<p>And the same for <code>BP</code> column (labels are the same: <code>normal</code> and <code>not normal</code>):</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">BP Label</th>
+<th align="center">Drug A</th>
+<th align="center">Drug B</th>
+<th align="center">P(A)</th>
+<th align="center">P(B)</th>
+<th align="center">Entropy</th>
+<th align="center">Weight</th>
+<th align="center">Weighted Entropy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">normal</td>
+<td align="center">0</td>
+<td align="center">6</td>
+<td align="center"><span class="math inline">\(\frac{0}{6}\)</span></td>
+<td align="center"><span class="math inline">\(\frac{6}{6}\)</span></td>
+<td align="center">0</td>
+<td align="center"><span class="math inline">\(\frac{6}{15}\)</span></td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">not normal</td>
+<td align="center">7</td>
+<td align="center">2</td>
+<td align="center"><span class="math inline">\(\frac{7}{9}\)</span></td>
+<td align="center"><span class="math inline">\(\frac{2}{9}\)</span></td>
+<td align="center">0.764</td>
+<td align="center"><span class="math inline">\(\frac{9}{15}\)</span></td>
+<td align="center">0.459</td>
+</tr>
+</tbody>
+</table>
+<p><span class="math display">\[\text{Information Gain} = 0.997 - (0 + 0.459) = 0.538\]</span></p>
+</div>
+<div id="node-summary" class="section level4">
+<h4>Node Summary</h4>
+<p>As we can see <code>BP</code> gives the <strong>highest</strong> information gain, or in other words, if we split the data by this column we will be <strong>more</strong> certain about the target variable distribution. So our first split will look like this:</p>
+<pre class="r"><code>node0 &lt;- &quot;Blood Pressure&quot;
+node1 &lt;- &quot;(normal node)&quot;
+node2 &lt;- &quot;(not normal node)&quot;
+nodeNames &lt;- c(node0, node1, node2)
+        
+# create new graph object
+rEG &lt;- new(&quot;graphNEL&quot;, nodes=nodeNames, edgemode=&quot;directed&quot;)
+rEG &lt;- addEdge(node0, node1, rEG)
+rEG &lt;- addEdge(node0, node2, rEG)
+
+# specify the attributes of the object (color, shape, etc)
+at &lt;- list(node=list(label = &quot;foo&quot;, fillcolor=&quot;lightblue&quot;, 
+                     fontsize=16, shape=&quot;box&quot;, fixedsize=F), 
+           edge=list(color=&quot;black&quot;))
+
+plot(rEG, attrs = at)</code></pre>
+<p><img src="/post/cart/index_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+</div>
+<div id="bpnormal-node" class="section level3">
+<h3><code>BP:normal</code> Node</h3>
+<p>Continue to grow the tree from the <code>(normal node)</code>. We filter observations that have <code>normal</code> blood pressure:</p>
+<pre class="r"><code>train_df %&gt;% 
+  filter(BP == &quot;normal&quot;) %&gt;% 
+  select(-BP) %&gt;% 
+  kable(format = &quot;html&quot;) %&gt;%
+  kable_styling(bootstrap_options = &quot;striped&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Patient ID
+</th>
+<th style="text-align:left;">
+Gender
+</th>
+<th style="text-align:left;">
+BMI
+</th>
+<th style="text-align:left;">
+Drug
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+p02
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p06
+</td>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p08
+</td>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p12
+</td>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p13
+</td>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p15
+</td>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+</tbody>
+</table>
+<p>As we can see, there is no Drug A for this node and entropy is already 0. This node is going to be last for this branch with the drug B as an output with probability = 1.</p>
+<pre class="r"><code>node0 &lt;- &quot;Blood Pressure&quot;
+node1 &lt;- &quot;Drug B (P=1.)&quot;
+node2 &lt;- &quot;(not normal node)&quot;
+nodeNames &lt;- c(node0, node1, node2)
+        
+# create new graph object
+rEG &lt;- new(&quot;graphNEL&quot;, nodes=nodeNames, edgemode=&quot;directed&quot;)
+rEG &lt;- addEdge(node0, node1, rEG)
+rEG &lt;- addEdge(node0, node2, rEG)
+
+plot(rEG, attrs = at)
+text(150, 200, &quot;normal&quot;, col=&quot;black&quot;)
+text(350, 200, &quot;not normal&quot;, col=&quot;black&quot;)</code></pre>
+<p><img src="/post/cart/index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="bpnot-normal-node" class="section level3">
+<h3><code>BP:not normal</code> Node</h3>
+<p>Filter all the observations that have <code>not normal</code> blood pressure:</p>
+<pre class="r"><code>train_df %&gt;% 
+  filter(BP == &quot;not normal&quot;) %&gt;% 
+  select(-BP) %&gt;% 
+  kable(format = &quot;html&quot;) %&gt;%
+  kable_styling(bootstrap_options = &quot;striped&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Patient ID
+</th>
+<th style="text-align:left;">
+Gender
+</th>
+<th style="text-align:left;">
+BMI
+</th>
+<th style="text-align:left;">
+Drug
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+p01
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p03
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p04
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p05
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p07
+</td>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p09
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p10
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p11
+</td>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p14
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+</tbody>
+</table>
+<p>Now we consider this set as “initial set”. Entropy of target distribution at this node is <span class="math inline">\(0.764\)</span> (we have already calculated it). At this node we have two features: <code>Gender</code> and <code>BMI</code>. We perform the same procedure to find the best splitting feature.</p>
+<div id="gender-1" class="section level4">
+<h4>Gender</h4>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Gender Label</th>
+<th align="center">Drug A</th>
+<th align="center">Drug B</th>
+<th align="center">P(A)</th>
+<th align="center">P(B)</th>
+<th align="center">Entropy</th>
+<th align="center">Weight</th>
+<th align="center">Weighted Entropy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">M</td>
+<td align="center">6</td>
+<td align="center">1</td>
+<td align="center"><span class="math inline">\(\frac{6}{7}\)</span></td>
+<td align="center"><span class="math inline">\(\frac{1}{7}\)</span></td>
+<td align="center">0.592</td>
+<td align="center"><span class="math inline">\(\frac{7}{9}\)</span></td>
+<td align="center">0.46</td>
+</tr>
+<tr class="even">
+<td align="center">F</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center"><span class="math inline">\(\frac{1}{2}\)</span></td>
+<td align="center"><span class="math inline">\(\frac{1}{2}\)</span></td>
+<td align="center">1</td>
+<td align="center"><span class="math inline">\(\frac{2}{9}\)</span></td>
+<td align="center">0.222</td>
+</tr>
+</tbody>
+</table>
+<p><span class="math display">\[\text{Information Gain} = 0.764 - (0.46 + 0.222) = 0.082\]</span></p>
+</div>
+<div id="bmi-1" class="section level4">
+<h4>BMI</h4>
+<table>
+<thead>
+<tr class="header">
+<th align="center">BMI Label</th>
+<th align="center">Drug A</th>
+<th align="center">Drug B</th>
+<th align="center">P(A)</th>
+<th align="center">P(B)</th>
+<th align="center">Entropy</th>
+<th align="center">Weight</th>
+<th align="center">Weighted Entropy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">normal</td>
+<td align="center">4</td>
+<td align="center">1</td>
+<td align="center"><span class="math inline">\(\frac{4}{5}\)</span></td>
+<td align="center"><span class="math inline">\(\frac{1}{5}\)</span></td>
+<td align="center">0.722</td>
+<td align="center"><span class="math inline">\(\frac{5}{9}\)</span></td>
+<td align="center">0.401</td>
+</tr>
+<tr class="even">
+<td align="center">not normal</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center"><span class="math inline">\(\frac{3}{4}\)</span></td>
+<td align="center"><span class="math inline">\(\frac{1}{4}\)</span></td>
+<td align="center">0.811</td>
+<td align="center"><span class="math inline">\(\frac{4}{9}\)</span></td>
+<td align="center">0.361</td>
+</tr>
+</tbody>
+</table>
+<p><span class="math display">\[\text{Information Gain} = 0.764 - (0.401 + 0.361) = 0.002\]</span></p>
+</div>
+<div id="node-summary-1" class="section level4">
+<h4>Node Summary</h4>
+<p>Gender gives the most information gain after splitting the data. Now tree will look like this:</p>
+<pre class="r"><code>node0 &lt;- &quot;Blood Pressure&quot;
+node1 &lt;- &quot;Drug B (P=1.)&quot;
+node2 &lt;- &quot;Gender&quot;
+node3 &lt;- &quot;(male node)&quot;
+node4 &lt;- &quot;(female node)&quot;
+nodeNames &lt;- c(node0, node1, node2, node3, node4)
+        
+# create new graph object
+rEG &lt;- new(&quot;graphNEL&quot;, nodes=nodeNames, edgemode=&quot;directed&quot;)
+rEG &lt;- addEdge(node0, node1, rEG)
+rEG &lt;- addEdge(node0, node2, rEG)
+rEG &lt;- addEdge(node2, node3, rEG)
+rEG &lt;- addEdge(node2, node4, rEG)
+
+plot(rEG, attrs = at)
+text(100, 250, &quot;normal&quot;, col=&quot;black&quot;)
+text(300, 250, &quot;not normal&quot;, col=&quot;black&quot;)</code></pre>
+<p><img src="/post/cart/index_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+</div>
+<div id="genderm-node" class="section level3">
+<h3><code>Gender:M</code> Node</h3>
+<p>Now we filer the set so that we have only observations with <code>BP:not normal</code> and <code>Gender:M</code>:</p>
+<pre class="r"><code>train_df %&gt;% 
+  filter(BP == &quot;not normal&quot; &amp; Gender == &quot;M&quot;) %&gt;% 
+  select(-c(BP, Gender)) %&gt;% 
+  kable(format = &quot;html&quot;) %&gt;%
+  kable_styling(bootstrap_options = &quot;striped&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Patient ID
+</th>
+<th style="text-align:left;">
+BMI
+</th>
+<th style="text-align:left;">
+Drug
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+p01
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p03
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p04
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p05
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p09
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p10
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p14
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+</tbody>
+</table>
+<p>There is just one feature left <code>BMI</code>. Since we have no more features apart from this one we are going to “grow” last nodes with <code>BMI:normal</code> and <code>BMI:not normal</code> labels:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">BMI Label</th>
+<th align="center">Drug A</th>
+<th align="center">Drug B</th>
+<th align="center">P(A)</th>
+<th align="center">P(B)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">normal</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center"><span class="math inline">\(\frac{2}{3}\)</span></td>
+<td align="center"><span class="math inline">\(\frac{1}{3}\)</span></td>
+</tr>
+<tr class="even">
+<td align="center">not normal</td>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center"><span class="math inline">\(\frac{4}{4}\)</span></td>
+<td align="center"><span class="math inline">\(\frac{0}{4}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>For the <code>BMI:normal</code> node the predicted class is going to be Drug A, since its probability is higher. The same applies for <code>BMI:not normal</code> node.</p>
+<pre class="r"><code>node0 &lt;- &quot;Blood Pressure&quot;
+node1 &lt;- &quot;Drug B (P=1.)&quot;
+node2 &lt;- &quot;Gender&quot;
+node3 &lt;- &quot;BMI&quot;
+node4 &lt;- &quot;BMI &quot;
+node5 &lt;- &quot;Drug A (P=0.66)&quot;
+node6 &lt;- &quot;Drug A (P=1.)&quot;
+nodeNames &lt;- c(node0, node1, node2, node3, node4, node5, node6)
+        
+# create new graph object
+rEG &lt;- new(&quot;graphNEL&quot;, nodes=nodeNames, edgemode=&quot;directed&quot;)
+rEG &lt;- addEdge(node0, node1, rEG)
+rEG &lt;- addEdge(node0, node2, rEG)
+rEG &lt;- addEdge(node2, node3, rEG)
+rEG &lt;- addEdge(node2, node4, rEG)
+rEG &lt;- addEdge(node3, node5, rEG)
+rEG &lt;- addEdge(node3, node6, rEG)
+
+plot(rEG, attrs = at)
+text(150, 300, &quot;normal&quot;, col=&quot;black&quot;)
+text(300, 300, &quot;not normal&quot;, col=&quot;black&quot;)
+text(270, 190, &quot;male&quot;, col=&quot;black&quot;)
+text(390, 190, &quot;female&quot;, col=&quot;black&quot;)
+text(150, 80, &quot;normal&quot;, col=&quot;black&quot;)
+text(360, 80, &quot;not normal&quot;, col=&quot;black&quot;)</code></pre>
+<p><img src="/post/cart/index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+</div>
+<div id="genderf-node" class="section level3">
+<h3><code>Gender:F</code> Node</h3>
+<p>Now we filer the set so that we have only observations with <code>BP:not normal</code> and <code>Gender:F</code>:</p>
+<pre class="r"><code>train_df %&gt;% 
+  filter(BP == &quot;not normal&quot; &amp; Gender == &quot;F&quot;) %&gt;% 
+  select(-c(BP, Gender)) %&gt;% 
+  kable(format = &quot;html&quot;) %&gt;%
+  kable_styling(bootstrap_options = &quot;striped&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Patient ID
+</th>
+<th style="text-align:left;">
+BMI
+</th>
+<th style="text-align:left;">
+Drug
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+p07
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:left;">
+Drug A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p11
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+Drug B
+</td>
+</tr>
+</tbody>
+</table>
+<p>We are left with just 1 observation in each node. Predicted class for node <code>BMI:normal</code> is going to be Drug A (<span class="math inline">\(P = 1.\)</span>). Predicted class for node <code>BMI:not normal</code> is going to be Drug B (<span class="math inline">\(P = 1.\)</span>).</p>
+</div>
+<div id="final-tree" class="section level3">
+<h3><a name="final-tree">Final Tree</a></h3>
+<p>Using the information from the “female” branch we can visualize the final tree.</p>
+<pre class="r"><code>node0 &lt;- &quot;Blood Pressure&quot;
+node1 &lt;- &quot;Drug B (P=1.)&quot;
+node2 &lt;- &quot;Gender&quot;
+node3 &lt;- &quot;BMI&quot;
+node4 &lt;- &quot;BMI &quot;
+node5 &lt;- &quot;Drug A (P=0.66)&quot;
+node6 &lt;- &quot;Drug A (P=1.)&quot;
+node7 &lt;- &quot;Drug A (P=1.) &quot;
+node8 &lt;- &quot;Drug B (P=1.) &quot;
+nodeNames &lt;- c(node0, node1, node2, node3, 
+               node4, node5, node6, node7, node8)
+        
+# create new graph object
+rEG &lt;- new(&quot;graphNEL&quot;, nodes=nodeNames, edgemode=&quot;directed&quot;)
+rEG &lt;- addEdge(node0, node1, rEG)
+rEG &lt;- addEdge(node0, node2, rEG)
+rEG &lt;- addEdge(node2, node3, rEG)
+rEG &lt;- addEdge(node2, node4, rEG)
+rEG &lt;- addEdge(node3, node5, rEG)
+rEG &lt;- addEdge(node3, node6, rEG)
+rEG &lt;- addEdge(node4, node7, rEG)
+rEG &lt;- addEdge(node4, node8, rEG)
+
+plot(rEG, attrs = at)
+text(150, 300, &quot;normal&quot;, col=&quot;black&quot;)
+text(260, 300, &quot;not normal&quot;, col=&quot;black&quot;)
+text(200, 190, &quot;male&quot;, col=&quot;black&quot;)
+text(310, 190, &quot;female&quot;, col=&quot;black&quot;)
+text(100, 80, &quot;normal&quot;, col=&quot;black&quot;)
+text(230, 80, &quot;not normal&quot;, col=&quot;black&quot;)
+text(290, 80, &quot;normal&quot;, col=&quot;black&quot;)
+text(420, 80, &quot;not normal&quot;, col=&quot;black&quot;)</code></pre>
+<p><img src="/post/cart/index_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+</div>
+<div id="prediction" class="section level3">
+<h3><a name="prediction">Prediction</a></h3>
+<p>Let’s look at the 16-th patient:</p>
+<pre class="r"><code>test_df %&gt;% 
+  kable(format = &quot;html&quot;) %&gt;%
+  kable_styling(bootstrap_options = &quot;striped&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Patient ID
+</th>
+<th style="text-align:left;">
+Gender
+</th>
+<th style="text-align:left;">
+BMI
+</th>
+<th style="text-align:left;">
+BP
+</th>
+<th style="text-align:left;">
+Drug
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+p16
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+not normal
+</td>
+<td style="text-align:left;">
+???
+</td>
+</tr>
+</tbody>
+</table>
+<p>To make a prediction we just need to move top to bottom by the branches of our tree.</p>
+<ol style="list-style-type: decimal">
+<li>Check <code>BP</code>. Since <code>BP:not normal</code> go to left branch.</li>
+<li>Check <code>Gender</code>. <code>Gender:M</code> =&gt; right branch.</li>
+<li>Check <code>BMI</code>. <code>BMI:not normal</code> =&gt; right branch.</li>
+</ol>
+<p>The predicted value is going to be <code>Drug A</code> with the probability of 1.0.</p>
+</div>
+</div>
+<div id="using-software" class="section level2">
+<h2><a name="soft">Using Software</a></h2>
+<div id="r" class="section level3">
+<h3><a name="r">R</a></h3>
+<p>We can build a decision tree using <code>rpart</code> function (<code>rpart</code> package) and plot it with the help of <code>fancyRpartPlot</code> function (<code>rattle</code> package). Note, that R doesn’t require to encode the categorical variables since it can handle them by itself.</p>
+<pre class="r"><code>model_dt &lt;- rpart(formula = Drug~Gender+BMI+BP,
+                  data = train_df,
+                  method = &quot;class&quot;,
+                  minsplit = 1,
+                  minbucket = 1,
+                  parms = list(split = &quot;information&quot;)
+)
+
+#plot decision tree model
+fancyRpartPlot(model_dt, caption = NULL, type=4)</code></pre>
+<p><img src="/post/cart/index_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>Get a prediction for 16-th patient:</p>
+<pre class="r"><code># return the class
+predict(object = model_dt, newdata = test_df, type = &quot;class&quot;)
+##      1 
+## Drug A 
+## Levels: Drug A Drug B
+
+# return the probability of each class
+predict(object = model_dt, newdata = test_df, type = &quot;prob&quot;)
+##      Drug A    Drug B
+## 1 0.8571429 0.1428571</code></pre>
+<p>Note that since R didn’t split <code>Gender:M</code> node by <code>BMI</code> the probabilities are quite different that we expected but it doesn’t effect the predicted class.</p>
+</div>
+<div id="python" class="section level3">
+<h3><a name="python">Python</a></h3>
+<p>Unlike R, Python doesn’t allow categorical input variables, so we need to encode them:</p>
+<pre class="python"><code>patients_df = pd.read_csv(&quot;DecisionTree_SampleData.csv&quot;)
+# drop id column
+patients_df.drop(&#39;Patient ID&#39;, axis=1, inplace=True)
+
+# convert to dummy variables
+patients_df_labeled = pd.get_dummies(patients_df)
+columns_to_drop = [&#39;Gender_F&#39;, &#39;BMI_not normal&#39;, &#39;BP_not normal&#39;, &#39;Drug_???&#39;, &#39;Drug_Drug B&#39;]
+patients_df_labeled.drop(
+    columns_to_drop, 
+    axis=1, 
+    inplace=True)
+unknown_drug = patients_df_labeled.iloc[15, :]
+patients_df_labeled.drop(15, axis=0, inplace=True) # unknow drug row
+patients_df_labeled.head().to_html(classes=&#39;table table-striped&#39;)</code></pre>
+<center>
+<table border="0" class="dataframe table table-striped">
+
+<thead>
+
+<tr style="text-align: right;">
+
+<th>
+</th>
+
+<th>
+Gender_M
+</th>
+
+<th>
+BMI_normal
+</th>
+
+<th>
+BP_normal
+</th>
+
+<th>
+Drug_Drug A
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<th>
+0
+</th>
+
+<td>
+1
+</td>
+
+<td>
+0
+</td>
+
+<td>
+0
+</td>
+
+<td>
+1
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+1
+</th>
+
+<td>
+1
+</td>
+
+<td>
+0
+</td>
+
+<td>
+1
+</td>
+
+<td>
+0
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+2
+</th>
+
+<td>
+1
+</td>
+
+<td>
+0
+</td>
+
+<td>
+0
+</td>
+
+<td>
+1
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+3
+</th>
+
+<td>
+1
+</td>
+
+<td>
+1
+</td>
+
+<td>
+0
+</td>
+
+<td>
+1
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+4
+</th>
+
+<td>
+1
+</td>
+
+<td>
+0
+</td>
+
+<td>
+0
+</td>
+
+<td>
+1
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</center>
+<p>For example <code>Gender_M:1</code> means that subject is Male and <code>Gender_M:0</code> means that subject is female.</p>
+<p>To build a decision tree model we can use a <code>DecisionTreeClassifier</code> function from <code>sklearn.tree</code> module.</p>
+<pre class="python"><code># split the data 
+X = patients_df_labeled.drop(&#39;Drug_Drug A&#39;, axis=1)
+y = patients_df_labeled[&#39;Drug_Drug A&#39;]
+
+# fit the decision tree model
+model = tree.DecisionTreeClassifier(criterion=&#39;entropy&#39;)
+model.fit(X, y)</code></pre>
+<pre><code>## DecisionTreeClassifier(ccp_alpha=0.0, class_weight=None, criterion=&#39;entropy&#39;,
+##                        max_depth=None, max_features=None, max_leaf_nodes=None,
+##                        min_impurity_decrease=0.0, min_impurity_split=None,
+##                        min_samples_leaf=1, min_samples_split=2,
+##                        min_weight_fraction_leaf=0.0, presort=&#39;deprecated&#39;,
+##                        random_state=None, splitter=&#39;best&#39;)</code></pre>
+<pre class="python"><code>plt.figure(figsize=(10,10))
+tree.plot_tree(model, filled=True, rounded=True,
+               feature_names=X.columns.tolist(), proportion=False,
+               class_names=[&#39;Drug B&#39;, &#39;Drug A&#39;])
+plt.show()</code></pre>
+<center>
+<img src="python-tree.png"></img>
+</center>
+<p>Get a prediction for the 16-th patient:</p>
+<pre class="python"><code>unknown_drug = pd.DataFrame(unknown_drug).T
+unknown_drug.drop([&#39;Drug_Drug A&#39;], axis=1, inplace=True)
+
+# return the class
+model.predict(unknown_drug)
+## array([1], dtype=uint8)</code></pre>
+<pre class="python"><code># return the probability of each class
+model.predict_proba(unknown_drug)
+## array([[0., 1.]])</code></pre>
+</div>
+</div>
+<div id="numerical-explanatory-variables" class="section level2">
+<h2><a name="numerical">Numerical Explanatory Variables</a></h2>
+<p>In our simple data set we had only categorical variables (with 2 labels each). But what would model do if we had numerical value as an input? In fact, decision tree model (in R or Python) takes only numerical variables as an input.</p>
+<p>I want to draw your attention to Python decision tree, especially on the decision nodes like <code>Gender_M &lt;= 0.5</code>. Where does this <code>0.5</code> come from? The answer intersects with the answer how model handles numerical values.</p>
+<p>Recall the <code>Gender_M</code> column we created for Python train set. It consisted of two <strong>numerical</strong> values (<code>0</code> and <code>1</code>). What model actually does is filtering the data by the <strong>middle</strong> value among these two numbers. “Middle” value was :<span class="math inline">\(\frac{0+1}{2}=0.5\)</span>. Now model have to sets of data: one set has only those values that agree with condition <code>Gender_M &lt;= 0 == True</code> (OR <code>Gender_M = 0</code> OR <code>Gender</code> is Female) and the other set that doesn’t agree with condition <code>Gender_M &lt;= 0 == False</code> (OR <code>Gender_M = 1</code> OR <code>Gender</code> is Male). R does this behind the scenes, so we don’t need to worry about encoding, however Python tree was a good way to show how does the algorithm works.</p>
+<p>Image that we add a third category <code>Non-binary</code> to the <code>Gender</code> feature. First, we would encode the values and create a new column <code>Gender_encoded</code>, that would have three numerical values (<code>0</code>, <code>1</code> and <code>2</code>). Say, <code>Non-binary = 0</code>, <code>Male = 1</code>, <code>Female = 2</code>. Now model would have <strong>three</strong> conditions for filtering the data.</p>
+<ul>
+<li><code>Gender_encoded &lt;= 0.5</code> (OR <code>Gender_encoded = 0</code> OR <code>Gender</code> is Non-binary)</li>
+<li><code>Gender_encoded &lt;= 1.5</code> (OR <code>Gender_encoded = 0 or 1</code> OR <code>Gender</code> is Non-binary | Male)</li>
+</ul>
+<p>In a general form we can say that if we have numerical feature, algorithm will convert it to “categorical” by choosing the average “middle” value as a threshold between actual input values:</p>
+<ul>
+<li>filter 1: feature &lt;= threshold</li>
+<li>filter 2: feature &gt; threshold</li>
+</ul>
+<p>For example:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">id</th>
+<th align="center">blood_pressure</th>
+<th align="center">drug</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">p01</td>
+<td align="center">100</td>
+<td align="center">A</td>
+</tr>
+<tr class="even">
+<td align="center">p02</td>
+<td align="center">120</td>
+<td align="center">B</td>
+</tr>
+<tr class="odd">
+<td align="center">p03</td>
+<td align="center">150</td>
+<td align="center">B</td>
+</tr>
+<tr class="even">
+<td align="center">p03</td>
+<td align="center">200</td>
+<td align="center">B</td>
+</tr>
+</tbody>
+</table>
+<p>“Middle threshold” values are: <code>110</code> (<span class="math inline">\(\frac{100+120}{2}\)</span>), <code>135</code> (<span class="math inline">\(\frac{120+150}{2}\)</span>), <code>175</code> (<span class="math inline">\(\frac{150+200}{2}\)</span>).</p>
+</div>
+<div id="other-splitting-metrics" class="section level2">
+<h2><a name="metrics">Other Splitting Metrics</a></h2>
+<div id="gini-impurity" class="section level3">
+<h3><a name="gini">Gini Impurity</a></h3>
+<p>As told before, for classification problem you can also use <strong>Gini impurity</strong> as a way to find the best splitting feature. The idea stays the same. The only difference is that instead of Entropy formula we are using Gini formula:</p>
+<p><span class="math display">\[G(X) = 1 - \sum_{i=1}^{n} p(x_i)^2\]</span>
+After calculating Gini impurity value for each feature we would calculate the gain and chose the feature that has <strong>the highest</strong> gain.</p>
+<p><span class="math display">\[\text{Gain} = \text{Gini impurity before the split} - \text{Weighted Gini impurity after the split}\]</span></p>
+</div>
+<div id="variance-reduction" class="section level3">
+<h3><a name="variance">Variance Reduction</a></h3>
+<p>If we are dealing with regression problem (predicting numerical variable, rather than a class) we would use <strong>variance reduction</strong>. Instead of calculating the probabilities of target variable we calculate its variance:</p>
+<p><span class="math display">\[Var(x) = \frac{\sum_{i=1}^n(x_i- \bar x)^2}{n-1}\]</span>
+And in the same way we are looking for a variable that has <strong>the highest</strong> variance reduction, or in other words variance in target variable becomes lower after the split.</p>
+<p><span class="math display">\[\text{Variance Reduction} = \text{Variance before the split} - \text{Weighted variance after the split}\]</span></p>
+</div>
+</div>
+<div id="summary" class="section level2">
+<h2><a name="summary">Summary</a></h2>
+<p>I hope that it all made sense and it became a bit clearer how do CART models work. It is really simple algorithm that doesn’t require much feature engineering and often used as a base estimator in more complex bagging and boosting models. Please let me know if you have any questions that I might have missed here.</p>
+</div>
+<div id="references" class="section level2">
+<h2><a name="ref">References</a></h2>
+<ul>
+<li><a name="1">[1]:</a> <a href="https://en.wikipedia.org/wiki/Supervised_learning" class="uri">https://en.wikipedia.org/wiki/Supervised_learning</a></li>
+<li><a name="2">[2]:</a> <a href="https://en.wikipedia.org/wiki/Statistical_classification" class="uri">https://en.wikipedia.org/wiki/Statistical_classification</a></li>
+<li><a name="3">[3]:</a> <a href="https://en.wikipedia.org/wiki/Regression_analysis" class="uri">https://en.wikipedia.org/wiki/Regression_analysis</a></li>
+<li><a name="4">[4]:</a> <a href="https://en.wikipedia.org/wiki/Entropy_(information_theory)" class="uri">https://en.wikipedia.org/wiki/Entropy_(information_theory)</a></li>
+<li><a name="5">[5]:</a> <a href="https://en.wikipedia.org/wiki/Information_theory" class="uri">https://en.wikipedia.org/wiki/Information_theory</a></li>
+</ul>
+</div>
