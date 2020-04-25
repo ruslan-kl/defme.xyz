@@ -10,19 +10,20 @@ tags: ["Shiny App", "Probability", "Statistics"]
 
 ---
 
-<style>
-iframe {
-    left: 0;
-    position: absolute;
-    width: 100%;
-}
-</style>
+# <style>
+# iframe {
+#     name: "t";
+#     left: 0;
+#     position: absolute;
+#     width: 100%;
+# }
+# </style>
 
 
 Open in the new window at [shinyapps.io](https://ruslankl.shinyapps.io/norm-binom/)
 
 
-<iframe src="https://ruslankl.shinyapps.io/norm-binom/" width=1000 height=800" frameborder="1"></iframe>
+<iframe src="https://ruslankl.shinyapps.io/norm-binom/" height=800" frameborder="1" style="left: 0; position: absolute; width: 100%"></iframe>
 
 <br>
 <br>
