@@ -6,31 +6,16 @@ categories: []
 tags: ["Probability"]
 ---
 
-<iframe src="https://ruslankl.shinyapps.io/bayes_rule/" frameborder="1" style="left: 0px; position: absolute; width: 100%; height: 900px"></iframe>
+<style>
+iframe {
+  height: 900px; /* Set this to the height you want the iframe to have. */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+</style>
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+<iframe src="https://ruslankl.shinyapps.io/bayes_rule/" frameborder="1"></iframe>

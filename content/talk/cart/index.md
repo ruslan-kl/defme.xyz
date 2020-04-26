@@ -15,7 +15,7 @@ date_end: "2020-05-01T20:00:00Z"
 # all_day: false
 
 # Schedule page publish date (NOT talk date).
-# publishDate: "2020-04-24"
+publishDate: "2020-04-25"
 
 authors: []
 tags: ["Python", "Machine Learning"]
