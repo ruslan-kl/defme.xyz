@@ -1,6 +1,5 @@
 ---
 date: "2020-04-05"
-external_link: https://ruslankl.shinyapps.io/roc_simulation/
 image:
   focal_point: Smart
   preview_only: true
@@ -13,35 +12,4 @@ title: ROC Curve Simulation
 Open in the new window at [shinyapps.io](https://ruslankl.shinyapps.io/roc_simulation/)
 
 
-<iframe src="https://ruslankl.shinyapps.io/roc_simulation/" height=1000" frameborder="1" style="left: 0; position: absolute; width: 100%"></iframe>
-
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+<iframe src="https://ruslankl.shinyapps.io/roc_simulation/" height=900" frameborder="1" style="height: 960px; width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw;"></iframe>
