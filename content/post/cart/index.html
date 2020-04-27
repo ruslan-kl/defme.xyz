@@ -12,7 +12,6 @@ categories: ["Machine Learning"]
 tags: ["Machine Learning", "Decision Trees"]
 ---
 
-<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
 
 
 <div id="table-of-contents" class="section level2">
@@ -56,307 +55,133 @@ import matplotlib.pyplot as plt</code></pre>
 </div>
 <div id="what-is-cart" class="section level2">
 <h2><a name="cart">What is CART?</a></h2>
-<p><strong>C</strong>lassification <strong>a</strong>nd <strong>R</strong>egression <strong>T</strong>rees (or <strong>CART</strong> for short) is a type of supervised learning algorithm <a href="#1">[1]</a> that is mostly used in classification problems<a href="#2">[2]</a>, but can be applied for regression problems <a href="#3">[3]</a> as well. It can handle both categorical and numerical input variables.</p>
+<p><strong>C</strong>lassification <strong>a</strong>nd <strong>R</strong>egression <strong>T</strong>rees (or <strong>CART</strong> for short) is a type of supervised learning algorithm <a href="#1">[1]</a> that is mostly used in classification problems <a href="#2">[2]</a>, but can be applied for regression problems <a href="#3">[3]</a> as well. It can handle both categorical and numerical input variables.</p>
 <p>In this tutorial we are going to look at the <strong>classification</strong> problem.</p>
 <p>Let’s start with a simple example. Image that we have medical data about patients and we have two drugs (Drug A and Drug B) which work differently for each patient based on his health metrics. We have historical data about 15 patients and what drug have worked better for them. Now 16-th patient comes to us and we want to assign a drug to him based on this historical data. You can load the sample data set <a href="DecisionTree_SampleData.csv">here</a>.</p>
 <pre class="r"><code>patients_df &lt;- read_csv(&quot;DecisionTree_SampleData.csv&quot;)
-kable(patients_df, format = &quot;html&quot;, caption = &quot;&lt;b&gt;Patients Data&lt;/b&gt;&quot;) %&gt;%
-  kable_styling(bootstrap_options = &quot;condensed&quot;)</code></pre>
-<table class="table table-condensed" style="margin-left: auto; margin-right: auto;">
-<caption>
-<span id="tab:unnamed-chunk-3">Table 1: </span><b>Patients Data</b>
-</caption>
+kable(patients_df, format = &quot;markdown&quot;, caption = &quot;&lt;b&gt;Patients Data&lt;/b&gt;&quot;)</code></pre>
+<table>
 <thead>
-<tr>
-<th style="text-align:left;">
-Patient ID
-</th>
-<th style="text-align:left;">
-Gender
-</th>
-<th style="text-align:left;">
-BMI
-</th>
-<th style="text-align:left;">
-BP
-</th>
-<th style="text-align:left;">
-Drug
-</th>
+<tr class="header">
+<th align="left">Patient ID</th>
+<th align="left">Gender</th>
+<th align="left">BMI</th>
+<th align="left">BP</th>
+<th align="left">Drug</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-p01
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="odd">
+<td align="left">p01</td>
+<td align="left">M</td>
+<td align="left">not normal</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p02
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="even">
+<td align="left">p02</td>
+<td align="left">M</td>
+<td align="left">not normal</td>
+<td align="left">normal</td>
+<td align="left">Drug B</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p03
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="odd">
+<td align="left">p03</td>
+<td align="left">M</td>
+<td align="left">not normal</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p04
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="even">
+<td align="left">p04</td>
+<td align="left">M</td>
+<td align="left">normal</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p05
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="odd">
+<td align="left">p05</td>
+<td align="left">M</td>
+<td align="left">not normal</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p06
-</td>
-<td style="text-align:left;">
-F
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="even">
+<td align="left">p06</td>
+<td align="left">F</td>
+<td align="left">not normal</td>
+<td align="left">normal</td>
+<td align="left">Drug B</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p07
-</td>
-<td style="text-align:left;">
-F
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="odd">
+<td align="left">p07</td>
+<td align="left">F</td>
+<td align="left">normal</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p08
-</td>
-<td style="text-align:left;">
-F
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="even">
+<td align="left">p08</td>
+<td align="left">F</td>
+<td align="left">not normal</td>
+<td align="left">normal</td>
+<td align="left">Drug B</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p09
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="odd">
+<td align="left">p09</td>
+<td align="left">M</td>
+<td align="left">not normal</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p10
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="even">
+<td align="left">p10</td>
+<td align="left">M</td>
+<td align="left">normal</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p11
-</td>
-<td style="text-align:left;">
-F
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="odd">
+<td align="left">p11</td>
+<td align="left">F</td>
+<td align="left">not normal</td>
+<td align="left">not normal</td>
+<td align="left">Drug B</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p12
-</td>
-<td style="text-align:left;">
-F
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="even">
+<td align="left">p12</td>
+<td align="left">F</td>
+<td align="left">normal</td>
+<td align="left">normal</td>
+<td align="left">Drug B</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p13
-</td>
-<td style="text-align:left;">
-F
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="odd">
+<td align="left">p13</td>
+<td align="left">F</td>
+<td align="left">normal</td>
+<td align="left">normal</td>
+<td align="left">Drug B</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p14
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="even">
+<td align="left">p14</td>
+<td align="left">M</td>
+<td align="left">normal</td>
+<td align="left">not normal</td>
+<td align="left">Drug B</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p15
-</td>
-<td style="text-align:left;">
-F
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="odd">
+<td align="left">p15</td>
+<td align="left">F</td>
+<td align="left">not normal</td>
+<td align="left">normal</td>
+<td align="left">Drug B</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p16
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-???
-</td>
+<tr class="even">
+<td align="left">p16</td>
+<td align="left">M</td>
+<td align="left">not normal</td>
+<td align="left">not normal</td>
+<td align="left">???</td>
 </tr>
 </tbody>
 </table>
@@ -444,44 +269,25 @@ test_df &lt;- patients_df[16, ]</code></pre>
   summarise(n = n(),
             p = round(n() / dim(train_df)[1], 2))
 
-kable(temp_df, format = &quot;html&quot;) %&gt;%
-  kable_styling(bootstrap_options = &quot;striped&quot;)</code></pre>
-<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+kable(temp_df, format = &quot;markdown&quot;)</code></pre>
+<table>
 <thead>
-<tr>
-<th style="text-align:left;">
-Drug
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-p
-</th>
+<tr class="header">
+<th align="left">Drug</th>
+<th align="right">n</th>
+<th align="right">p</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Drug A
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-0.47
-</td>
+<tr class="odd">
+<td align="left">Drug A</td>
+<td align="right">7</td>
+<td align="right">0.47</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Drug B
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-0.53
-</td>
+<tr class="even">
+<td align="left">Drug B</td>
+<td align="right">8</td>
+<td align="right">0.53</td>
 </tr>
 </tbody>
 </table>
@@ -685,111 +491,54 @@ Drug B
 <h3><code>BP:normal</code> Node</h3>
 <p>Continue to grow the tree from the <code>(normal node)</code>. We filter observations that have <code>normal</code> blood pressure:</p>
 <pre class="r"><code>train_df %&gt;% 
-  filter(BP == &quot;normal&quot;) %&gt;% 
+  filter(BP == &quot;normal&quot;) %&gt;%
   select(-BP) %&gt;% 
-  kable(format = &quot;html&quot;) %&gt;%
-  kable_styling(bootstrap_options = &quot;striped&quot;)</code></pre>
-<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+  kable(format = &quot;markdown&quot;)</code></pre>
+<table>
 <thead>
-<tr>
-<th style="text-align:left;">
-Patient ID
-</th>
-<th style="text-align:left;">
-Gender
-</th>
-<th style="text-align:left;">
-BMI
-</th>
-<th style="text-align:left;">
-Drug
-</th>
+<tr class="header">
+<th align="left">Patient ID</th>
+<th align="left">Gender</th>
+<th align="left">BMI</th>
+<th align="left">Drug</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-p02
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="odd">
+<td align="left">p02</td>
+<td align="left">M</td>
+<td align="left">not normal</td>
+<td align="left">Drug B</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p06
-</td>
-<td style="text-align:left;">
-F
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="even">
+<td align="left">p06</td>
+<td align="left">F</td>
+<td align="left">not normal</td>
+<td align="left">Drug B</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p08
-</td>
-<td style="text-align:left;">
-F
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="odd">
+<td align="left">p08</td>
+<td align="left">F</td>
+<td align="left">not normal</td>
+<td align="left">Drug B</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p12
-</td>
-<td style="text-align:left;">
-F
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="even">
+<td align="left">p12</td>
+<td align="left">F</td>
+<td align="left">normal</td>
+<td align="left">Drug B</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p13
-</td>
-<td style="text-align:left;">
-F
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="odd">
+<td align="left">p13</td>
+<td align="left">F</td>
+<td align="left">normal</td>
+<td align="left">Drug B</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p15
-</td>
-<td style="text-align:left;">
-F
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="even">
+<td align="left">p15</td>
+<td align="left">F</td>
+<td align="left">not normal</td>
+<td align="left">Drug B</td>
 </tr>
 </tbody>
 </table>
@@ -802,151 +551,70 @@ Drug B
 <pre class="r"><code>train_df %&gt;% 
   filter(BP == &quot;not normal&quot;) %&gt;% 
   select(-BP) %&gt;% 
-  kable(format = &quot;html&quot;) %&gt;%
-  kable_styling(bootstrap_options = &quot;striped&quot;)</code></pre>
-<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+  kable(format = &quot;markdown&quot;)</code></pre>
+<table>
 <thead>
-<tr>
-<th style="text-align:left;">
-Patient ID
-</th>
-<th style="text-align:left;">
-Gender
-</th>
-<th style="text-align:left;">
-BMI
-</th>
-<th style="text-align:left;">
-Drug
-</th>
+<tr class="header">
+<th align="left">Patient ID</th>
+<th align="left">Gender</th>
+<th align="left">BMI</th>
+<th align="left">Drug</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-p01
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="odd">
+<td align="left">p01</td>
+<td align="left">M</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p03
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="even">
+<td align="left">p03</td>
+<td align="left">M</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p04
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="odd">
+<td align="left">p04</td>
+<td align="left">M</td>
+<td align="left">normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p05
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="even">
+<td align="left">p05</td>
+<td align="left">M</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p07
-</td>
-<td style="text-align:left;">
-F
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="odd">
+<td align="left">p07</td>
+<td align="left">F</td>
+<td align="left">normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p09
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="even">
+<td align="left">p09</td>
+<td align="left">M</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p10
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="odd">
+<td align="left">p10</td>
+<td align="left">M</td>
+<td align="left">normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p11
-</td>
-<td style="text-align:left;">
-F
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="even">
+<td align="left">p11</td>
+<td align="left">F</td>
+<td align="left">not normal</td>
+<td align="left">Drug B</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p14
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="odd">
+<td align="left">p14</td>
+<td align="left">M</td>
+<td align="left">normal</td>
+<td align="left">Drug B</td>
 </tr>
 </tbody>
 </table>
@@ -1043,99 +711,50 @@ Drug B
 <pre class="r"><code>train_df %&gt;% 
   filter(BP == &quot;not normal&quot; &amp; Gender == &quot;M&quot;) %&gt;% 
   select(-c(BP, Gender)) %&gt;% 
-  kable(format = &quot;html&quot;) %&gt;%
-  kable_styling(bootstrap_options = &quot;striped&quot;)</code></pre>
-<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+  kable(format = &quot;markdown&quot;)</code></pre>
+<table>
 <thead>
-<tr>
-<th style="text-align:left;">
-Patient ID
-</th>
-<th style="text-align:left;">
-BMI
-</th>
-<th style="text-align:left;">
-Drug
-</th>
+<tr class="header">
+<th align="left">Patient ID</th>
+<th align="left">BMI</th>
+<th align="left">Drug</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-p01
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="odd">
+<td align="left">p01</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p03
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="even">
+<td align="left">p03</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p04
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="odd">
+<td align="left">p04</td>
+<td align="left">normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p05
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="even">
+<td align="left">p05</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p09
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="odd">
+<td align="left">p09</td>
+<td align="left">not normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p10
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="even">
+<td align="left">p10</td>
+<td align="left">normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p14
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="odd">
+<td align="left">p14</td>
+<td align="left">normal</td>
+<td align="left">Drug B</td>
 </tr>
 </tbody>
 </table>
@@ -1176,44 +795,25 @@ Drug B
 <pre class="r"><code>train_df %&gt;% 
   filter(BP == &quot;not normal&quot; &amp; Gender == &quot;F&quot;) %&gt;% 
   select(-c(BP, Gender)) %&gt;% 
-  kable(format = &quot;html&quot;) %&gt;%
-  kable_styling(bootstrap_options = &quot;striped&quot;)</code></pre>
-<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+  kable(format = &quot;markdown&quot;) </code></pre>
+<table>
 <thead>
-<tr>
-<th style="text-align:left;">
-Patient ID
-</th>
-<th style="text-align:left;">
-BMI
-</th>
-<th style="text-align:left;">
-Drug
-</th>
+<tr class="header">
+<th align="left">Patient ID</th>
+<th align="left">BMI</th>
+<th align="left">Drug</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-p07
-</td>
-<td style="text-align:left;">
-normal
-</td>
-<td style="text-align:left;">
-Drug A
-</td>
+<tr class="odd">
+<td align="left">p07</td>
+<td align="left">normal</td>
+<td align="left">Drug A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-p11
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-Drug B
-</td>
+<tr class="even">
+<td align="left">p11</td>
+<td align="left">not normal</td>
+<td align="left">Drug B</td>
 </tr>
 </tbody>
 </table>
@@ -1260,45 +860,24 @@ text(420, 80, &quot;not normal&quot;, col=&quot;black&quot;)</code></pre>
 <h3><a name="prediction">Prediction</a></h3>
 <p>Let’s look at the 16-th patient:</p>
 <pre class="r"><code>test_df %&gt;% 
-  kable(format = &quot;html&quot;) %&gt;%
-  kable_styling(bootstrap_options = &quot;striped&quot;)</code></pre>
-<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+  kable(format = &quot;markdown&quot;) </code></pre>
+<table>
 <thead>
-<tr>
-<th style="text-align:left;">
-Patient ID
-</th>
-<th style="text-align:left;">
-Gender
-</th>
-<th style="text-align:left;">
-BMI
-</th>
-<th style="text-align:left;">
-BP
-</th>
-<th style="text-align:left;">
-Drug
-</th>
+<tr class="header">
+<th align="left">Patient ID</th>
+<th align="left">Gender</th>
+<th align="left">BMI</th>
+<th align="left">BP</th>
+<th align="left">Drug</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-p16
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-not normal
-</td>
-<td style="text-align:left;">
-???
-</td>
+<tr class="odd">
+<td align="left">p16</td>
+<td align="left">M</td>
+<td align="left">not normal</td>
+<td align="left">not normal</td>
+<td align="left">???</td>
 </tr>
 </tbody>
 </table>

@@ -52,7 +52,7 @@ import matplotlib.pyplot as plt
 
 ## <a name="cart">What is CART?</a>
 
-**C**lassification **a**nd **R**egression **T**rees (or **CART** for short) is a type of supervised learning algorithm [[1]](#1)  that is mostly used in classification problems[[2]](#2), but can be applied for regression problems [[3]](#3) as well. It can handle both categorical and numerical input variables.
+**C**lassification **a**nd **R**egression **T**rees (or **CART** for short) is a type of supervised learning algorithm [[1]](#1) that is mostly used in classification problems [[2]](#2), but can be applied for regression problems [[3]](#3) as well. It can handle both categorical and numerical input variables.
 
 In this tutorial we are going to look at the **classification** problem.
 
@@ -60,8 +60,7 @@ Let's start with a simple example. Image that we have medical data about patient
 
 ```{r message=FALSE, warning=FALSE}
 patients_df <- read_csv("DecisionTree_SampleData.csv")
-kable(patients_df, format = "html", caption = "<b>Patients Data</b>") %>%
-  kable_styling(bootstrap_options = "condensed")
+kable(patients_df, format = "markdown", caption = "<b>Patients Data</b>")
 ```
 
 Our decision tree is going to look something like this:
@@ -199,8 +198,7 @@ temp_df <- train_df %>%
   summarise(n = n(),
             p = round(n() / dim(train_df)[1], 2))
 
-kable(temp_df, format = "html") %>%
-  kable_styling(bootstrap_options = "striped")
+kable(temp_df, format = "markdown")
 
 entropy(temp_df$p)
 ```
@@ -296,10 +294,9 @@ Continue to grow the tree from the `(normal node)`. We filter observations that 
 
 ```{r}
 train_df %>% 
-  filter(BP == "normal") %>% 
+  filter(BP == "normal") %>%
   select(-BP) %>% 
-  kable(format = "html") %>%
-  kable_styling(bootstrap_options = "striped")
+  kable(format = "markdown")
 ```
 
 As we can see, there is no Drug A for this node and entropy is already 0. This node is going to be last for this branch with the drug B as an output with probability = 1.
@@ -328,8 +325,7 @@ Filter all the observations that have `not normal` blood pressure:
 train_df %>% 
   filter(BP == "not normal") %>% 
   select(-BP) %>% 
-  kable(format = "html") %>%
-  kable_styling(bootstrap_options = "striped")
+  kable(format = "markdown")
 ```
 
 Now we consider this set as "initial set". Entropy of target distribution at this node is $0.764$ (we have already calculated it). At this node we have two features: `Gender` and `BMI`. We perform the same procedure to find the best splitting feature.
@@ -384,8 +380,7 @@ Now we filer the set so that we have only observations with `BP:not normal` and 
 train_df %>% 
   filter(BP == "not normal" & Gender == "M") %>% 
   select(-c(BP, Gender)) %>% 
-  kable(format = "html") %>%
-  kable_styling(bootstrap_options = "striped")
+  kable(format = "markdown")
 ```
 
 There is just one feature left `BMI`. Since we have no more features apart from this one we are going to "grow" last nodes with `BMI:normal` and `BMI:not normal` labels:
@@ -433,8 +428,7 @@ Now we filer the set so that we have only observations with `BP:not normal` and 
 train_df %>% 
   filter(BP == "not normal" & Gender == "F") %>% 
   select(-c(BP, Gender)) %>% 
-  kable(format = "html") %>%
-  kable_styling(bootstrap_options = "striped")
+  kable(format = "markdown") 
 ```
 
 We are left with just 1 observation in each node. Predicted class for node `BMI:normal` is going to be Drug A ($P = 1.$). Predicted class for node `BMI:not normal` is going to be Drug B ($P = 1.$). 
@@ -484,8 +478,7 @@ Let's look at the 16-th patient:
 
 ```{r}
 test_df %>% 
-  kable(format = "html") %>%
-  kable_styling(bootstrap_options = "striped")
+  kable(format = "markdown") 
 ```
 
 To make a prediction we just need to move top to bottom by the branches of our tree. 
