@@ -31,7 +31,7 @@ links:
 url_code: "https://colab.research.google.com/drive/1ijrvGbq_fS_8lHRkHfVfsyArYZplDbqa"
 url_pdf: ""
 url_slides: "https://drive.google.com/open?id=1kB33iz2KU8Vo3n-4-eA8muejDCIa7dUi"
-url_video: ""
+url_video: "https://youtu.be/L5A9xOrYd9A"
 
 # Markdown Slides (optional).
 #   Associate this talk with Markdown slides.
@@ -53,9 +53,7 @@ math: true
 
 ## Video
 
-coming soon... 
-
-{{< youtube >}}
+{{< youtube L5A9xOrYd9A>}}
 
 <br>
 
