@@ -50,7 +50,3 @@ projects: []
 # Enable math on this page?
 math: true
 ---
-
-{{% alert note %}}
-**[Register Now](https://devrepublik.com/calendar/classification-and-regression-trees-p-class-my-button-regs-a-href-https-share-hsforms-com-1skcxzjohtdiktng_4i1rdw49933-registration-a-p-fee-540-uah/)**
-{{% /alert %}}
