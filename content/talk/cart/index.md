@@ -28,7 +28,7 @@ image:
   focal_point: Right
 
 links:
-url_code: ""
+url_code: "https://defme.xyz/post/cart/"
 url_pdf: ""
 url_slides: ""
 url_video: ""
