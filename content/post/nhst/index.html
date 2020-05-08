@@ -1,0 +1,1313 @@
+---
+title: "Null Hypothesis Significance Testing, part 1"
+subtitle: "Inference for a population mean: $t$-tests & ANOVA "
+date: "2020-05-10"
+summary: Basic concept of NHST and p-value. Overview of the inference for a population mean one/two-sample $t$-tests and ANOVA.
+image:
+  caption: 'Image credit: <a href="https://pixabay.com/ru/users/geralt-9301/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2692575">Gerd Altmann</a> from <a href="https://pixabay.com/ru/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2692575">Pixabay</a>'
+  focal_point: ""
+  placement: 3
+  preview_only: true
+categories: ["Statistics"]
+tags: ["Statistics", "Probability"]
+---
+
+
+
+<p style="font-size:15px">
+<i> Cover image credit: <b><a href="https://pixabay.com/ru/users/geralt-9301/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2692575">Gerd Altmann</a></b> from <b><a href="https://pixabay.com/ru/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2692575">Pixabay</a></b></i>
+</p>
+<div id="table-of-contents" class="section level2">
+<h2>Table of contents</h2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#intuitive-example">Intuitive Example</a>
+<ul>
+<li><a href="#one-tailed-vs-two-tailed-test">One-tailed vs Two-tailed Test</a></li>
+</ul></li>
+<li><a href="#inference-for-a-mean">Inference for a mean</a></li>
+<li><a href="#data-set">Data Set</a></li>
+<li><a href="#one-sample-test">One Sample Test</a></li>
+<li><a href="#two-sample-test-independent-groups">Two Sample Test (Independent Groups)</a></li>
+<li><a href="#two-sample-test-paired-groups">Two Sample Test (Paired Groups)</a></li>
+<li><a href="#comparing-more-than-two-means-anova">Comparing More than Two Means (ANOVA)</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+<pre class="r"><code># r import
+library(tidyverse)
+library(knitr)
+library(reticulate)
+library(broom)
+
+options(digits = 4)
+use_python(&quot;/home/ruslan/anaconda3/bin/python3.7&quot;)</code></pre>
+<pre class="python"><code># python import
+import pandas as pd
+from scipy import stats</code></pre>
+<pre class="r"><code># custom functions
+nhst_result &lt;- function(pval, alpha){
+  if(pval &lt; alpha) {
+    print(paste0(&quot;p-value is less than alpha (&quot;, 
+                 alpha, &quot;). Reject null hypothesis.&quot;))
+  } else {print(paste0(&quot;p-value is greater than alpha (&quot;, 
+                     alpha, &quot;). Fail to reject null hypothesis.&quot;))}
+}</code></pre>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>The concept of hypothesis testing is analogous to concept of criminal trials. Consider that you are a judge during a trial and there is a person for a criminal offense. You must decide if the defendant is innocent or guilty. Your basic knowledge is that the person is innocent and after evidence comes in you need to make a choice - is there enough evidence to claim that the defendant is guilty?</p>
+<center>
+<figure>
+<img src="balance.png" width="300"/>
+<figcaption>
+Image by <a href="https://pixabay.com/users/OpenClipart-Vectors-30363/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=154516">OpenClipart-Vectors</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=154516">Pixabay</a>
+</figcaption>
+</figure>
+</center>
+<p>There are four possible outcomes:</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"></th>
+<th align="center">Defendant is actually innocent</th>
+<th align="center">Defendant is actually guilty</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>You decide that the defendant is innocent</strong></td>
+<td align="center">Correct decision</td>
+<td align="center">You set the criminal free</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>You decide that the defendant is guilty</strong></td>
+<td align="center">You send the innocent person to jail</td>
+<td align="center">Correct decision</td>
+</tr>
+</tbody>
+</table>
+<p>If we transform this to “statistical language”, we would say that we have:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Null hypothesis</strong> <span class="math inline">\(H_0\)</span>, which tells us that defendant is innocent (nothing is happening).</li>
+<li><strong>Alternative hypothesis</strong> <span class="math inline">\(H_A\)</span>, which tells us that defendant is guilty (something is actually happening).</li>
+<li><strong>Significance level</strong> <span class="math inline">\(\alpha\)</span>, which is the probability of an sending innocent person to jail (probability of rejecting the null hypothesis <span class="math inline">\(H_0\)</span> when the it is true). That is also called a <strong>Type I error</strong>.</li>
+</ol>
+<p>Probability of setting the criminal free is usually denoted as <span class="math inline">\(\beta\)</span> (probability of accepting the null hypothesis <span class="math inline">\(H_0\)</span> when the it is false). That is also called a <strong>Type II error</strong></p>
+<p>We can rewrite the previous table in general form:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center"></th>
+<th align="center"><span class="math inline">\(H_0\)</span> is true</th>
+<th align="center"><span class="math inline">\(H_0\)</span> is false</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Failed to reject <span class="math inline">\(H_0\)</span></strong></td>
+<td align="center">No Error</td>
+<td align="center">Type II Error</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Reject <span class="math inline">\(H_0\)</span> in favor of <span class="math inline">\(H_A\)</span></strong></td>
+<td align="center">Type I Error</td>
+<td align="center">No Error</td>
+</tr>
+</tbody>
+</table>
+<p>Sure you don’t want to send innocent person to jail, but what level of significance <span class="math inline">\(\alpha\)</span> would you choose? Usually alpha is set up to 0.05, meaning that we let ourselves to have <span class="math inline">\(5\%\)</span> possibility chance of wrong decision. Another common values of alpha are <span class="math inline">\(0.1, 0.01\)</span>. If we set a low threshold for <span class="math inline">\(\alpha\)</span> (for example 0.001), then it will require more evidence to convict an innocent person. On the other hand, if we set a higher threshold for <span class="math inline">\(\alpha\)</span> (for example 0.1), then less evidence is required.</p>
+<p>In statistical hypothesis testing framework we usually calculate the <strong>p-value</strong>* and check whether it is greater or less than a significance level <span class="math inline">\(\alpha\)</span>.</p>
+<p><strong>p-value</strong> is the probability of obtaining results as extreme as the observed results under the assumptions that null hypothesis is true. In order to be able to reject null hypothesis p-value needs to be lower than significance level <span class="math inline">\(\alpha\)</span>.</p>
+<ul>
+<li><span class="math inline">\(P(\text{Data | }H_0 \text{ is true}) \leq \alpha\)</span>: reject the null hypothesis in favor of the alternative hypothesis.</li>
+<li><span class="math inline">\(P(\text{Data | }H_0 \text{ is true}) &gt; \alpha\)</span>: fail (not enough evidence) to reject the null hypothesis.</li>
+</ul>
+<p><strong>Steps for hypothesis testing</strong>:</p>
+<ol style="list-style-type: decimal">
+<li>Formulate null and alternative hypothesis.</li>
+<li>Choose a proper test for a given problem.</li>
+<li>Set the significance level <span class="math inline">\(\alpha\)</span>.</li>
+<li><span style="background-color: #9ce0ff">Calculate the desired statistic and p-value associated with it.</span></li>
+<li>Interpret the results in a context of a problem.</li>
+</ol>
+<p>Note that the <span class="math inline">\(4.\)</span> point is highlighted. This is usually the <strong>only</strong> step that is can be done by software (SPSS, R, Python, Excel, etc) meaning that user must do all the work left: choose null and alternative hypothesis, decide what test to use, interpret the results.</p>
+<p>Some examples of hypothesis would be:</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"><strong>Null hypothesis</strong> <span class="math inline">\(H_0\)</span></th>
+<th align="left"><strong>Alternative hypothesis</strong> <span class="math inline">\(H_A\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">The coin is fair <span class="math inline">\(\left( P(\text{Heads}) = P(\text{Tails}) = \frac{1}{2} \right)\)</span></td>
+<td align="left">The coin is biased towards Heads <span class="math inline">\(\left(P(\text{Heads}) &gt; \frac{1}{2} \right)\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">Ratio of success for the new drug is 75% <span class="math inline">\(\left(\pi = 0.75 \right)\)</span></td>
+<td align="left">New drug is more effective than previous version <span class="math inline">\(\left(\pi&gt;0.75 \right)\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">There is no difference in average of blood pressure between two groups <span class="math inline">\(\left(\mu_1 - \mu_2 = 0 \right)\)</span></td>
+<td align="left">Average blood pressure among two groups is different <span class="math inline">\(\left(\mu_1 - \mu_2 \neq 0 \right)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><em>Note that significance testing checks the population parameters, not sample statistics, that’s why we use Greek letters.</em></p>
+<p><strong>Difference between population and sample</strong>:</p>
+<p>One of the main purposes of statistics is to estimate the <strong>population parameter</strong> based on the <strong>sample statistic</strong>. For example, you would like like to know what is the effect of the new drug for the subjects who have a specific disease (<span class="math inline">\(\pi\)</span> - proportion of success). Performing an experiment on a whole <strong>population</strong> (every subject who has a disease) would give you a true ratio <span class="math inline">\(\pi\)</span> when drug was effective vs. when it was not. However, performing such experiment would be extremely expensive and often not possible to perform. What you could do instead is to get a <strong>sample</strong> from your population (some number of subjects with a given disease), perform an experiment of them and then generalize the results to the whole population based on the point estimate <span class="math inline">\(p\)</span> and confidence interval.</p>
+<center>
+<img src="pop-chart.jpeg" width="500"></img>
+</center>
+</div>
+<div id="intuitive-example" class="section level2">
+<h2>Intuitive Example</h2>
+<p>Let’s take a look at a simple example to build an intuition about p-value and alpha.</p>
+<p>Image you have a coin and you are not sure if it’s fair or not. You flip the coin once and it comes up Heads. Would you assume that the coin is unfair (is it more likely to get Heads, rather than Tails)?</p>
+<p>What about two Heads out of two flips? Three? Four? Five?</p>
+<table align="center">
+<tr>
+<td>
+1st coin toss
+</td>
+<td>
+2nd coin toss
+</td>
+<td>
+3rd coin toss
+</td>
+<td>
+4th coin toss
+</td>
+<td>
+5th coin toss
+</td>
+<td>
+Probability
+</td>
+</tr>
+<tr>
+<td>
+<img src="heads.jpg" width="50"> </img>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+0.5
+</td>
+</tr>
+<tr>
+<td>
+<img src="heads.jpg" width="50"></img>
+</td>
+<td>
+<img src="heads.jpg" width="50"></img>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+0.25
+</td>
+</tr>
+<tr>
+<td>
+<img src="heads.jpg" width="50"></img>
+</td>
+<td>
+<img src="heads.jpg" width="50"></img>
+</td>
+<td>
+<img src="heads.jpg" width="50"></img>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+0.125
+</td>
+</tr>
+<tr>
+<td>
+<img src="heads.jpg" width="50"></img>
+</td>
+<td>
+<img src="heads.jpg" width="50"></img>
+</td>
+<td>
+<img src="heads.jpg" width="50"></img>
+</td>
+<td>
+<img src="heads.jpg" width="50"></img>
+</td>
+<td>
+</td>
+<td>
+0.0625
+</td>
+</tr>
+<tr>
+<td>
+<img src="heads.jpg" width="50"></img>
+</td>
+<td>
+<img src="heads.jpg" width="50"></img>
+</td>
+<td>
+<img src="heads.jpg" width="50"></img>
+</td>
+<td>
+<img src="heads.jpg" width="50"></img>
+</td>
+<td>
+<img src="heads.jpg" width="50"></img>
+</td>
+<td>
+0.0313
+</td>
+</tr>
+</table>
+<p>Most people would doubt the fairness of the coin after five Heads out of five coin flips. If we calculate the probability of 5 Heads in a row we get:</p>
+<p><span class="math display">\[P(\text{5 Heads}) = \left( \frac{1}{2} \right) ^ 5 = 0.0313\]</span></p>
+<p>In other words, there is about 3% of getting five Heads in a row assuming that the coin is fair. This seems to be a really low probability to be true, that is why most people would assume that this coin is not fair, but rather probability of Heads <span class="math inline">\(p(\text{Heads}) &gt; \frac{1}{2}\)</span>.</p>
+<p>If we have used NHST framework it would look as follows:</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: coin is fair, <span class="math inline">\(p(\text{Heads}) = \frac{1}{2}\)</span></li>
+<li><span class="math inline">\(H_A\)</span>: coin is unfair, <span class="math inline">\(p(\text{Heads}) &gt; \frac{1}{2}\)</span></li>
+<li><span class="math inline">\(\alpha = 0.05\)</span></li>
+</ul>
+<p>We flipped the coin 5 times and got 5 heads. Now, assuming that the coin is fair we calculate the probability of this event (which was 0.0313). Note that we used <span class="math inline">\(p=\frac{1}{2}\)</span> in formula since we assume that coin is fair (null hypothesis is true). This probability of 0.0313 is our p-value. <span class="math inline">\(\text{p-value} &lt; \alpha\)</span>, that is why we reject the null hypothesis, saying that data provides enough evidence that coin is nor fair and probability of Heads is greater than <span class="math inline">\(\frac{1}{2}\)</span>.</p>
+<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-4-1.png" width="480" style="display: block; margin: auto;" /></p>
+<div id="one-tailed-vs-two-tailed-test" class="section level3">
+<h3>One-tailed vs Two-tailed Test</h3>
+<p>Our alternative hypothesis in this example was that the coin is unfair and <span class="math inline">\(p(\text{Heads}) &gt; \frac{1}{2}\)</span>, which is also called a <strong>one-tailed significance test</strong>. In such case we are interested only in probabilities of obtaining results <strong>more extreme</strong> as 5 out of 5 Heads. Due to the experiment design there was no outcome that are more extreme as 5 out of 5 Heads (since we cannot get 6 Heads out of 5 coin flips).</p>
+<p>Another type of test would be <strong>two-tailed</strong> significance test. In this way we would be interested in probabilities of obtaining results <strong>more or as extreme</strong> as obtained data. Alternative hypothesis would be:</p>
+<ul>
+<li><span class="math inline">\(H_A\)</span>: coin is unfair, <span class="math inline">\(p(\text{Heads}) \neq \frac{1}{2}\)</span> (<span class="math inline">\(p(\text{Heads}) &lt; \frac{1}{2}\)</span> or <span class="math inline">\(p(\text{Heads}) &gt; \frac{1}{2}\)</span>)</li>
+</ul>
+<p>As you can see, under the two-tailed testing we are not concerned about the direction of alternative hypothesis.</p>
+<p>In our example outcome of 0 Heads (5 Tails) out of 5 flips has the same probability as observed probability of 5 Heads out of 5 flips. Hence, <span class="math inline">\(\text{p-value} = P(0) + P(5) = 0.0313 + 0.0313 = 0.0616\)</span>.</p>
+<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>Since now <span class="math inline">\(\text{p-value} &gt; \alpha\)</span> we would fail to reject null hypothesis saying there is not enough evidence to claim that the coin is not fair.</p>
+</div>
+</div>
+<div id="inference-for-a-mean" class="section level2">
+<h2>Inference for a mean</h2>
+<p>In this section we are going to look at a significance testing for the population mean. The general formula looks as following:</p>
+<p><span class="math display">\[\text{Statistic} = \frac{\text{Point Estimate} - \text{Null Value}}{\text{SE}}\]</span></p>
+<ul>
+<li>Point Estimate - the data we have observed (one sample mean, difference in two means, etc)</li>
+<li>Null Value - the value under the null hypothesis</li>
+<li>SE - standard error of the sample, <span class="math inline">\(SE = \frac{s}{\sqrt{n}}\)</span></li>
+<li>Statistic - calculated value of simulated distribution (<span class="math inline">\(t\)</span> distribution, <span class="math inline">\(\chi^2\)</span> distribution, etc)</li>
+</ul>
+<p>After we have calculated the statistic we can find the p-value (with the help of tables, R/Python).</p>
+</div>
+<div id="data-set" class="section level2">
+<h2>Data Set</h2>
+<p>For this tutorial we are going to look at <strong>Memory Test on Drugged Islanders Data</strong> data set from Kaggle<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.</p>
+<p>Context of the problem:</p>
+<p>An experiment on the effects of anti-anxiety medicine on memory recall when being primed with happy or sad memories. The participants were done on novel Islanders whom mimic real-life humans in response to external factors. Participants were above 25+ years old to ensure a fully developed pre-frontal cortex, a region responsible for higher level cognition and memory recall.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Drugs of interest (known-as) [Dosage 1, 2, 3]:</th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>A</code> - Alprazolam (Xanax, Long-term) [1mg/3mg/5mg]</td>
+<td align="center"><img src="xanax.jpg" width="200"></img></td>
+</tr>
+<tr class="even">
+<td align="left"><code>T</code> - Triazolam (Halcion, Short-term) [0.25mg/0.5mg/0.75mg]</td>
+<td align="center"><img src="halcion.jpg" width="200"></img></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>S</code> - Sugar Tablet (Placebo) [1 tab/2tabs/3tabs]</td>
+<td align="center"><img src="placebo.jpg" width="200"></img></td>
+</tr>
+</tbody>
+</table>
+<p><code>Mem_Score_Before</code> and <code>Mem_Score_After</code> features show how long it took to finish a memory test before/after drug exposure (in seconds).</p>
+<pre class="r"><code>islander_data &lt;- read_csv(&quot;memory-test-on-drugged-islanders-data/Islander_data.csv&quot;)
+sample_n(islander_data, 5) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">first_name</th>
+<th align="left">last_name</th>
+<th align="right">age</th>
+<th align="left">Happy_Sad_group</th>
+<th align="right">Dosage</th>
+<th align="left">Drug</th>
+<th align="right">Mem_Score_Before</th>
+<th align="right">Mem_Score_After</th>
+<th align="right">Diff</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Manuel</td>
+<td align="left">Lopez</td>
+<td align="right">25</td>
+<td align="left">H</td>
+<td align="right">1</td>
+<td align="left">T</td>
+<td align="right">59.5</td>
+<td align="right">61.5</td>
+<td align="right">2.0</td>
+</tr>
+<tr class="even">
+<td align="left">Jun</td>
+<td align="left">Durand</td>
+<td align="right">30</td>
+<td align="left">H</td>
+<td align="right">3</td>
+<td align="left">A</td>
+<td align="right">43.6</td>
+<td align="right">63.0</td>
+<td align="right">19.4</td>
+</tr>
+<tr class="odd">
+<td align="left">Carla</td>
+<td align="left">Kennedy</td>
+<td align="right">34</td>
+<td align="left">S</td>
+<td align="right">2</td>
+<td align="left">S</td>
+<td align="right">61.4</td>
+<td align="right">66.4</td>
+<td align="right">5.0</td>
+</tr>
+<tr class="even">
+<td align="left">Hama</td>
+<td align="left">Carrasco</td>
+<td align="right">36</td>
+<td align="left">H</td>
+<td align="right">3</td>
+<td align="left">A</td>
+<td align="right">61.8</td>
+<td align="right">87.4</td>
+<td align="right">25.6</td>
+</tr>
+<tr class="odd">
+<td align="left">Emma</td>
+<td align="left">Durand</td>
+<td align="right">34</td>
+<td align="left">S</td>
+<td align="right">1</td>
+<td align="left">T</td>
+<td align="right">49.0</td>
+<td align="right">40.5</td>
+<td align="right">-8.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="one-sample-test" class="section level2">
+<h2>One Sample Test</h2>
+<p><strong>The <span class="math inline">\(t\)</span>-distribution</strong><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> is useful for describing the distribution of the sample mean when the population standard deviation <span class="math inline">\(\sigma\)</span> is unknown (which is almost always). That’s why this test is also called <strong>One Sample <span class="math inline">\(t\)</span>-Test</strong><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.</p>
+<p>As the name of the test suggests, we are going to look at a single mean and whether it’s significantly different from the null value.</p>
+<p>However, in order to perform <span class="math inline">\(t\)</span>-test couple of conditions need to be met:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Independence</strong>: sampled observations need to be independent (for example, it would be a bad idea to include relatives like parents-children for a Memory Test expriment, since results can be affected by inheritance).</li>
+<li><strong>Randomness</strong>: probability of occurrence of each observation in a sample is equally likely (for example, it the population of interest is islanders, men and women should have equal chances to be added to the experiment).</li>
+<li><strong>Approximate Normality</strong>. The sample distribution size needs to be approximately normal, especially if the sample size is not large enough <span class="math inline">\((\geq30)\)</span> for Central Limit Theorem<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>.</li>
+</ol>
+<p>Also, test may be affected by extreme values (outliers) that are better to be removed.</p>
+<div id="example" class="section level3">
+<h3>Example</h3>
+<p>Let’s assume that previous studies suggest that average time to finish a memory test after 1mg of Alprazolam is 60 seconds. We have observed new data and we want to check if there is enough evidence to claim that average time to finish a memory test is actually &lt;60 seconds.</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: Average time to finish a memory test after 1mg of Alprazolam is 60 seconds, <span class="math inline">\(\mu = 60\)</span></li>
+<li><span class="math inline">\(H_A\)</span>: Average time to finish a memory test after 1mg of Alprazolam is less than 60 seconds, <span class="math inline">\(\mu &lt; 60\)</span></li>
+<li><span class="math inline">\(\alpha = 0.05\)</span></li>
+</ul>
+<pre class="r"><code>temp_df &lt;- islander_data %&gt;% 
+  filter(Drug == &quot;A&quot; &amp; Dosage == 1)
+
+hist(temp_df$Mem_Score_After, 
+     main = &quot;Distribution of Memory Test Results\nafter 1mg of Alprazolam&quot;,
+     xlab = &quot;Average time to finish a memory test&quot;)</code></pre>
+<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><strong>Summary statistics:</strong></p>
+<pre class="r"><code>temp_df %&gt;% 
+  summarise(mean = mean(Mem_Score_After),
+            std = sd(Mem_Score_After),
+            n = n()) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">mean</th>
+<th align="center">std</th>
+<th align="left">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">58.56</td>
+<td align="center">16.27</td>
+<td align="left">23</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Check for normality using Shapiro–Wilk test</strong><a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>:</p>
+<pre class="r"><code>shapiro.test(temp_df$Mem_Score_After)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  temp_df$Mem_Score_After
+## W = 0.95, p-value = 0.3</code></pre>
+<p>Note that under the Shapiro–Wilk test we have:</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: sample is normally distributed.</li>
+<li><span class="math inline">\(H_A\)</span>: sample isn’t normally distributed.</li>
+</ul>
+<p>p-value of <span class="math inline">\(0.3\)</span> means that we failed to reject the null hypothesis, meaning that there is not enough evidence to claim that sample is not normally distributed.</p>
+<p>Using formula from above we can calculate point estimate (average value of the set), null estimate (60 seconds) and standard error.</p>
+<pre class="r"><code>alpha &lt;- 0.05
+null_estimate &lt;- 60
+n &lt;- length(temp_df$Mem_Score_After)
+x_bar &lt;- mean(temp_df$Mem_Score_After)
+SE &lt;- sd(temp_df$Mem_Score_After) / sqrt(n)
+
+t_stat &lt;- (x_bar - null_estimate) / SE
+t_stat</code></pre>
+<pre><code>## [1] -0.4255</code></pre>
+<p>After we calculated <span class="math inline">\(t\)</span> statistic we can find the area under the <span class="math inline">\(t\)</span> distribution curve from <span class="math inline">\(-\infty\)</span> to <span class="math inline">\(t_{\text{calc}}\)</span>. <span class="math inline">\(t\)</span> distribution has only one parameter - degrees of freedom, that are equal <span class="math inline">\(df = n-1\)</span>, where <span class="math inline">\(n\)</span> is the sample size.</p>
+<details>
+<summary>Code</summary>
+<p>
+<pre class="r"><code>df &lt;- n-1
+x &lt;- seq(-5,5,0.05)
+t_dist &lt;- dt(x, df)
+
+ggplot() +
+  geom_line(
+    mapping = aes(x = x, y = t_dist),
+    color = &quot;black&quot;, size = 1.5) +   
+  geom_vline(xintercept = t_stat) +
+  geom_area(
+    mapping = aes(x = x[x &lt;= t_stat], y = t_dist[x &lt;= t_stat]),
+    fill=&quot;red&quot;, alpha=0.6) +
+  labs(title = &quot;t-Distribution&quot;,
+       y = &quot;Density&quot;) +
+  theme_classic()</code></pre>
+</p>
+</details>
+<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-12-1.png" width="480" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pval &lt;- pt(t_stat, df)
+print(paste0(&quot;p-value is: &quot;, round(pval, 3)))
+## [1] &quot;p-value is: 0.337&quot;
+alpha &lt;- 0.05
+nhst_result(pval, alpha)
+## [1] &quot;p-value is greater than alpha (0.05). Fail to reject null hypothesis.&quot;</code></pre>
+<blockquote>
+<p>As we can see, we failed to reject the null hypothesis, or in other words, there is not enough evidence to claim that the average time to finish a memory test after 1mg of Alprazolam is less than 60 seconds.</p>
+</blockquote>
+<p>Alternatively, we can let R and Python do the calculations for us:</p>
+<details>
+<summary><strong>R</strong></summary>
+<p>
+<p>Built-in function <code>t.test</code>:</p>
+<pre class="r"><code>t.test(temp_df$Mem_Score_After, 
+       mu = 60, 
+       conf.level = 0.95,
+       alternative = &quot;less&quot;)</code></pre>
+<pre><code>## 
+##  One Sample t-test
+## 
+## data:  temp_df$Mem_Score_After
+## t = -0.43, df = 22, p-value = 0.3
+## alternative hypothesis: true mean is less than 60
+## 95 percent confidence interval:
+##   -Inf 64.38
+## sample estimates:
+## mean of x 
+##     58.56</code></pre>
+</p>
+</details>
+<details>
+<summary><strong>Python</strong></summary>
+<p>
+<p><code>ttest_1samp</code> function from <code>scipy.stats</code> module:</p>
+<pre class="python"><code>islander_data = pd.read_csv(&quot;memory-test-on-drugged-islanders-data/Islander_data.csv&quot;)
+temp_df = islander_data[(islander_data[&quot;Drug&quot;] == &quot;A&quot;) &amp; (islander_data[&quot;Dosage&quot;] == 1)] 
+
+t_stat, p_val = stats.ttest_1samp(a=temp_df[&#39;Mem_Score_After&#39;], popmean=60)
+
+print(f&quot;Calculated test statistic: {t_stat: .4f}\np-value: {p_val/2: .4f}&quot;)</code></pre>
+<pre><code>## Calculated test statistic: -0.4255
+## p-value:  0.3373</code></pre>
+<p><em>Note that <code>ttest_1samp</code> returns the result for <b>two-sided</b> test, that is why we need to divide the p-value by 2.</em></p>
+</p>
+</details>
+</div>
+</div>
+<div id="two-sample-test-independent-groups" class="section level2">
+<h2>Two Sample Test (Independent Groups)</h2>
+<p>Now we are going to compare the mean values of two groups and check if there is statistically significant difference between them. The same way, in order to perform Two-Sample <span class="math inline">\(t\)</span>-test the condition of <strong>independence</strong> need to be met, meaning that you cannot compare difference of a memory test result before and after the pill for the same person. Also, for two sample <span class="math inline">\(t\)</span> test the <strong>variance of two groups need to be equal</strong>. There is a way<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> to perform <span class="math inline">\(t\)</span>-test when variances are not equal but it will not be covered here.</p>
+<div id="example-1" class="section level3">
+<h3>Example</h3>
+<p>Let’s check if there is a difference in memory test results after 5 mg of Alprazolam and 3 tabs of sugar pills (placebo).</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: There is no difference in test results fare 5 mg of Alprazolam and 3 tabs of sugar pills, <span class="math inline">\(\mu_{\text{Alprozam}} - \mu_{\text{Placebo}} = 0\)</span></li>
+<li><span class="math inline">\(H_A\)</span>: There is a difference in test results fare 5 mg of Alprazolam and 3 tabs of sugar pills, <span class="math inline">\(\mu_{\text{Alprozam}} - \mu_{\text{Placebo}} \neq 0\)</span></li>
+<li><span class="math inline">\(\alpha = 0.05\)</span></li>
+</ul>
+<details>
+<summary>Code</summary>
+<p>
+<pre class="r"><code>islander_data %&gt;% 
+  filter(Drug %in% c(&quot;A&quot;, &quot;S&quot;) &amp; Dosage == 3) %&gt;% 
+  group_by(Drug) %&gt;% 
+  ggplot() +
+    geom_boxplot(aes(x = Drug, y = Mem_Score_After, color = Drug), show.legend = FALSE) +
+  labs(title = &quot;Distribution of Memory Test Result after Drugs&quot;,
+       y = &quot;Memory Test Score&quot;) +
+  theme_classic()</code></pre>
+</p>
+</details>
+<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><strong>Summary statistics:</strong></p>
+<pre class="r"><code>islander_data %&gt;% 
+  filter(Drug %in% c(&quot;A&quot;, &quot;S&quot;) &amp; Dosage == 3) %&gt;% 
+  group_by(Drug) %&gt;% 
+  summarise(mean = mean(Mem_Score_After),
+            std = sd(Mem_Score_After),
+            n = n()) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Drug</th>
+<th align="right">mean</th>
+<th align="right">std</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">77.54</td>
+<td align="right">18.94</td>
+<td align="right">22</td>
+</tr>
+<tr class="even">
+<td align="left">S</td>
+<td align="right">57.60</td>
+<td align="right">18.40</td>
+<td align="right">22</td>
+</tr>
+</tbody>
+</table>
+<p>Test statistic can be calculated in the same way:</p>
+<p><span class="math display">\[t_{\text{calc}} = \frac{\text{Point Estimate} - \text{Null Estimate}}{SE}\]</span></p>
+<ul>
+<li>Point estimate is the difference of two sample means: <span class="math inline">\(\bar{x}_{\text{Alprozam}} - \bar{x}_{\text{Placebo}}\)</span>;</li>
+<li>Null estimate is the value under the null hypothesis: <span class="math inline">\(\mu_{\text{Alprozam}} - \mu_{\text{Placebo}} = 0\)</span></li>
+<li>“Pooled” standard error: <span class="math inline">\(SE = \sqrt{\frac{s^2_\text{Alprazolam}}{n_\text{Alprazolam}} + \frac{s^2_\text{Placebo}}{n_\text{Placebo}}}\)</span></li>
+<li>Degrees of freedom: <span class="math inline">\(df = n_{\text{Alprozam}} + n_{\text{Placebo}} - 2\)</span></li>
+</ul>
+<pre class="r"><code>alp_sample &lt;- islander_data %&gt;% 
+  filter(Drug == &quot;A&quot; &amp; Dosage == 3) %&gt;% 
+  select(Mem_Score_After) 
+pla_sample &lt;- islander_data %&gt;% 
+  filter(Drug == &quot;S&quot; &amp; Dosage == 3) %&gt;% 
+  select(Mem_Score_After)
+
+# sample means
+x_alp &lt;- mean(alp_sample$Mem_Score_After)
+x_pla &lt;- mean(pla_sample$Mem_Score_After)
+
+# sample variance
+var_alp &lt;- var(alp_sample$Mem_Score_After)
+var_pla &lt;- var(pla_sample$Mem_Score_After)
+
+# sample standard deviations
+s_alp &lt;- sd(alp_sample$Mem_Score_After)
+s_pla &lt;- sd(pla_sample$Mem_Score_After)
+
+# sample size
+n_alp &lt;- length(alp_sample$Mem_Score_After)
+n_pla &lt;- length(pla_sample$Mem_Score_After)
+
+# degrees of freedom
+df &lt;- n_alp + n_pla - 2 </code></pre>
+<p><strong>Check for normality:</strong></p>
+<pre class="r"><code># normality check
+shapiro.test(alp_sample$Mem_Score_After)
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  alp_sample$Mem_Score_After
+## W = 0.97, p-value = 0.7
+shapiro.test(pla_sample$Mem_Score_After)
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  pla_sample$Mem_Score_After
+## W = 0.96, p-value = 0.5</code></pre>
+<p>p-value = 0.5, so we failed to reject the null hypothesis that samples are normally distributed.</p>
+<p><strong>Check that variances are equal:</strong></p>
+<p>For this purpose we are going to use the proportion of two variances <span class="math inline">\(\frac{s_1^2}{s_2^2}\)</span> to estimate the proportion of population variances <span class="math inline">\(\frac{\sigma_1^2}{\sigma_2^2}\)</span> using <strong><span class="math inline">\(F\)</span>-distribution</strong><a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>.</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: population variances are equal <span class="math inline">\(\frac{\sigma_1^2}{\sigma_2^2} = 1\)</span>.</li>
+<li><span class="math inline">\(H_A\)</span>: population variances are different <span class="math inline">\(\frac{\sigma_1^2}{\sigma_2^2} \neq 1\)</span>.</li>
+</ul>
+<p><span class="math inline">\(F\)</span>-distribution has two parameters <span class="math inline">\(df_1 = n_1 - 1\)</span> and <span class="math inline">\(df_2 = n_2 -1\)</span>, where <span class="math inline">\(n_1\)</span> and <span class="math inline">\(n_2\)</span> is the size of samples.</p>
+<pre class="r"><code># check for equal variances
+var_ratio &lt;- var_alp / var_pla
+pval &lt;- pf(var_ratio, n_alp-1, n_pla-1, lower.tail = FALSE) * 2
+print(paste0(&quot;p-value is: &quot;, round(pval, 3)))</code></pre>
+<pre><code>## [1] &quot;p-value is: 0.896&quot;</code></pre>
+<p>p-value is 0.9 so we failed to reject null hypothesis that population variances are equal.</p>
+<details>
+<summary><strong>R</strong></summary>
+<p>
+<p>Built-in function <code>var.test</code> to compare two variances:</p>
+<pre class="r"><code>var.test(alp_sample$Mem_Score_After, pla_sample$Mem_Score_After)</code></pre>
+<pre><code>## 
+##  F test to compare two variances
+## 
+## data:  alp_sample$Mem_Score_After and pla_sample$Mem_Score_After
+## F = 1.1, num df = 21, denom df = 21, p-value = 0.9
+## alternative hypothesis: true ratio of variances is not equal to 1
+## 95 percent confidence interval:
+##  0.4399 2.5518
+## sample estimates:
+## ratio of variances 
+##              1.059</code></pre>
+</p>
+</details>
+<p><br>
+Calculate <span class="math inline">\(t\)</span>-statistic:</p>
+<pre class="r"><code>se &lt;- sqrt(s_alp^2/n_alp + s_pla^2/n_pla)
+t_stat &lt;- (x_alp - x_pla - 0) / se
+t_stat</code></pre>
+<pre><code>## [1] 3.542</code></pre>
+<details>
+<summary>Code</summary>
+<p>
+<pre class="r"><code>x &lt;- seq(-5,5,0.01)
+t_dist &lt;- dt(x, df)
+
+ggplot() +
+  geom_line(
+    mapping = aes(x = x, y = t_dist),
+    color = &quot;black&quot;, size = 1.5) +   
+  geom_vline(xintercept = t_stat) +
+  geom_vline(xintercept = -t_stat) +
+  geom_area(
+    mapping = aes(x = x[x &lt;= -t_stat], y = t_dist[x &lt;= -t_stat]),
+    fill=&quot;red&quot;, alpha=0.6) +
+  geom_area(
+    mapping = aes(x = x[x &gt;= t_stat], y = t_dist[x &gt;= t_stat]),
+    fill=&quot;red&quot;, alpha=0.6) +
+  labs(title = &quot;t-Distribution&quot;,
+       y = &quot;Density&quot;) +
+  theme_classic()</code></pre>
+</p>
+</details>
+<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-25-1.png" width="480" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pval &lt;- pt(-t_stat, df)*2
+print(paste0(&quot;p-value is: &quot;, round(pval, 3)))
+## [1] &quot;p-value is: 0.001&quot;
+alpha &lt;- 0.05
+nhst_result(pval, alpha)
+## [1] &quot;p-value is less than alpha (0.05). Reject null hypothesis.&quot;</code></pre>
+<blockquote>
+<p>We reject the null hypothesis, or in other words, there is evidence that the average time to finish a memory test after 5 mg of Alprazolam and 3 tabs of sugar pills is different.</p>
+</blockquote>
+<details>
+<summary><strong>R</strong></summary>
+<p>
+<pre class="r"><code>t.test(alp_sample$Mem_Score_After,
+       pla_sample$Mem_Score_After,
+       null_estimate = 0,
+       conf.level = 0.95,
+       alternative = &quot;two.sided&quot;,
+       var.equal = TRUE) </code></pre>
+<pre><code>## 
+##  Two Sample t-test
+## 
+## data:  alp_sample$Mem_Score_After and pla_sample$Mem_Score_After
+## t = 3.5, df = 42, p-value = 0.001
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##   8.58 31.30
+## sample estimates:
+## mean of x mean of y 
+##     77.54     57.60</code></pre>
+</p>
+</details>
+<details>
+<summary><strong>Python</strong></summary>
+<p>
+<p><code>ttest_ind</code> function from <code>stats</code> module:</p>
+<pre class="python"><code>alp_mask = (islander_data[&quot;Drug&quot;] == &quot;A&quot;) &amp; (islander_data[&quot;Dosage&quot;] == 3)
+pla_mask = (islander_data[&quot;Drug&quot;] == &quot;S&quot;) &amp; (islander_data[&quot;Dosage&quot;] == 3)
+
+alp_sample = islander_data[&quot;Mem_Score_After&quot;][alp_mask]
+pla_sample = islander_data[&quot;Mem_Score_After&quot;][pla_mask]
+
+t_stat, p_val = stats.ttest_ind(alp_sample, pla_sample, equal_var=True)
+
+print(f&quot;Calculated test statistic: {t_stat: .4f}\np-value: {p_val: .5f}&quot;)</code></pre>
+<pre><code>## Calculated test statistic:  3.5422
+## p-value:  0.00099</code></pre>
+</p>
+</details>
+</div>
+</div>
+<div id="two-sample-test-paired-groups" class="section level2">
+<h2>Two Sample Test (Paired Groups)</h2>
+<p>But what if we still need to compare difference in <strong>dependent</strong> groups (for example before and after the drug)? We cannot use <span class="math inline">\(t\)</span>-test for paired sample, however we can use a single sample <span class="math inline">\(t\)</span>-test for a <strong>sample of differences</strong>.</p>
+<div id="example-2" class="section level3">
+<h3>Example</h3>
+<p>Let’s now check if there is a significance difference (in any direction, so two-tailed test) in memory test results before and after 0.75mg of Triazolam. Now we are going to use the variable <code>Diff</code> which was calculated as <code>Mem_Score_After - Mem_Score_Before</code>.</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: There is no difference in test results before and after 0.75mg of Triazolam, <span class="math inline">\(\mu_{\text{diff}} = 0\)</span></li>
+<li><span class="math inline">\(H_A\)</span>: There is a difference in test results before and after 0.75mg of Triazolam, <span class="math inline">\(\mu_{\text{diff}} \neq 0\)</span></li>
+<li><span class="math inline">\(\alpha = 0.05\)</span></li>
+</ul>
+<pre class="r"><code>temp_df &lt;- islander_data %&gt;% 
+  filter(Drug == &quot;T&quot; &amp; Dosage == 3)
+
+hist(temp_df$Diff, 
+     main = &quot;Distribution of Difference of Memory Test Results\nbefore and after 0.75mg of Triazolam&quot;,
+     xlab = &quot;Average time to finish a memory test&quot;)</code></pre>
+<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-29-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>There are two outliers (difference in test results is less than <span class="math inline">\(-20\)</span>) that need to be removed for further analysis:</p>
+<pre class="r"><code>temp_df[temp_df$Diff &lt; -20, ] %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">first_name</th>
+<th align="left">last_name</th>
+<th align="right">age</th>
+<th align="left">Happy_Sad_group</th>
+<th align="right">Dosage</th>
+<th align="left">Drug</th>
+<th align="right">Mem_Score_Before</th>
+<th align="right">Mem_Score_After</th>
+<th align="right">Diff</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Noemie</td>
+<td align="left">Kennedy</td>
+<td align="right">73</td>
+<td align="left">H</td>
+<td align="right">3</td>
+<td align="left">T</td>
+<td align="right">110.0</td>
+<td align="right">87.8</td>
+<td align="right">-22.2</td>
+</tr>
+<tr class="even">
+<td align="left">Naoto</td>
+<td align="left">Lopez</td>
+<td align="right">39</td>
+<td align="left">H</td>
+<td align="right">3</td>
+<td align="left">T</td>
+<td align="right">50.8</td>
+<td align="right">30.4</td>
+<td align="right">-20.4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Summary statistics:</strong></p>
+<pre class="r"><code>temp_df %&gt;% 
+  filter(Diff &gt; -20) %&gt;% 
+  summarise(n = n(),
+            mean = mean(Diff),
+            std = sd(Diff)) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">n</th>
+<th align="center">mean</th>
+<th align="center">std</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">19</td>
+<td align="center">0.3368</td>
+<td align="center">6.186</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Check for normality:</strong></p>
+<pre class="r"><code># normality check
+shapiro.test(temp_df$Diff[temp_df$Diff &gt; -20])</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  temp_df$Diff[temp_df$Diff &gt; -20]
+## W = 0.95, p-value = 0.4</code></pre>
+<p>p-value is 0.4, so we failed to reject the null hypothesis that sample is normally distributed.</p>
+<details>
+<summary><strong>R</strong></summary>
+<p>
+<pre class="r"><code>results &lt;- t.test(temp_df$Diff[temp_df$Diff &gt; -20], 
+       mu = 0, 
+       conf.level = 0.95,
+       alternative = &quot;two.sided&quot;)
+
+results</code></pre>
+<pre><code>## 
+##  One Sample t-test
+## 
+## data:  temp_df$Diff[temp_df$Diff &gt; -20]
+## t = 0.24, df = 18, p-value = 0.8
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  -2.644  3.318
+## sample estimates:
+## mean of x 
+##    0.3368</code></pre>
+</p>
+</details>
+<details>
+<summary><strong>Python</strong></summary>
+<p>
+<pre class="python"><code>temp_df = islander_data[(islander_data[&quot;Drug&quot;] == &quot;T&quot;) &amp; (islander_data[&quot;Dosage&quot;] == 3)] 
+temp_df = temp_df[temp_df[&quot;Diff&quot;] &gt; -20]
+
+t_stat, p_val = stats.ttest_1samp(a=temp_df[&#39;Diff&#39;], popmean=0)
+
+print(f&quot;Calculated test statistic: {t_stat: .4f}\np-value: {p_val: .4f}&quot;)</code></pre>
+<pre><code>## Calculated test statistic:  0.2374
+## p-value:  0.8150</code></pre>
+</p>
+</details>
+<p><br>Since it’s two-tailed test we are interested in area under the curve from two sides of the distribution:</p>
+<details>
+<summary>Code</summary>
+<p>
+<pre class="r"><code>n &lt;- dim(temp_df)[1]
+t_stat &lt;- results$statistic
+df &lt;- n-1
+x &lt;- seq(-5,5,0.01)
+t_dist &lt;- dt(x, df)
+
+ggplot() +
+  geom_line(
+    mapping = aes(x = x, y = t_dist),
+    color = &quot;black&quot;, size = 1.5) +   
+  geom_vline(xintercept = t_stat) +
+  geom_vline(xintercept = -t_stat) +
+  geom_area(
+    mapping = aes(x = x[x &lt;= -t_stat], y = t_dist[x &lt;= -t_stat]),
+    fill=&quot;red&quot;, alpha=0.6) +
+  geom_area(
+    mapping = aes(x = x[x &gt;= t_stat], y = t_dist[x &gt;= t_stat]),
+    fill=&quot;red&quot;, alpha=0.6) +
+  labs(title = &quot;t-Distribution&quot;,
+       y = &quot;Density&quot;) +
+  theme_classic()</code></pre>
+</p>
+</details>
+<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-36-1.png" width="480" style="display: block; margin: auto;" /></p>
+<blockquote>
+<p>p-value is 0.8, which is greater than <span class="math inline">\(\alpha\)</span>, that’s why failed to reject null hypothesis. In other words, there is not enough evidence to claim that there is a difference in memory test results before and after 0.75mg of Triazolam.</p>
+</blockquote>
+</div>
+</div>
+<div id="comparing-more-than-two-means-anova" class="section level2">
+<h2>Comparing More than Two Means (ANOVA)</h2>
+<p>Imagine that you want to compare the difference of the means in three or more sample. There is no way to do this using <span class="math inline">\(t\)</span>-test, however it can be done using <strong>ANOVA</strong> (ANalysis Of VAriance) and <span class="math inline">\(F\)</span> statistic. In general form the hypothesis for ANOVA are described as:</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: there is no difference among the group means, <span class="math inline">\(\mu_1=\mu_2=...=\mu_k\)</span></li>
+<li><span class="math inline">\(H_A\)</span>: at least two groups are significantly different (but it doesn’t specify which pair exactly).</li>
+<li><span class="math inline">\(k\)</span> - number of groups.</li>
+</ul>
+<p>Test statistic <span class="math inline">\(F\)</span> can be calculated as:</p>
+<p><span class="math display">\[F_\text{calc} = \frac{\text{Variability beetween groups}}{\text{Variability within groups}}\]</span></p>
+<p>Conditions that need to be met for ANOVA:</p>
+<ul>
+<li><strong>Within Group Independence</strong>: sampled observations must be independent.</li>
+<li><strong>Between Group Independence</strong>: non-paired groups.</li>
+<li><strong>Approximate Normality</strong> of sample distributions.</li>
+<li><strong>Equal Variance</strong> among groups.</li>
+</ul>
+<div id="example-3" class="section level3">
+<h3>Example</h3>
+<p>Let’s look for simplicity at the small number of samples and check whether there is a significant difference in memory test results before and after 0.25mg (<code>Dosage = 1</code>), 0.5mg (<code>Dosage = 2</code>) and 0.75mg (<code>Dosage = 3</code>) of Triazolam (3 samples in total).</p>
+<details>
+<summary>Code</summary>
+<p>
+<pre class="r"><code>islander_data %&gt;% 
+  filter(Drug == &quot;T&quot;) %&gt;%
+  ggplot() +
+    geom_boxplot(aes(x = as.factor(Dosage), y = Diff, color = as.factor(Dosage)), 
+                 show.legend = FALSE) +
+  labs(title = &quot;Distribution of Difference in Memory Test Result\nbefore and after Triazolam&quot;,
+       y = &quot;Memory Test Score&quot;,
+       x = &quot;Dosage&quot;) +
+  theme_classic()</code></pre>
+</p>
+</details>
+<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-38-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>There are some outliers that need to be removed for further analysis:</p>
+<pre class="r"><code>islander_data %&gt;% 
+  filter(Drug == &quot;T&quot; &amp; (Diff &lt; -15 | Diff &gt; 15)) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">first_name</th>
+<th align="left">last_name</th>
+<th align="right">age</th>
+<th align="left">Happy_Sad_group</th>
+<th align="right">Dosage</th>
+<th align="left">Drug</th>
+<th align="right">Mem_Score_Before</th>
+<th align="right">Mem_Score_After</th>
+<th align="right">Diff</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Naoto</td>
+<td align="left">Lopez</td>
+<td align="right">35</td>
+<td align="left">H</td>
+<td align="right">2</td>
+<td align="left">T</td>
+<td align="right">33.4</td>
+<td align="right">57.5</td>
+<td align="right">24.1</td>
+</tr>
+<tr class="even">
+<td align="left">Noemie</td>
+<td align="left">Kennedy</td>
+<td align="right">73</td>
+<td align="left">H</td>
+<td align="right">3</td>
+<td align="left">T</td>
+<td align="right">110.0</td>
+<td align="right">87.8</td>
+<td align="right">-22.2</td>
+</tr>
+<tr class="odd">
+<td align="left">Naoto</td>
+<td align="left">Lopez</td>
+<td align="right">39</td>
+<td align="left">H</td>
+<td align="right">3</td>
+<td align="left">T</td>
+<td align="right">50.8</td>
+<td align="right">30.4</td>
+<td align="right">-20.4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Summary statistics:</strong></p>
+<pre class="r"><code>islander_data %&gt;% 
+  filter(Drug == &quot;T&quot; &amp; Diff &gt; -15 &amp; Diff &lt; 15) %&gt;%
+  group_by(Dosage) %&gt;% 
+  summarise(mean = mean(Diff),
+            std = sd(Diff),
+            n = n()) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Dosage</th>
+<th align="center">mean</th>
+<th align="center">std</th>
+<th align="center">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="center">-1.2409</td>
+<td align="center">5.530</td>
+<td align="center">22</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="center">0.0571</td>
+<td align="center">4.450</td>
+<td align="center">21</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="center">0.3368</td>
+<td align="center">6.186</td>
+<td align="center">19</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>temp_df &lt;- islander_data %&gt;% 
+  filter(Drug == &quot;T&quot; &amp; Diff &gt; -15 &amp; Diff &lt; 15)
+
+oned_sample &lt;- temp_df$Diff[temp_df$Dosage == 1]
+twod_sample &lt;- temp_df$Diff[temp_df$Dosage == 2]
+threed_sample &lt;- temp_df$Diff[temp_df$Dosage == 3]</code></pre>
+<details>
+<summary><strong>Check for normality</strong></summary>
+<p>
+<pre class="r"><code># check for normality
+shapiro.test(oned_sample)
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  oned_sample
+## W = 0.96, p-value = 0.6
+shapiro.test(twod_sample)
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  twod_sample
+## W = 0.93, p-value = 0.2
+shapiro.test(threed_sample)
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  threed_sample
+## W = 0.95, p-value = 0.4</code></pre>
+Condition is met.
+</p>
+</details>
+<details>
+<summary><strong>Check for equal variances</strong></summary>
+<p>
+<pre class="r"><code># check for equal variances
+var.test(oned_sample, twod_sample)
+## 
+##  F test to compare two variances
+## 
+## data:  oned_sample and twod_sample
+## F = 1.5, num df = 21, denom df = 20, p-value = 0.3
+## alternative hypothesis: true ratio of variances is not equal to 1
+## 95 percent confidence interval:
+##  0.6309 3.7454
+## sample estimates:
+## ratio of variances 
+##              1.545
+var.test(oned_sample, threed_sample)
+## 
+##  F test to compare two variances
+## 
+## data:  oned_sample and threed_sample
+## F = 0.8, num df = 21, denom df = 18, p-value = 0.6
+## alternative hypothesis: true ratio of variances is not equal to 1
+## 95 percent confidence interval:
+##  0.3143 1.9678
+## sample estimates:
+## ratio of variances 
+##             0.7993
+var.test(twod_sample, threed_sample)
+## 
+##  F test to compare two variances
+## 
+## data:  twod_sample and threed_sample
+## F = 0.52, num df = 20, denom df = 18, p-value = 0.2
+## alternative hypothesis: true ratio of variances is not equal to 1
+## 95 percent confidence interval:
+##  0.2022 1.2944
+## sample estimates:
+## ratio of variances 
+##             0.5175</code></pre>
+Condition is met.
+</p>
+</details>
+<p><br></p>
+<p>Total variability (<span class="math inline">\(SST\)</span>, sum of squares total) in the memory test results can be divided into variability attributed to the drug (<strong>between group variability</strong>) and variability attributed to other factors (<strong>within group variability</strong>).</p>
+<p><span class="math display">\[SST = SSG + SSE\]</span></p>
+<p><span class="math display">\[SST = \sum_{i=1}^n \left[ (y_i - \bar{y})^2 \right]\]</span></p>
+<ul>
+<li><span class="math inline">\(\bar{y}\)</span>: total average value.</li>
+</ul>
+<p><span class="math inline">\(SSG\)</span>: sum of squares for groups, measures the variability between groups. Explained variability.</p>
+<p><span class="math display">\[SSG = \sum_{j=1}^k \left[ n_j (\bar{y_j} - \bar{y})^2 \right]\]</span></p>
+<ul>
+<li><span class="math inline">\(n_j\)</span>: number of samples in <span class="math inline">\(j\)</span> group.</li>
+<li><span class="math inline">\(\bar{y_j}\)</span>: average value for the <span class="math inline">\(j\)</span> group.</li>
+</ul>
+<p><span class="math inline">\(SSE\)</span>: sum of squares for error, measures the variability within groups. Unexplained variability.</p>
+<p>We can rewrite the formula for <span class="math inline">\(F\)</span> statistic:</p>
+<p><span class="math display">\[F = \frac{MSG}{MSE}\]</span></p>
+<p><span class="math inline">\(MSG\)</span>: Mean Squares for groups. Average variability <strong>between</strong> groups calculated as the total variability (sum of squares) scaled by degrees of freedom.</p>
+<p><span class="math display">\[MSG = \frac{SSG}{df_{\text{group}}}\]</span></p>
+<p><span class="math inline">\(MSE\)</span> Mean Squares for error. Average variability <strong>within</strong> groups calculated as the total variability (sum of squares) scaled by degrees of freedom.</p>
+<p><span class="math display">\[MSE = \frac{SSE}{df_{\text{Error}}}\]</span></p>
+<p>Degrees of freedom can be found as:</p>
+<ul>
+<li><span class="math inline">\(df_{\text{total}} = n - 1\)</span></li>
+<li><span class="math inline">\(df_{\text{group}} = k -1\)</span></li>
+<li><span class="math inline">\(df_{\text{error}} = df_{\text{total}} - df_{\text{group}}\)</span></li>
+</ul>
+<pre class="r"><code># calculations
+
+# degrees of freedom
+n &lt;- dim(temp_df)[1]
+k &lt;- length(unique(temp_df$Dosage))
+df_total &lt;- n - 1
+df_group &lt;- k - 1
+df_error &lt;- df_total - df_group
+
+# sum of squares
+y_bar &lt;- mean(temp_df$Diff)
+(sst &lt;- sum((temp_df$Diff - y_bar)^2))
+## [1] 1757
+
+(temp_df %&gt;% 
+  group_by(Dosage) %&gt;% 
+  summarise(n = n(),
+            yj_bar = mean(Diff)) %&gt;% 
+  mutate(ssg = n * (yj_bar - y_bar)^2) %&gt;% 
+  summarise(sum(ssg)) %&gt;% 
+  as.numeric() -&gt; ssg)
+## [1] 29.84
+
+(sse &lt;- sst - ssg)
+## [1] 1727
+
+# average variability
+(msg &lt;- ssg / df_group)
+## [1] 14.92
+(mse &lt;- sse / df_error)
+## [1] 29.27
+
+F_stat &lt;- msg / mse
+print(paste0(&quot;Calculated F statistic: &quot;, round(F_stat, 3)))
+## [1] &quot;Calculated F statistic: 0.51&quot;</code></pre>
+<details>
+<summary>Code</summary>
+<p>
+<pre class="r"><code>x &lt;- seq(0,4,0.01)
+f_dist &lt;- df(x, df_group, df_error)
+
+ggplot() +
+  geom_line(
+    mapping = aes(x = x, y = f_dist),
+    color = &quot;black&quot;, size = 1.5) +   
+  geom_vline(xintercept = F_stat) +
+  geom_area(
+    mapping = aes(x = x[x &gt;= F_stat], y = f_dist[x &gt;= F_stat]),
+    fill=&quot;red&quot;, alpha=0.6) +
+  labs(title = &quot;F-Distribution&quot;,
+       y = &quot;Density&quot;) +
+  theme_classic()</code></pre>
+</p>
+</details>
+<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-46-1.png" width="480" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pval &lt;- pf(F_stat, df_group, df_error, lower.tail = FALSE)
+print(paste0(&quot;p-value is: &quot;, round(pval, 3)))
+## [1] &quot;p-value is: 0.603&quot;
+alpha &lt;- 0.05
+nhst_result(pval, alpha)
+## [1] &quot;p-value is greater than alpha (0.05). Fail to reject null hypothesis.&quot;</code></pre>
+<blockquote>
+<p>We failed to reject the null hypothesis meaning there is not enough evidence to claim that at least one pair of group is significantly different.</p>
+</blockquote>
+<p>As you can see there is a lot of calculations, so most of the time we rely on software:</p>
+<details>
+<summary><strong>R</strong></summary>
+<p>
+<p>Built-int <code>aov</code> function:</p>
+<pre class="r"><code>aov(formula = Diff ~ as.factor(Dosage),
+    data = temp_df) %&gt;% 
+  tidy() %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">df</th>
+<th align="right">sumsq</th>
+<th align="right">meansq</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">as.factor(Dosage)</td>
+<td align="right">2</td>
+<td align="right">29.84</td>
+<td align="right">14.92</td>
+<td align="right">0.5098</td>
+<td align="right">0.6033</td>
+</tr>
+<tr class="even">
+<td align="left">Residuals</td>
+<td align="right">59</td>
+<td align="right">1726.89</td>
+<td align="right">29.27</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</p>
+</details>
+<details>
+<summary><strong>Python</strong></summary>
+<p>
+<p><code>f_oneway</code> function from <code>stats</code> module:</p>
+<pre class="python"><code>temp_df = islander_data[(islander_data[&quot;Drug&quot;] == &quot;T&quot;) &amp; (islander_data[&quot;Diff&quot;].between(-15, 15))]
+F_stat, p_val = stats.f_oneway(
+  temp_df[&quot;Diff&quot;][temp_df[&quot;Dosage&quot;] == 1], 
+  temp_df[&quot;Diff&quot;][temp_df[&quot;Dosage&quot;] == 2],
+  temp_df[&quot;Diff&quot;][temp_df[&quot;Dosage&quot;] == 3])
+  
+print(f&quot;Calculated test statistic: {F_stat: .4f}\np-value: {p_val: .4f}&quot;)</code></pre>
+<pre><code>## Calculated test statistic:  0.5098
+## p-value:  0.6033</code></pre>
+</p>
+</details>
+</div>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>I hope that you have better understanding of algorithms for inference for a population means after this tutorial. As you could see, calculation of p-value can be easily done by R/Python, however there is lots of work for us before and after the calculations. We always need to choose the right test, check conditions for this test and interpret the results in context of the problem, etc. Also, making decision based only on p-value isn’t always enough and also we need to take into account an <strong>effect size</strong>, that we be described in later tutorial.</p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://www.kaggle.com/steveahn/memory-test-on-drugged-islanders-data" class="uri">https://www.kaggle.com/steveahn/memory-test-on-drugged-islanders-data</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p><a href="https://en.wikipedia.org/wiki/Student%27s_t-distribution" class="uri">https://en.wikipedia.org/wiki/Student%27s_t-distribution</a><a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p><a href="https://en.wikipedia.org/wiki/Student%27s_t-test" class="uri">https://en.wikipedia.org/wiki/Student%27s_t-test</a><a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p><a href="https://en.wikipedia.org/wiki/Central_limit_theorem" class="uri">https://en.wikipedia.org/wiki/Central_limit_theorem</a><a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p><a href="https://en.wikipedia.org/wiki/Shapiro%E2%80%93Wilk_test" class="uri">https://en.wikipedia.org/wiki/Shapiro%E2%80%93Wilk_test</a><a href="#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p><a href="http://www.real-statistics.com/students-t-distribution/two-sample-t-test-uequal-variances/" class="uri">http://www.real-statistics.com/students-t-distribution/two-sample-t-test-uequal-variances/</a><a href="#fnref6" class="footnote-back">↩</a></p></li>
+<li id="fn7"><p><a href="https://en.wikipedia.org/wiki/F-distribution" class="uri">https://en.wikipedia.org/wiki/F-distribution</a><a href="#fnref7" class="footnote-back">↩</a></p></li>
+</ol>
+</div>

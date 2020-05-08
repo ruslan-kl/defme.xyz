@@ -6,11 +6,13 @@ image:
   caption: 'Image credit: <a style="background-color:black;color:white;text-decoration:none;padding:4px 6px;font-family:-apple-system, BlinkMacSystemFont, &quot;San Francisco&quot;, &quot;Helvetica Neue&quot;, Helvetica, Ubuntu, Roboto, Noto, &quot;Segoe UI&quot;, Arial, sans-serif;font-size:12px;font-weight:bold;line-height:1.2;display:inline-block;border-radius:3px" href="https://unsplash.com/@elliottengelmann?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge" target="_blank" rel="noopener noreferrer" title="Download free do whatever you want high-resolution photos from Elliott Engelmann"><span style="display:inline-block;padding:2px 3px"><svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:auto;position:relative;vertical-align:middle;top:-2px;fill:white" viewBox="0 0 32 32"><title>unsplash-logo</title><path d="M10 9V0h12v9H10zm12 5h10v18H0V14h10v9h12v-9z"></path></svg></span><span style="display:inline-block;padding:2px 3px">Elliott Engelmann</span></a>'
   focal_point: ""
   placement: 3
-  preview_only: false
+  preview_only: true
 date: "2020-04-22"
 categories: ["Machine Learning"]
 tags: ["Machine Learning", "Decision Trees"]
 ---
+
+<p style="font-size:15px"><i> Cover image credit: <a style="background-color:black;color:white;text-decoration:none;padding:4px 6px;font-family:-apple-system, BlinkMacSystemFont, &quot;San Francisco&quot;, &quot;Helvetica Neue&quot;, Helvetica, Ubuntu, Roboto, Noto, &quot;Segoe UI&quot;, Arial, sans-serif;font-size:12px;font-weight:bold;line-height:1.2;display:inline-block;border-radius:3px" href="https://unsplash.com/@elliottengelmann?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge" target="_blank" rel="noopener noreferrer" title="Download free do whatever you want high-resolution photos from Elliott Engelmann"><span style="display:inline-block;padding:2px 3px"><svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:auto;position:relative;vertical-align:middle;top:-2px;fill:white" viewBox="0 0 32 32"><title>unsplash-logo</title><path d="M10 9V0h12v9H10zm12 5h10v18H0V14h10v9h12v-9z"></path></svg></span><span style="display:inline-block;padding:2px 3px">Elliott Engelmann</span></a></i></p>
 
 ## Table of contents
 
@@ -437,7 +439,46 @@ We are left with just 1 observation in each node. Predicted class for node `BMI:
 
 Using the information from the "female" branch we can visualize the final tree.
 
-```{r}
+<details><summary>**Code**</summary>
+<p>
+```{r, eval=FALSE}
+node0 <- "Blood Pressure"
+node1 <- "Drug B (P=1.)"
+node2 <- "Gender"
+node3 <- "BMI"
+node4 <- "BMI "
+node5 <- "Drug A (P=0.66)"
+node6 <- "Drug A (P=1.)"
+node7 <- "Drug A (P=1.) "
+node8 <- "Drug B (P=1.) "
+nodeNames <- c(node0, node1, node2, node3, 
+               node4, node5, node6, node7, node8)
+        
+# create new graph object
+rEG <- new("graphNEL", nodes=nodeNames, edgemode="directed")
+rEG <- addEdge(node0, node1, rEG)
+rEG <- addEdge(node0, node2, rEG)
+rEG <- addEdge(node2, node3, rEG)
+rEG <- addEdge(node2, node4, rEG)
+rEG <- addEdge(node3, node5, rEG)
+rEG <- addEdge(node3, node6, rEG)
+rEG <- addEdge(node4, node7, rEG)
+rEG <- addEdge(node4, node8, rEG)
+
+plot(rEG, attrs = at)
+text(150, 300, "normal", col="black")
+text(260, 300, "not normal", col="black")
+text(200, 190, "male", col="black")
+text(310, 190, "female", col="black")
+text(100, 80, "normal", col="black")
+text(230, 80, "not normal", col="black")
+text(290, 80, "normal", col="black")
+text(420, 80, "not normal", col="black")
+```
+</p>
+</details>
+
+```{r, echo=FALSE}
 node0 <- "Blood Pressure"
 node1 <- "Drug B (P=1.)"
 node2 <- "Gender"

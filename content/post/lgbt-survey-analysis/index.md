@@ -6,12 +6,14 @@ image:
   caption: 'Image by <a href="https://pixabay.com/users/Wokandapix-614097/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2495948">Wokandapix</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2495948">Pixabay</a>'
   focal_point: ""
   placement: 3
-  preview_only: false
+  preview_only: true
 categories: ["Data Visualization"]
 tags: ["Data Visualization", "Survey Analysis", "Python"]
 ---
 
-**Table of Contents**
+<p style="font-size:15px"><i> Cover image credit: <b><a href="https://pixabay.com/users/Wokandapix-614097/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2495948">Wokandapix</a></b> from <b><a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2495948">Pixabay</a></b></i></p>
+
+## Table of Contents
 - <a href='#intro'>1. Project overview and objectives</a> 
     - <a href='#survey'>1.1. The aim of the survey</a>
     - <a href='#data'>1.2. Data set overview</a>
@@ -31,11 +33,11 @@ tags: ["Data Visualization", "Survey Analysis", "Python"]
 
 **Note: I've hidden all the code blocks since they have taken so much place and have been somewhat distracting. I pushed the [notebook](https://nbviewer.jupyter.org/github/ruslan-kl/lgbt/blob/master/lgbt-survey-analysis.ipynb) to [GitHub repo](https://github.com/ruslan-kl/lgbt).**
 
-# <a id='intro'>1. Project overview and objectives</a>
+## <a id='intro'>1. Project overview and objectives</a>
 
 The main purpose of this project is the visualization of survey results conducted in EU countries (and Croatia) among 93000 LGBT people (2012). I tried to estimate the overall score of "suitability" (in other words, how good is this county for LGBT community?) by assigning weights to answers and getting average scores for each of the question block. Then I look at some particular questions to explore how satisfied LGBT communiy is and what they think would improve their lives in the countries they live in.
 
-## <a id='survey'>1.1. The aim of the survey</a>
+### <a id='survey'>1.1. The aim of the survey</a>
 
 > *The aim of the EU LGBT survey was to obtain robust and comparable data that would allow a better understanding of how lesbian, gay, bisexual and transgender (LGBT) people living in the European Union (EU) and Croatia experience the enjoyment of fundamental rights. The survey collected data from 93,079 people across the EU and Croatia through an anonymous online questionnaire, collecting the views, perceptions, opinions and experiences of persons aged 18 years or over, who self-identify as lesbian, gay, bisexual or transgender. The topics related to various fundamental rights issues with an emphasis on experienced discrimination, violence and harassment. The survey and all related activities covered the 27 current EU Member States as well as Croatia. FRA designed the questionnaire and finalised it in consultation with its Scientific Committee, relevant stakeholders and civil society organisations, as well as independent academics and national experts with expertise in the area of discrimination on grounds of sexual orientation and
 gender identity.*
@@ -51,7 +53,7 @@ gender identity.*
 
 *Taken from [EU LGBT survey technical report. Methodology, online survey, questionnaire and sample](https://fra.europa.eu/sites/default/files/eu-lgbt-survey-technical-report_en.pdf)*
 
-## <a id='data'>1.2. Data set overview</a>
+### <a id='data'>1.2. Data set overview</a>
 
 Data set consist of 5 .csv files that represent 5 blocks of questions.
 
@@ -154,17 +156,17 @@ The schema of all the tables is identical:
 </div>
 
 
-# <a id='bi'>2. Choropleth map visualization of responses</a>
+## <a id='bi'>2. Choropleth map visualization of responses</a>
 
 This visualization allows to explore single question response by country. The dashboard was done using **Microsoft Power BI**. Original map visualization can be find [here](https://fra.europa.eu/en/publications-and-resources/data-and-maps/survey-fundamental-rights-lesbian-gay-bisexual-and).
 
 <iframe width="700" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiMzI4MzMzN2QtYTA5NC00MTZkLTllYTAtMWMzOWQxNjlmZjI5IiwidCI6ImMzNWFiZTIwLTI1N2QtNDcxZi04ZDI3LWU3MTI5ZjA5MjJmNSIsImMiOjl9" frameborder="0" allowFullScreen="true"></iframe>
 
-# <a id='score'>3. Country 'suitable' scores</a>
+## <a id='score'>3. Country 'suitable' scores</a>
 
 In this section I am going to score each country by the survey answers to find out which county is "most suitable" for LGBT community. Each country will get a score in 4 blocks **Daily Life**, **Discrimination**, **Violence and Harassment** and **Rights Awareness** (I didn't include **Transgender Specific Questions** here since the segment of people is transgenders only) and a **final score**. 
 
-## <a id='method'>3.1. Scoring methodology</a>
+### <a id='method'>3.1. Scoring methodology</a>
 
 First of all the ratio of Lesbians/Gays/Bisexuals/Transgenders are not equal amoung countries. In order to 'normalize' I am going to set the weight of each subset:
 
@@ -231,7 +233,7 @@ In that case `Score` can also be in the range `[-1, 1]` with `-1` being negative
 <br>
 So the `Total Block Score` for this block is going to be $\frac{-0.25 -.075 + 0.15 + 0.2 - 0.3 + 0.2}{6} = −0.0125$. After computing the scores for 4 blocks the `Total Score` is going to be the average of four `Total Block Scores`.
 
-## <a id='dl'>3.2. Daily Life</a>
+### <a id='dl'>3.2. Daily Life</a>
 
 Let's start with `Daily Life` questions block where subjects answered questions about day to day living as a lesbian, gay, bisexual or transgender person.
 
@@ -241,7 +243,8 @@ Let's start with `Daily Life` questions block where subjects answered questions 
 * The first place goes to **Netherlands**🇳🇱 (which means that the responses about daily life for this country were more positive comparing to other countries).
 * The last place goes to **Cyprus**🇨🇾.
 
-## <a id='ra'>3.3. Right Awareness</a>
+
+### <a id='ra'>3.3. Right Awareness</a>
 
 
 <iframe src="plotly-output/3.html" width="700" height="450" frameborder="0"></iframe>
@@ -249,7 +252,7 @@ Let's start with `Daily Life` questions block where subjects answered questions 
 * The first place goes to **Sweden🇸🇪** (which means that the people from the LGBT community are much more aware about their rights in that country comparing to other).
 * The last place goes to **Greece**🇬🇷.
 
-## <a id='disc'>3.4. Discrimination</a>
+### <a id='disc'>3.4. Discrimination</a>
 
 
 <iframe src="plotly-output/4.html" width="700" height="450" frameborder="0"></iframe>
@@ -258,7 +261,7 @@ Let's start with `Daily Life` questions block where subjects answered questions 
 * The first place goes to **Malta**🇲🇹 (which means that the people from the LGBT feel less discriminated in that country comparing to other countries).
 * The last place goes to **Romania**🇷🇴.
 
-## <a id='vah'>3.5. Violence and Harassment</a>
+### <a id='vah'>3.5. Violence and Harassment</a>
 
 
 <iframe src="plotly-output/5.html" width="700" height="450" frameborder="0"></iframe>
@@ -267,7 +270,7 @@ Let's start with `Daily Life` questions block where subjects answered questions 
 * The first place goes to **Finland🇫🇮** (which means that the people from the LGBT are beinge the subject of harassment or violation less often in that country comparing to other countries).
 * The last place goes to **Estonia**🇪🇪.
 
-## <a id='overall'>3.6. Overall rank</a>
+### <a id='overall'>3.6. Overall rank</a>
 
 By taking the average of 4 scores we can rescale that values to get the final `Total Rank`.
 
@@ -282,11 +285,11 @@ So!
 
 Here is something to think about when you are considering a destination for travelling/relocation.
 
-# <a id='lbgt'>4. What the LGBT community says</a>
+## <a id='lbgt'>4. What the LGBT community says</a>
 
 After I got the `Total Rank` for each country I want to look at some particular responses to find out how does LGBT community respond to living in EU countries.
 
-## <a id='satisfied'>4.1.  Do people fell satisfied in EU countries?</a>
+### <a id='satisfied'>4.1.  Do people fell satisfied in EU countries?</a>
 
 There was a question "**All things considered, how satisfied would you say you are with your life these days?**" in Daily Life questions block where subjects could pick a value from 0 to 10 (10 being the most satisfied) of how satisfied they feel. Using the same methodology I am going to find a score for this single question and compare it to the `Total Rank` from previous section.
 
@@ -303,7 +306,7 @@ There was a question "**All things considered, how satisfied would you say you a
 
 In such way, `-` sign in `Satisfaction Rank` column means that LGBT community feel more satisfied in that county as I would guess from `Total Rank` value. `+` sign tells the opposite.
 
-## <a id='open'>4.2. Are people being open about their orientation?</a>
+### <a id='open'>4.2. Are people being open about their orientation?</a>
 
 Next question "**4 levels of being open about LGBT background**" from Daiy Life questions block allow to see how open the LGBT community is in the country they live in. The possible answers are Never Open, Rarerly Open, Fairly Open, Very Open.
 
@@ -323,7 +326,7 @@ The countries in the plot are sorted by the `Total Rank` (the top countries have
 * Gay Men have the highest `Very Open` rate (23%) while Bisexual Men have the highest `Never Open` rate (75%).
 * In total, about 27% of people from LGBT community being open about their orientaion (`Very Open` + `Fairly Open`), especially in Netherlands🇳🇱 (15%).
 
-## <a id='comf'>4.3. What would allow to live more comfortable?</a>
+### <a id='comf'>4.3. What would allow to live more comfortable?</a>
 
 There were a series of questions "**What would allow you to be more comfortable living as a LGB person?**" with 8 different options that allow to explore what is missing in current situation in the country for the LGBT community to feel better.
 
@@ -344,6 +347,6 @@ There were a series of questions "**What would allow you to be more comfortable 
 * 16% of people feel satisfied with the **The possibility to marry and/or register a partnership** (top countries are: Netherlands🇳🇱, Belgium🇧🇪 and Portugal🇵🇹)
 * 9% of people don't think that **The possibility to foster / adopt children** would change a lot.
 
-# <a id='end'>5. Conclusions</a>
+## <a id='end'>5. Conclusions</a>
 
 So I estimated the country ranks of goodness for LGBT community, showed in what countries people are more open about their orientation and what do people think would make their life better. It's just a small piece of insights that could be extracted from this survey so many more questions can be answered. You can also check the [official report](https://fra.europa.eu/en/publication/2014/eu-lgbt-survey-european-union-lesbian-gay-bisexual-and-transgender-survey-main) with survey analysis results.

@@ -5,18 +5,15 @@ date: "2020-04-11"
 image:
   caption: 'Image by <a href="https://pixabay.com/users/janjf93-3084263/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2311261">janjf93</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2311261">Pixabay</a>'
   placement: 3
+  preview_only: true
 summary: Create interactive plots using plotly library in R.
 categories: ["Data Visualization"]
 tags: ["Data Visualization", "R", "plotly"]
 ---
 
-```{r message=FALSE}
-library(knitr)
-library(tidyverse)
-library(plotly)
-```
+<p style="font-size:15px"><i> Cover image credit: <b><a href="https://pixabay.com/users/janjf93-3084263/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2311261">janjf93</a></b> from <b><a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2311261">Pixabay</a></b></i></p>
 
-# Table of contents
+## Table of contents
 
 - [What is `plotly`](#plotly) 
 - [What is Data Visualization](#data-viz)
@@ -34,7 +31,13 @@ library(plotly)
 - [Rule of Thumb](#thumb-rule)
 - [References](#references)
 
-# <a name="plotly">What is `plotly`</a>
+```{r message=FALSE}
+library(knitr)
+library(tidyverse)
+library(plotly)
+```
+
+## <a name="plotly">What is `plotly`</a>
 
 <center><img src="https://raw.githubusercontent.com/cldougl/plot_images/add_r_img/plotly_2017.png" width="400"></img></center>
 
@@ -44,7 +47,7 @@ Plotly.R is free and open source and you can view the source, report issues or c
 
 **[Website](https://plotly.com/)** | **[GitHub](https://github.com/plotly)** | **[Gallery](https://plotly.com/r/)**
 
-# <a name="data-viz">What is Data Visualization</a>
+## <a name="data-viz">What is Data Visualization</a>
 
 First of all, let's start with the definiton what is "Data Visualization". Wikidepia defines it as:
 
@@ -114,9 +117,9 @@ nobel_df %>%
   kable()
 ```
 
-# <a name="chart-types">Chart Types</a>
+## <a name="chart-types">Chart Types</a>
 
-## <a name="line-chart">Line Chart</a>
+### <a name="line-chart">Line Chart</a>
 
 Let's start with the most basic chart line chart. 
 
@@ -152,7 +155,7 @@ As a summary we can say that line chart usually is used to show the connection b
 
 You can add more **categorical** variables as the new line charts (for example, you could a new line a line of total awards for Peace category, so your plot would show the relationship for two categories - `Total Awards` and `Awards for Peace Category`).
 
-## <a name="area-chart">Area Chart</a>
+### <a name="area-chart">Area Chart</a>
 
 A slight modification of the line chart would be **the area chart**.
 
@@ -181,7 +184,7 @@ nobel_df %>%
 
 <iframe src="3.html" width="700" height="450" frameborder="0"></iframe>
 
-### <a name="stacked-area-chart">Stacked Area Chart</a>
+#### <a name="stacked-area-chart">Stacked Area Chart</a>
 
 As you can see that previous example was not really different from the regular line plot. However, there is a modification of area chart called **stacked area chart** that is way more useful. It is used to show the difference when two or more labels are included in the plot. When multiple attributes are included, the first attribute is plotted as a line with color fill followed by the second attribute, and so on. For example, let's take a look on how amount of awards differs among men and women for each year.
 
@@ -280,19 +283,19 @@ You can add more **categorical** variables as new area charts.
 
 What if we wanted to see how the number of awards by `Category` (categorical variable) on `x` axis rather then by `Year`? We couldn't use line chart, however, we could use the **bar chart**.
 
-## <a name="bar-chart">Bar chart</a>
+### <a name="bar-chart">Bar chart</a>
 
 > **A bar chart** or bar graph is a chart or graph that presents categorical data with rectangular bars with heights or lengths proportional to the values that they represent. The bars can be plotted vertically or horizontally. A vertical bar chart is sometimes called a column chart. [[4]](#4)
 
 We have seen the example of bar chart in the [example](#data-viz) section. So we can jump straight forward to bar chart modifications.
 
-### <a name="grouped-bar-chart">Grouped Bar chart</a>
+#### <a name="grouped-bar-chart">Grouped Bar chart</a>
 
 > In **a grouped bar chart**, for each categorical group there are two or more bars. These bars are color-coded to represent a particular grouping. example, a business owner with two stores might make a grouped bar chart with different colored bars to represent each store: the horizontal axis would show the months of the year and the vertical axis would show the revenue. [[4]](#4)
 
 This is useful for side-by-side comparison among categories.
 
-### <a name="stacked-bar-chart">Stacked Bar Chart</a>
+#### <a name="stacked-bar-chart">Stacked Bar Chart</a>
 
 > **The stacked bar chart** stacks bars that represent different groups on top of each other. The height of the resulting bar shows the combined result of the groups. However, stacked bar charts are not suited to data sets where some groups have negative values. In such cases, grouped bar chart are preferable.
 >
@@ -391,7 +394,7 @@ Note, that it would be still ok to plot `total awards` by `year` using bar chart
 * For side-by-side comparison among different **categorical** variables you can use **grouped bar chart**.
 * If you are interested in total proportion of each **categorical** variable for each `x` values (for vertical bar chart) you can use **stacked bar chart** (or **normalized stacked bar chart**).
 
-## <a name="scatter-plot">Scatter Plot</a>
+### <a name="scatter-plot">Scatter Plot</a>
 
 What if you had two numerical variables, but none of them is in "datetime" format so it makes no sence for a line chart? Bar charts are also not useful for such type of problem since you would have dozens of bars for each of the numerical variable you put on `x` axis. In such case **scatter plots** might help.
 
@@ -448,7 +451,7 @@ Scatter plots are useful to see the shape of relationship between variables (lin
 
 You can also add a third **numerical** variable for comparison. This type of plots are usually called **bubble chart**.
 
-### <a name="bubble-chart">Bubble Chart</a>
+##### <a name="bubble-chart">Bubble Chart</a>
 
 > **A bubble chart** is a type of chart that displays three dimensions of data. Each entity with its triplet of associated data is plotted as a disk that expresses two of the vi values through the disk's xy location and the third through its size. Bubble charts can facilitate the understanding of social, economical, medical, and other scientific relationships. [[7]](#7)
 
@@ -510,7 +513,7 @@ edindex_df %>%
 * Third **continuous** varialbe can be added as a **size** of a point.
 * Third **categorical** varialbe can be added as a **color/shape** of a point.
 
-## <a name="pie-chart">Pie chart</a>
+### <a name="pie-chart">Pie chart</a>
 
 Next type of chat is a bit controversial since it has been criticized among specialist since it can be hard to ompare different sections of a given chart, or to compare data across different charts.
 
@@ -538,7 +541,7 @@ It seems readable since we have jsut 6 categories but imageine what would happen
 
 * pie chart shows the normalized propotion of a **categorical** variable.
 
-## <a name="heatmap">Heatmap</a>
+### <a name="heatmap">Heatmap</a>
 
 > **A heat map** (or heatmap) is a data visualization technique that shows magnitude of a phenomenon as color in two dimensions. The variation in color may be by hue or intensity, giving obvious visual cues to the reader about how the phenomenon is clustered or varies over space. [[9]](9)
 
@@ -571,7 +574,7 @@ plot_ly(
 
 This is it for now. In the next part I want to show the examples of map chart, custom buttons/sliders and animations. 
 
-# <a name="thumb-rule">Rule of Thumb</a>
+## <a name="thumb-rule">Rule of Thumb</a>
 
 To sum up, here are some guidelines for creating a good chart no matter what library you are using (`plotly`, `ggplot`, etc.):
 
@@ -582,7 +585,7 @@ To sum up, here are some guidelines for creating a good chart no matter what lib
 5. Describe it with titles, labels and annotations.
 6. Don’t go crazy with colors.
 
-# <a name="references">References</a>
+## <a name="references">References</a>
 
 * <a name="1">[1]</a>: https://en.wikipedia.org/wiki/Data_visualization
 * <a name="2">[2]</a>: https://en.wikipedia.org/wiki/Line_chart

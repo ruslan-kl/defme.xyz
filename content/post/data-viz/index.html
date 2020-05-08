@@ -5,6 +5,7 @@ date: "2020-04-11"
 image:
   caption: 'Image by <a href="https://pixabay.com/users/janjf93-3084263/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2311261">janjf93</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2311261">Pixabay</a>'
   placement: 3
+  preview_only: true
 summary: Create interactive plots using plotly library in R.
 categories: ["Data Visualization"]
 tags: ["Data Visualization", "R", "plotly"]
@@ -12,11 +13,11 @@ tags: ["Data Visualization", "R", "plotly"]
 
 
 
-<pre class="r"><code>library(knitr)
-library(tidyverse)
-library(plotly)</code></pre>
-<div id="table-of-contents" class="section level1">
-<h1>Table of contents</h1>
+<p style="font-size:15px">
+<i> Cover image credit: <b><a href="https://pixabay.com/users/janjf93-3084263/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2311261">janjf93</a></b> from <b><a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2311261">Pixabay</a></b></i>
+</p>
+<div id="table-of-contents" class="section level2">
+<h2>Table of contents</h2>
 <ul>
 <li><a href="#plotly">What is <code>plotly</code></a></li>
 <li><a href="#data-viz">What is Data Visualization</a></li>
@@ -42,9 +43,12 @@ library(plotly)</code></pre>
 <li><a href="#thumb-rule">Rule of Thumb</a></li>
 <li><a href="#references">References</a></li>
 </ul>
+<pre class="r"><code>library(knitr)
+library(tidyverse)
+library(plotly)</code></pre>
 </div>
-<div id="what-is-plotly" class="section level1">
-<h1><a name="plotly">What is <code>plotly</code></a></h1>
+<div id="what-is-plotly" class="section level2">
+<h2><a name="plotly">What is <code>plotly</code></a></h2>
 <center>
 <img src="https://raw.githubusercontent.com/cldougl/plot_images/add_r_img/plotly_2017.png" width="400"></img>
 </center>
@@ -52,8 +56,8 @@ library(plotly)</code></pre>
 <p>Plotly.R is free and open source and you can view the source, report issues or contribute on GitHub.</p>
 <p><strong><a href="https://plotly.com/">Website</a></strong> | <strong><a href="https://github.com/plotly">GitHub</a></strong> | <strong><a href="https://plotly.com/r/">Gallery</a></strong></p>
 </div>
-<div id="what-is-data-visualization" class="section level1">
-<h1><a name="data-viz">What is Data Visualization</a></h1>
+<div id="what-is-data-visualization" class="section level2">
+<h2><a name="data-viz">What is Data Visualization</a></h2>
 <p>First of all, let’s start with the definiton what is “Data Visualization”. Wikidepia defines it as:</p>
 <blockquote>
 <p><strong>Data visualization</strong> is the graphic representation of data. It involves producing images that communicate relationships among the represented data to viewers of the images. This communication is achieved through the use of a systematic mapping between graphic marks and data values in the creation of the visualization. This mapping establishes how data values will be represented visually, determining how and to what extent a property of a graphic mark, such as size or color, will change to reflect change in the value of a datum. <a href="#1">[1]</a></p>
@@ -311,10 +315,10 @@ nobel_df %&gt;%
 </tbody>
 </table>
 </div>
-<div id="chart-types" class="section level1">
-<h1><a name="chart-types">Chart Types</a></h1>
-<div id="line-chart" class="section level2">
-<h2><a name="line-chart">Line Chart</a></h2>
+<div id="chart-types" class="section level2">
+<h2><a name="chart-types">Chart Types</a></h2>
+<div id="line-chart" class="section level3">
+<h3><a name="line-chart">Line Chart</a></h3>
 <p>Let’s start with the most basic chart line chart.</p>
 <blockquote>
 <p><strong>A line chart</strong> or line plot or line graph or curve chart is a type of chart which displays information as a series of data points called ‘markers’ connected by straight line segments. <a href="#2">[2]</a></p>
@@ -344,8 +348,8 @@ nobel_df %&gt;%
 </ul>
 <p>You can add more <strong>categorical</strong> variables as the new line charts (for example, you could a new line a line of total awards for Peace category, so your plot would show the relationship for two categories - <code>Total Awards</code> and <code>Awards for Peace Category</code>).</p>
 </div>
-<div id="area-chart" class="section level2">
-<h2><a name="area-chart">Area Chart</a></h2>
+<div id="area-chart" class="section level3">
+<h3><a name="area-chart">Area Chart</a></h3>
 <p>A slight modification of the line chart would be <strong>the area chart</strong>.</p>
 <blockquote>
 <p><strong>An area chart</strong> or area graph displays graphically quantitative data. It is based on the line chart. The area between axis and line are commonly emphasized with colors, textures and hatchings. Commonly one compares two or more quantities with an area chart. <a href="#3">[3]</a></p>
@@ -369,8 +373,8 @@ nobel_df %&gt;%
     margin = list(t = 70))</code></pre>
 <iframe src="3.html" width="700" height="450" frameborder="0">
 </iframe>
-<div id="stacked-area-chart" class="section level3">
-<h3><a name="stacked-area-chart">Stacked Area Chart</a></h3>
+<div id="stacked-area-chart" class="section level4">
+<h4><a name="stacked-area-chart">Stacked Area Chart</a></h4>
 <p>As you can see that previous example was not really different from the regular line plot. However, there is a modification of area chart called <strong>stacked area chart</strong> that is way more useful. It is used to show the difference when two or more labels are included in the plot. When multiple attributes are included, the first attribute is plotted as a line with color fill followed by the second attribute, and so on. For example, let’s take a look on how amount of awards differs among men and women for each year.</p>
 <p>However, this requires some manual manipulation with the data frame.</p>
 <pre class="r"><code># select count for women by all years
@@ -492,21 +496,21 @@ subplot(fig1, fig2, nrows = 2, shareX = TRUE) %&gt;%
 <p>What if we wanted to see how the number of awards by <code>Category</code> (categorical variable) on <code>x</code> axis rather then by <code>Year</code>? We couldn’t use line chart, however, we could use the <strong>bar chart</strong>.</p>
 </div>
 </div>
-<div id="bar-chart" class="section level2">
-<h2><a name="bar-chart">Bar chart</a></h2>
+<div id="bar-chart" class="section level3">
+<h3><a name="bar-chart">Bar chart</a></h3>
 <blockquote>
 <p><strong>A bar chart</strong> or bar graph is a chart or graph that presents categorical data with rectangular bars with heights or lengths proportional to the values that they represent. The bars can be plotted vertically or horizontally. A vertical bar chart is sometimes called a column chart. <a href="#4">[4]</a></p>
 </blockquote>
 <p>We have seen the example of bar chart in the <a href="#data-viz">example</a> section. So we can jump straight forward to bar chart modifications.</p>
-<div id="grouped-bar-chart" class="section level3">
-<h3><a name="grouped-bar-chart">Grouped Bar chart</a></h3>
+<div id="grouped-bar-chart" class="section level4">
+<h4><a name="grouped-bar-chart">Grouped Bar chart</a></h4>
 <blockquote>
 <p>In <strong>a grouped bar chart</strong>, for each categorical group there are two or more bars. These bars are color-coded to represent a particular grouping. example, a business owner with two stores might make a grouped bar chart with different colored bars to represent each store: the horizontal axis would show the months of the year and the vertical axis would show the revenue. <a href="#4">[4]</a></p>
 </blockquote>
 <p>This is useful for side-by-side comparison among categories.</p>
 </div>
-<div id="stacked-bar-chart" class="section level3">
-<h3><a name="stacked-bar-chart">Stacked Bar Chart</a></h3>
+<div id="stacked-bar-chart" class="section level4">
+<h4><a name="stacked-bar-chart">Stacked Bar Chart</a></h4>
 <blockquote>
 <p><strong>The stacked bar chart</strong> stacks bars that represent different groups on top of each other. The height of the resulting bar shows the combined result of the groups. However, stacked bar charts are not suited to data sets where some groups have negative values. In such cases, grouped bar chart are preferable.</p>
 <p>&lt; Grouped bar graphs usually present the information in the same order in each grouping. Stacked bar graphs present the information in the same sequence on each bar. <a href="#4">[4]</a></p>
@@ -601,8 +605,8 @@ stacked_bc</code></pre>
 </ul>
 </div>
 </div>
-<div id="scatter-plot" class="section level2">
-<h2><a name="scatter-plot">Scatter Plot</a></h2>
+<div id="scatter-plot" class="section level3">
+<h3><a name="scatter-plot">Scatter Plot</a></h3>
 <p>What if you had two numerical variables, but none of them is in “datetime” format so it makes no sence for a line chart? Bar charts are also not useful for such type of problem since you would have dozens of bars for each of the numerical variable you put on <code>x</code> axis. In such case <strong>scatter plots</strong> might help.</p>
 <blockquote>
 <p><strong>A scatter plot</strong> (also called a scatterplot, scatter graph, scatter chart, scattergram, or scatter diagram) is a type of plot or mathematical diagram using Cartesian coordinates to display values for typically two variables for a set of data. If the points are coded (color/shape/size), one additional variable can be displayed. The data are displayed as a collection of points, each having the value of one variable determining the position on the horizontal axis and the value of the other variable determining the position on the vertical axis. <a href="#5">[5]</a></p>
@@ -737,8 +741,8 @@ kable(head(edindex_df))</code></pre>
 </ul>
 <p>Scatter plots are useful to see the shape of relationship between variables (linear, exponential, etc.) and for visual evaluation of correlation <a href="#6">[6]</a>.</p>
 <p>You can also add a third <strong>numerical</strong> variable for comparison. This type of plots are usually called <strong>bubble chart</strong>.</p>
-<div id="bubble-chart" class="section level3">
-<h3><a name="bubble-chart">Bubble Chart</a></h3>
+<div id="bubble-chart" class="section level5">
+<h5><a name="bubble-chart">Bubble Chart</a></h5>
 <blockquote>
 <p><strong>A bubble chart</strong> is a type of chart that displays three dimensions of data. Each entity with its triplet of associated data is plotted as a disk that expresses two of the vi values through the disk’s xy location and the third through its size. Bubble charts can facilitate the understanding of social, economical, medical, and other scientific relationships. <a href="#7">[7]</a></p>
 </blockquote>
@@ -794,8 +798,8 @@ kable(head(edindex_df))</code></pre>
 </ul>
 </div>
 </div>
-<div id="pie-chart" class="section level2">
-<h2><a name="pie-chart">Pie chart</a></h2>
+<div id="pie-chart" class="section level3">
+<h3><a name="pie-chart">Pie chart</a></h3>
 <p>Next type of chat is a bit controversial since it has been criticized among specialist since it can be hard to ompare different sections of a given chart, or to compare data across different charts.</p>
 <blockquote>
 <p><strong>A pie chart</strong> (or a circle chart) is a circular statistical graphic, which is divided into slices to illustrate numerical proportion. In a pie chart, the arc length of each slice (and consequently its central angle and area), is proportional to the quantity it represents. While it is named for its resemblance to a pie which has been sliced, there are variations on the way it can be presented. <a href="#8">[8]</a></p>
@@ -817,8 +821,8 @@ kable(head(edindex_df))</code></pre>
 <li>pie chart shows the normalized propotion of a <strong>categorical</strong> variable.</li>
 </ul>
 </div>
-<div id="heatmap" class="section level2">
-<h2><a name="heatmap">Heatmap</a></h2>
+<div id="heatmap" class="section level3">
+<h3><a name="heatmap">Heatmap</a></h3>
 <blockquote>
 <p><strong>A heat map</strong> (or heatmap) is a data visualization technique that shows magnitude of a phenomenon as color in two dimensions. The variation in color may be by hue or intensity, giving obvious visual cues to the reader about how the phenomenon is clustered or varies over space. <a href="9">[9]</a></p>
 </blockquote>
@@ -848,8 +852,8 @@ plot_ly(
 <p>This is it for now. In the next part I want to show the examples of map chart, custom buttons/sliders and animations.</p>
 </div>
 </div>
-<div id="rule-of-thumb" class="section level1">
-<h1><a name="thumb-rule">Rule of Thumb</a></h1>
+<div id="rule-of-thumb" class="section level2">
+<h2><a name="thumb-rule">Rule of Thumb</a></h2>
 <p>To sum up, here are some guidelines for creating a good chart no matter what library you are using (<code>plotly</code>, <code>ggplot</code>, etc.):</p>
 <ol style="list-style-type: decimal">
 <li>Think about what answer should you visualization answer (do you want to show the trend? distribution?).</li>
@@ -860,8 +864,8 @@ plot_ly(
 <li>Don’t go crazy with colors.</li>
 </ol>
 </div>
-<div id="references" class="section level1">
-<h1><a name="references">References</a></h1>
+<div id="references" class="section level2">
+<h2><a name="references">References</a></h2>
 <ul>
 <li><a name="1">[1]</a>: <a href="https://en.wikipedia.org/wiki/Data_visualization" class="uri">https://en.wikipedia.org/wiki/Data_visualization</a></li>
 <li><a name="2">[2]</a>: <a href="https://en.wikipedia.org/wiki/Line_chart" class="uri">https://en.wikipedia.org/wiki/Line_chart</a></li>

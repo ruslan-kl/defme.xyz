@@ -6,13 +6,20 @@ image:
   caption: 'Image credit: <a style="background-color:black;color:white;text-decoration:none;padding:4px 6px;font-family:-apple-system, BlinkMacSystemFont, &quot;San Francisco&quot;, &quot;Helvetica Neue&quot;, Helvetica, Ubuntu, Roboto, Noto, &quot;Segoe UI&quot;, Arial, sans-serif;font-size:12px;font-weight:bold;line-height:1.2;display:inline-block;border-radius:3px" href="https://unsplash.com/@_louisreed?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge" target="_blank" rel="noopener noreferrer" title="Download free do whatever you want high-resolution photos from Louis Reed"><span style="display:inline-block;padding:2px 3px"><svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:auto;position:relative;vertical-align:middle;top:-2px;fill:white" viewBox="0 0 32 32"><title>unsplash-logo</title><path d="M10 9V0h12v9H10zm12 5h10v18H0V14h10v9h12v-9z"></path></svg></span><span style="display:inline-block;padding:2px 3px">Louis Reed</span></a>'
   focal_point: ""
   placement: 3
-  preview_only: false
+  preview_only: true
 categories: ["Probability"]
 tags: ["Statistics", "Probability", "R", "Bayesian Inference"]
 ---
 
 
 
+<p style="font-size:15px">
+<i> Cover image credit: <a style="background-color:black;color:white;text-decoration:none;padding:4px 6px;font-family:-apple-system, BlinkMacSystemFont, &quot;San Francisco&quot;, &quot;Helvetica Neue&quot;, Helvetica, Ubuntu, Roboto, Noto, &quot;Segoe UI&quot;, Arial, sans-serif;font-size:12px;font-weight:bold;line-height:1.2;display:inline-block;border-radius:3px" href="https://unsplash.com/@_louisreed?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge" target="_blank" rel="noopener noreferrer" title="Download free do whatever you want high-resolution photos from Louis Reed"><span style="display:inline-block;padding:2px 3px"><svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:auto;position:relative;vertical-align:middle;top:-2px;fill:white" viewBox="0 0 32 32">
+<title>
+unsplash-logo
+</title>
+<path d="M10 9V0h12v9H10zm12 5h10v18H0V14h10v9h12v-9z"></path></svg></span><span style="display:inline-block;padding:2px 3px">Louis Reed</span></a></i>
+</p>
 <div id="table-of-contents" class="section level2">
 <h2>Table of contents</h2>
 <ul>
@@ -148,6 +155,9 @@ Note, that the probability that the subject has HIV is about <span class="math i
 <div id="using-r" class="section level2">
 <h2><a name="r">Using R</a></h2>
 <p>We still have <span class="math inline">\(19\%\)</span> chance that person doesn’t have HIV. What would be the next step to be sure with diagnosis? We can do the second test! The only difference now is that the initial (prior) probability of HIV for this subject is going to be <span class="math inline">\(0.8106564\)</span>, not <span class="math inline">\(0.000428\)</span> since now we have some information. We are going to use R to do the calculations:</p>
+<details>
+<summary><strong>Custom R functions</strong></summary>
+<p>
 <pre class="r"><code>BayesRuleProba &lt;- function(p_D, sensitivity, specificity, test_result, statistic) {
   p_neg_given_noD &lt;- specificity
   p_pos_given_D &lt;- sensitivity
@@ -178,6 +188,8 @@ Note, that the probability that the subject has HIV is about <span class="math i
         
   return(p)
 }</code></pre>
+</p>
+</details>
 <div id="initial-state-1" class="section level3">
 <h3>Initial state:</h3>
 <pre class="r"><code>prevalance &lt;- 42.8/100000

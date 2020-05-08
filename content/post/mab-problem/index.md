@@ -6,16 +6,18 @@ image:
   caption: 'Image by <a href="https://pixabay.com/users/AidanHowe-15857243/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=5012428">Aidan Howe</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=5012428">Pixabay</a>'
   focal_point: ""
   placement: 3
-  preview_only: false
+  preview_only: true
 categories: ["Probability"]
 tags: ["A/B Testing", "Probability", "Python"]
 ---
+
+<p style="font-size:15px"><i> Cover image credit: <b><a href="https://pixabay.com/users/AidanHowe-15857243/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=5012428">Aidan Howe</a></b> from <b><a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=5012428">Pixabay</a></b></i></p>
 
 *by Ruslan Klymentiev and [Zank Bennett](https://github.com/zankbennett)*
 
 *Originally created for Bennett Data Science [blog post](https://bennettdatascience.com/know-your-options-when-it-comes-to-a-b-testing/).*
 
-#### Table of Contents
+## Table of Contents
 - <a href='#mab'>What is Multi-Armed Bandit Problem?</a>  
 - <a href='#random'>Random Selection</a>
 - <a href='#epsilon'>Epsilon-Greedy</a> 
@@ -65,6 +67,8 @@ import random
 import math
 ```
 
+<details><summary>Custom functions</summary>
+<p>
 
 ```python
 def algorithm_performance(chosen_ads, total_reward, regret_list):
@@ -133,6 +137,10 @@ def algorithm_performance(chosen_ads, total_reward, regret_list):
     
     return fig
 ```
+
+</p>
+</details>
+<br>
 
 This never(?) happens in real life, but for we will assume that we know the actual CTR values for both Ads for simulation purposes.  
 
@@ -357,6 +365,8 @@ Logic:
 3. Estimate actual CTR’s by sampling values of Beta distribution for each variant $B(\alpha_i, \beta_i)$ and choose the sample with the highest value (estimated CTR).
 4. Repeat 2-3.
 
+<details><summary>**Custom functions**</summary>
+<p>
 
 ```python
 # functions for manual Tompson sampling
@@ -426,7 +436,8 @@ def plot_beta_dist():
 
     fig.show()
 ```
-
+</p>
+</details>
 
 ```python
 regret = 0 
@@ -460,6 +471,8 @@ for i in range(n):
     total_reward += did_click
 ```
 
+<details><summary>Code</summary>
+<p>
 
 ```python
 ## plot the Beta distributions
@@ -511,6 +524,8 @@ fig.update_layout(
 
 fig.show()
 ```
+</p>
+</details>
 
 
 <iframe src="plotly-output/3.html" width="700" height="450" frameborder="0"></iframe>
@@ -627,6 +642,8 @@ Now let's compare four of this methods and see which one performed better for ou
 
 First of all, it's obvious that we want to show the Ad B more often since its actual CTR is 0.65. Let's take a look at the ratio how many time the right Ad has been chosen for each algorithm.
 
+<details><summary>Code</summary>
+<p>
 
 ```python
 trace0 = go.Bar(
@@ -657,6 +674,8 @@ fig.update_layout(
 
 fig.show()
 ```
+</p>
+</details>
 
 
 <iframe src="plotly-output/6.html" width="700" height="450" frameborder="0"></iframe>
@@ -664,6 +683,8 @@ fig.show()
 
 As you can see, three algorithms Epsilon Greedy, Thimpson Sampling and UCB1 showed Ad B most of the times (95%+).
 
+<details><summary>Code</summary>
+<p>
 
 ```python
 trace0 = go.Scatter(
@@ -701,6 +722,8 @@ fig.update_layout(
 
 fig.show()
 ```
+</p>
+</details>
 
 
 <iframe src="plotly-output/7.html" width="700" height="450" frameborder="0"></iframe>
@@ -708,6 +731,8 @@ fig.show()
 
 Taking to account that Thompson Sampling and Epsilon-Greedy algorithms chose ad with the higher CTR (B) most of the time, it shouldn't come as surprise that their regret values are the lowest.
 
+<details><summary>Code</summary>
+<p>
 
 ```python
 trace0 = go.Bar(
@@ -746,6 +771,8 @@ fig.update_layout(
 
 fig.show()
 ```
+</p>
+</details>
 
 
 <iframe src="plotly-output/8.html" width="700" height="450" frameborder="0"></iframe>
