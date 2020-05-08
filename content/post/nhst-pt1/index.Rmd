@@ -7,7 +7,7 @@ image:
   focal_point: ""
   placement: 3
   preview_only: true
-date: "2020-05-09"
+date: "2020-05-08"
 categories: ["Statistics"]
 tags: ["Statistics", "Probability"]
 ---
