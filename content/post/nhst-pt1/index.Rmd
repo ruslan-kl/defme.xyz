@@ -287,7 +287,7 @@ As the name of the test suggests, we are going to look at a single mean and whet
 
 However, in order to perform $t$-test couple of conditions need to be met:
 
-1. **Independence**: sampled observations need to be independent (for example, it would be a bad idea to include relatives like parents-children for a Memory Test expriment, since results can be affected by inheritance).
+1. **Independence**: sampled observations need to be independent (for example, it would be a bad idea to include relatives like parents-children for a Memory Test experiment, since results can be affected by inheritance).
 2. **Randomness**: probability of occurrence of each observation in a sample is equally likely (for example, it the population of interest is islanders, men and women should have equal chances to be added to the experiment).
 3. **Approximate Normality**. The sample distribution size needs to be approximately normal, especially if the sample size is not large enough $(\geq30)$ for Central Limit Theorem[^4].
 
@@ -366,13 +366,21 @@ ggplot() +
     fill="red", alpha=0.6) +
   labs(title = "t-Distribution",
        y = "Density") +
+  annotate(
+    geom = "curve", x = 2, y = 0.3, xend = t_stat, yend = 0.2, 
+    curvature = .3, arrow = arrow(length = unit(2, "mm"))) +
+  annotate(geom = "text", x = 2.05, y = 0.3, label = "t statistic", hjust = "left") +
+  annotate(
+    geom = "curve", x = -2.5, y = 0.2, xend = -1, yend = 0.1, 
+    curvature = .3, arrow = arrow(length = unit(2, "mm"))) +
+  annotate(geom = "text", x = -2.5, y = 0.22, label = "p-value", hjust = "top") +
   theme_classic()
 ```
 
 </p>
 </details>
 
-```{r echo=FALSE, fig.align='center', fig.height=3, fig.width=5}
+```{r echo=FALSE, fig.align='center', fig.height=3, fig.width=5, message=FALSE, warning=FALSE}
 df <- n-1
 x <- seq(-5,5,0.05)
 t_dist <- dt(x, df)
@@ -387,6 +395,14 @@ ggplot() +
     fill="red", alpha=0.6) +
   labs(title = "t-Distribution",
        y = "Density") +
+  annotate(
+    geom = "curve", x = 2, y = 0.3, xend = t_stat, yend = 0.2, 
+    curvature = .3, arrow = arrow(length = unit(2, "mm"))) +
+  annotate(geom = "text", x = 2.05, y = 0.3, label = "t statistic", hjust = "left") +
+  annotate(
+    geom = "curve", x = -2.5, y = 0.2, xend = -1, yend = 0.1, 
+    curvature = .3, arrow = arrow(length = unit(2, "mm"))) +
+  annotate(geom = "text", x = -2.5, y = 0.22, label = "p-value", hjust = "top") +
   theme_classic()
 ```
 
@@ -399,7 +415,85 @@ nhst_result(pval, alpha)
 
 > As we can see, we failed to reject the null hypothesis, or in other words, there is not enough evidence to claim that the average time to finish a memory test after 1mg of Alprazolam is less than 60 seconds.
 
-Alternatively, we can let R and Python do the calculations for us:
+But would you be still be able to get conclusion of the test without software, if you did all the calculations by hand? The answer is "definetely yes". When you have calculated $t_\text{stat}$ (which was `r t_stat` in our example) you could compare this value to $t_\text{critical}$. $t_\text{critical}$ is the $\alpha$ (for one-tailed test) or $\alpha/2$ (for two-tailed test) quantile of $t$-distribution, that can be easily found in any of t-tables. 
+
+We need to find a value of $t_\text{critical}$ creates an area of 0.05 (our $\alpha$ level) under the curve for a $t$ distribution with 22 degrees of freedom:
+
+<center><img src="ttable.jpg" width="400"></img></center>
+
+```{r}
+(t_crit <- qt(alpha, df))
+```
+
+<details><summary>Code</summary>
+<p>
+
+```{r, eval=FALSE}
+df <- n-1
+x <- seq(-5,5,0.05)
+t_dist <- dt(x, df)
+
+ggplot() +
+  geom_line(
+    mapping = aes(x = x, y = t_dist),
+    color = "black", size = 1.5) +   
+  geom_vline(xintercept = t_stat) +
+  geom_vline(xintercept = t_crit, color = "red") +
+  labs(title = "t-Distribution",
+       y = "Density") +
+  annotate(
+    geom = "curve", x = 2, y = 0.3, xend = t_stat, yend = 0.2, 
+    curvature = .3, arrow = arrow(length = unit(2, "mm"))) +
+  annotate(geom = "text", x = 2.05, y = 0.3, label = "t statistic", hjust = "left") +
+  annotate(
+    geom = "curve", x = -4, y = 0.3, xend = t_crit, yend = 0.2, 
+    curvature = .3, arrow = arrow(length = unit(2, "mm"))) +
+  annotate(geom = "text", x = -4.05, y = 0.3, label = "t ctitical", hjust = "right") +
+  geom_area(
+    mapping = aes(x = x[x <= t_stat], y = t_dist[x <= t_stat]),
+    fill="red", alpha=0.6) +
+  geom_area(
+    mapping = aes(x = x[x <= t_crit], y = t_dist[x <= t_crit]),
+    fill="blue", alpha=0.6) +
+  theme_classic() 
+```
+
+</p>
+</details>
+
+```{r echo=FALSE, fig.align='center', fig.height=3, fig.width=5, message=FALSE, warning=FALSE}
+df <- n-1
+x <- seq(-5,5,0.05)
+t_dist <- dt(x, df)
+
+ggplot() +
+  geom_line(
+    mapping = aes(x = x, y = t_dist),
+    color = "black", size = 1.5) +   
+  geom_vline(xintercept = t_stat) +
+  geom_vline(xintercept = t_crit, color = "red") +
+  labs(title = "t-Distribution",
+       y = "Density") +
+  annotate(
+    geom = "curve", x = 2, y = 0.3, xend = t_stat, yend = 0.2, 
+    curvature = .3, arrow = arrow(length = unit(2, "mm"))) +
+  annotate(geom = "text", x = 2.05, y = 0.3, label = "t statistic", hjust = "left") +
+  annotate(
+    geom = "curve", x = -4, y = 0.3, xend = t_crit, yend = 0.2, 
+    curvature = .3, arrow = arrow(length = unit(2, "mm"))) +
+  annotate(geom = "text", x = -4.05, y = 0.3, label = "t ctitical", hjust = "right") +
+  geom_area(
+    mapping = aes(x = x[x <= t_stat], y = t_dist[x <= t_stat]),
+    fill="red", alpha=0.6) +
+  geom_area(
+    mapping = aes(x = x[x <= t_crit], y = t_dist[x <= t_crit]),
+    fill="blue", alpha=0.6) +
+  theme_classic() 
+```
+
+If out calculated $t$ statistic (black line) would be on the left side from ctitical $t$ value (red line) we would reject the null hypothesis, since we would be sure that p-value (red area) is < 0.05. Here we see that our $t$ statistic is greater than $t_\text{critical}$, so we fail to reject the null hypothesis. It's always a good idea to draw a test distribution.
+
+Alternatively, we can let R and Python do all the calculations for us:
 
 <details><summary>**R**</summary>
 <p>
