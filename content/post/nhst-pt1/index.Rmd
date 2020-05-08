@@ -1054,7 +1054,7 @@ print(f"Calculated test statistic: {F_stat: .4f}\np-value: {p_val: .4f}")
 
 ## Summary
 
-I hope that you have better understanding of algorithms for inference for a population means after this tutorial. As you could see, calculation of p-value can be easily done by R/Python, however there is lots of work for us before and after the calculations. We always need to choose the right test, check conditions for this test and interpret the results in context of the problem, etc. Also, making decision based only on p-value isn't always enough and also we need to take into account an **effect size**, that we be described in later tutorial.
+I hope that you have better understanding of algorithms for inference for a population means after this tutorial. As you could see, calculation of p-value can be easily done by R/Python, however there is lots of work for us before and after the calculations. We always need to choose the right test, check conditions for this test and interpret the results in context of the problem, etc. Also, making decision based only on p-value isn't always enough and also we need to take into account an **effect size**, that will be described in later tutorial.
 
 ## References
 
