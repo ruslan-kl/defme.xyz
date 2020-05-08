@@ -1,13 +1,13 @@
 ---
 title: "Null Hypothesis Significance Testing, part 1"
 subtitle: "Inference for a population mean: $t$-tests & ANOVA "
-date: "2020-05-10"
 summary: Basic concept of NHST and p-value. Overview of the inference for a population mean one/two-sample $t$-tests and ANOVA.
 image:
   caption: 'Image credit: <a href="https://pixabay.com/ru/users/geralt-9301/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2692575">Gerd Altmann</a> from <a href="https://pixabay.com/ru/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2692575">Pixabay</a>'
   focal_point: ""
   placement: 3
   preview_only: true
+date: "2020-05-09"
 categories: ["Statistics"]
 tags: ["Statistics", "Probability"]
 ---
@@ -298,7 +298,7 @@ Probability
 <li><span class="math inline">\(\alpha = 0.05\)</span></li>
 </ul>
 <p>We flipped the coin 5 times and got 5 heads. Now, assuming that the coin is fair we calculate the probability of this event (which was 0.0313). Note that we used <span class="math inline">\(p=\frac{1}{2}\)</span> in formula since we assume that coin is fair (null hypothesis is true). This probability of 0.0313 is our p-value. <span class="math inline">\(\text{p-value} &lt; \alpha\)</span>, that is why we reject the null hypothesis, saying that data provides enough evidence that coin is nor fair and probability of Heads is greater than <span class="math inline">\(\frac{1}{2}\)</span>.</p>
-<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-4-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-4-1.png" width="480" style="display: block; margin: auto;" /></p>
 <div id="one-tailed-vs-two-tailed-test" class="section level3">
 <h3>One-tailed vs Two-tailed Test</h3>
 <p>Our alternative hypothesis in this example was that the coin is unfair and <span class="math inline">\(p(\text{Heads}) &gt; \frac{1}{2}\)</span>, which is also called a <strong>one-tailed significance test</strong>. In such case we are interested only in probabilities of obtaining results <strong>more extreme</strong> as 5 out of 5 Heads. Due to the experiment design there was no outcome that are more extreme as 5 out of 5 Heads (since we cannot get 6 Heads out of 5 coin flips).</p>
@@ -308,7 +308,7 @@ Probability
 </ul>
 <p>As you can see, under the two-tailed testing we are not concerned about the direction of alternative hypothesis.</p>
 <p>In our example outcome of 0 Heads (5 Tails) out of 5 flips has the same probability as observed probability of 5 Heads out of 5 flips. Hence, <span class="math inline">\(\text{p-value} = P(0) + P(5) = 0.0313 + 0.0313 = 0.0616\)</span>.</p>
-<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>Since now <span class="math inline">\(\text{p-value} &gt; \alpha\)</span> we would fail to reject null hypothesis saying there is not enough evidence to claim that the coin is not fair.</p>
 </div>
 </div>
@@ -370,59 +370,59 @@ sample_n(islander_data, 5) %&gt;% kable()</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Manuel</td>
+<td align="left">Naoto</td>
 <td align="left">Lopez</td>
-<td align="right">25</td>
+<td align="right">35</td>
 <td align="left">H</td>
-<td align="right">1</td>
+<td align="right">2</td>
 <td align="left">T</td>
-<td align="right">59.5</td>
-<td align="right">61.5</td>
-<td align="right">2.0</td>
+<td align="right">33.4</td>
+<td align="right">57.5</td>
+<td align="right">24.1</td>
 </tr>
 <tr class="even">
-<td align="left">Jun</td>
-<td align="left">Durand</td>
-<td align="right">30</td>
-<td align="left">H</td>
-<td align="right">3</td>
-<td align="left">A</td>
-<td align="right">43.6</td>
-<td align="right">63.0</td>
-<td align="right">19.4</td>
-</tr>
-<tr class="odd">
-<td align="left">Carla</td>
-<td align="left">Kennedy</td>
-<td align="right">34</td>
+<td align="left">Lara</td>
+<td align="left">Summers</td>
+<td align="right">56</td>
 <td align="left">S</td>
 <td align="right">2</td>
-<td align="left">S</td>
-<td align="right">61.4</td>
-<td align="right">66.4</td>
-<td align="right">5.0</td>
-</tr>
-<tr class="even">
-<td align="left">Hama</td>
-<td align="left">Carrasco</td>
-<td align="right">36</td>
-<td align="left">H</td>
-<td align="right">3</td>
 <td align="left">A</td>
-<td align="right">61.8</td>
-<td align="right">87.4</td>
-<td align="right">25.6</td>
+<td align="right">64.4</td>
+<td align="right">48.1</td>
+<td align="right">-16.3</td>
 </tr>
 <tr class="odd">
-<td align="left">Emma</td>
-<td align="left">Durand</td>
-<td align="right">34</td>
+<td align="left">Ryan</td>
+<td align="left">Kennedy</td>
+<td align="right">50</td>
 <td align="left">S</td>
-<td align="right">1</td>
+<td align="right">2</td>
+<td align="left">A</td>
+<td align="right">74.2</td>
+<td align="right">88.1</td>
+<td align="right">13.9</td>
+</tr>
+<tr class="even">
+<td align="left">Lukas</td>
+<td align="left">Castro</td>
+<td align="right">80</td>
+<td align="left">S</td>
+<td align="right">3</td>
 <td align="left">T</td>
-<td align="right">49.0</td>
-<td align="right">40.5</td>
-<td align="right">-8.5</td>
+<td align="right">58.4</td>
+<td align="right">63.6</td>
+<td align="right">5.2</td>
+</tr>
+<tr class="odd">
+<td align="left">Jose</td>
+<td align="left">Durand</td>
+<td align="right">42</td>
+<td align="left">H</td>
+<td align="right">2</td>
+<td align="left">T</td>
+<td align="right">52.7</td>
+<td align="right">53.3</td>
+<td align="right">0.6</td>
 </tr>
 </tbody>
 </table>
@@ -452,7 +452,7 @@ sample_n(islander_data, 5) %&gt;% kable()</code></pre>
 hist(temp_df$Mem_Score_After, 
      main = &quot;Distribution of Memory Test Results\nafter 1mg of Alprazolam&quot;,
      xlab = &quot;Average time to finish a memory test&quot;)</code></pre>
-<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p><strong>Summary statistics:</strong></p>
 <pre class="r"><code>temp_df %&gt;% 
   summarise(mean = mean(Mem_Score_After),
@@ -519,7 +519,7 @@ ggplot() +
   theme_classic()</code></pre>
 </p>
 </details>
-<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-12-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-12-1.png" width="480" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>pval &lt;- pt(t_stat, df)
 print(paste0(&quot;p-value is: &quot;, round(pval, 3)))
 ## [1] &quot;p-value is: 0.337&quot;
@@ -592,7 +592,7 @@ print(f&quot;Calculated test statistic: {t_stat: .4f}\np-value: {p_val/2: .4f}&q
   theme_classic()</code></pre>
 </p>
 </details>
-<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p><strong>Summary statistics:</strong></p>
 <pre class="r"><code>islander_data %&gt;% 
   filter(Drug %in% c(&quot;A&quot;, &quot;S&quot;) &amp; Dosage == 3) %&gt;% 
@@ -733,7 +733,7 @@ ggplot() +
   theme_classic()</code></pre>
 </p>
 </details>
-<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-25-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-25-1.png" width="480" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>pval &lt;- pt(-t_stat, df)*2
 print(paste0(&quot;p-value is: &quot;, round(pval, 3)))
 ## [1] &quot;p-value is: 0.001&quot;
@@ -801,7 +801,7 @@ print(f&quot;Calculated test statistic: {t_stat: .4f}\np-value: {p_val: .5f}&quo
 hist(temp_df$Diff, 
      main = &quot;Distribution of Difference of Memory Test Results\nbefore and after 0.75mg of Triazolam&quot;,
      xlab = &quot;Average time to finish a memory test&quot;)</code></pre>
-<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-29-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-29-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>There are two outliers (difference in test results is less than <span class="math inline">\(-20\)</span>) that need to be removed for further analysis:</p>
 <pre class="r"><code>temp_df[temp_df$Diff &lt; -20, ] %&gt;% kable()</code></pre>
 <table>
@@ -937,7 +937,7 @@ ggplot() +
   theme_classic()</code></pre>
 </p>
 </details>
-<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-36-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-36-1.png" width="480" style="display: block; margin: auto;" /></p>
 <blockquote>
 <p>p-value is 0.8, which is greater than <span class="math inline">\(\alpha\)</span>, that’s why failed to reject null hypothesis. In other words, there is not enough evidence to claim that there is a difference in memory test results before and after 0.75mg of Triazolam.</p>
 </blockquote>
@@ -977,7 +977,7 @@ ggplot() +
   theme_classic()</code></pre>
 </p>
 </details>
-<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-38-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-38-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>There are some outliers that need to be removed for further analysis:</p>
 <pre class="r"><code>islander_data %&gt;% 
   filter(Drug == &quot;T&quot; &amp; (Diff &lt; -15 | Diff &gt; 15)) %&gt;% 
@@ -1224,7 +1224,7 @@ ggplot() +
   theme_classic()</code></pre>
 </p>
 </details>
-<p><img src="/post/nhst/index_files/figure-html/unnamed-chunk-46-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-46-1.png" width="480" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>pval &lt;- pf(F_stat, df_group, df_error, lower.tail = FALSE)
 print(paste0(&quot;p-value is: &quot;, round(pval, 3)))
 ## [1] &quot;p-value is: 0.603&quot;
