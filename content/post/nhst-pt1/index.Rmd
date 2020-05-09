@@ -51,16 +51,16 @@ from scipy import stats
 nhst_result <- function(pval, alpha){
   if(pval < alpha) {
     print(paste0("p-value is less than alpha (", 
-                 alpha, "). Reject null hypothesis."))
+                 alpha, "). Reject the null hypothesis."))
   } else {print(paste0("p-value is greater than alpha (", 
-                     alpha, "). Fail to reject null hypothesis."))}
+                     alpha, "). Fail to reject the null hypothesis."))}
 }
 ```
 
 
 ## Introduction
 
-The concept of hypothesis testing is analogous to concept of criminal trials. Consider that you are a judge during a trial and there is a person for a criminal offense. You must decide if the defendant is innocent or guilty. Your basic knowledge is that the person is innocent and after evidence comes in you need to make a choice - is there enough evidence to claim that the defendant is guilty? 
+The concept of hypothesis testing is analogous to the concept of criminal trials. Consider that you are a judge during a trial and there is a person for a criminal offense. You must decide if the defendant is innocent or guilty. Your basic knowledge is that the person is innocent and after evidence comes in you need to make a choice - is there enough evidence to claim that the defendant is guilty? 
 
 <center>
 <figure>
@@ -73,7 +73,7 @@ The concept of hypothesis testing is analogous to concept of criminal trials. Co
 
 There are four possible outcomes:
 
-|  | Defendant is actually innocent | Defendant is actually guilty |
+|  | The defendant is innocent | The defendant is guilty |
 |:-:|:-:|:-:|
 | **You decide that the defendant is innocent** | Correct decision | You set the criminal free |
 | **You decide that the defendant is guilty** | You send the innocent person to jail | Correct decision |
@@ -82,49 +82,49 @@ If we transform this to "statistical language", we would say that we have:
 
 1. **Null hypothesis** $H_0$, which tells us that defendant is innocent (nothing is happening).
 2. **Alternative hypothesis** $H_A$, which tells us that defendant is guilty (something is actually happening). 
-3. **Significance level** $\alpha$, which is the probability of an sending innocent person to jail (probability of rejecting the null hypothesis $H_0$ when the it is true). That is also called a **Type I error**.
+3. **Significance level** $\alpha$, which is the probability of sending an innocent person to jail (probability of rejecting the null hypothesis $H_0$ when it is true). That is also called a **Type I error**.
 
-Probability of setting the criminal free is usually denoted as $\beta$ (probability of accepting the null hypothesis $H_0$ when the it is false). That is also called a **Type II error**
+The probability of setting the criminal free is usually denoted as $\beta$ (probability of accepting the null hypothesis $H_0$ when it is false). That is also called a **Type II error**
 
-We can rewrite the previous table in general form:
+We can rewrite the previous table in the general form:
 
 |  | $H_0$ is true | $H_0$ is false |
 |:-:|:-:|:-:|
 | **Failed to reject $H_0$** | No Error | Type II Error |
 | **Reject $H_0$ in favor of $H_A$** | Type I Error | No Error |
 
-Sure you don't want to send innocent person to jail, but what level of significance $\alpha$ would you choose? Usually alpha is set up to 0.05, meaning that we let ourselves to have $5\%$ possibility chance of wrong decision. Another common values of alpha are $0.1, 0.01$. If we set a low threshold for $\alpha$ (for example 0.001), then it will require more evidence to convict an innocent person. On the other hand, if we set a higher threshold for $\alpha$ (for example 0.1), then less evidence is required.
+Sure you don't want to send an innocent person to jail, but what level of significance $\alpha$ would you choose? Usually alpha is set up to 0.05, meaning that we let ourselves have a $5\%$ possibility chance of wrong decision. Other common values of alpha are $0.1, 0.01$. If we set a low threshold for $\alpha$ (for example 0.001), then it will require more evidence to convict an innocent person. On the other hand, if we set a higher threshold for $\alpha$ (for example 0.1), then less evidence is required.
 
-In statistical hypothesis testing framework we usually calculate the **p-value**\* and check whether it is greater or less than a significance level $\alpha$.
+In the statistical hypothesis testing framework we usually calculate the **p-value**\* and check whether it is greater or less than a significance level $\alpha$.
 
-**p-value** is the probability of obtaining results as extreme as the observed results under the assumptions that null hypothesis is true. In order to be able to reject null hypothesis p-value needs to be lower than significance level $\alpha$.
+The **p-value** is the probability of obtaining results as extreme as the observed results under the assumption that null hypothesis is true. To be able to reject the null hypothesis p-value needs to be lower than the significance level $\alpha$.
 
 * $P(\text{Data | }H_0 \text{ is true}) \leq \alpha$: reject the null hypothesis in favor of the alternative hypothesis.
 * $P(\text{Data | }H_0 \text{ is true}) > \alpha$: fail (not enough evidence) to reject the null hypothesis.
 
 **Steps for hypothesis testing**:
 
-1. Formulate null and alternative hypothesis.
+1. Formulate the null and alternative hypotheses.
 2. Choose a proper test for a given problem.
 3. Set the significance level $\alpha$.
 4. <span style="background-color: #9ce0ff">Calculate the desired statistic and p-value associated with it.</span>
-5. Interpret the results in a context of a problem.
+5. Interpret the results in the context of a problem.
 
-Note that the $4.$ point is highlighted. This is usually the **only** step that can be done by software (SPSS, R, Python, Excel, etc) meaning that user must do all the work left: choose null and alternative hypothesis, decide what test to use, interpret the results.
+Note that the $4.$ point is highlighted. This is usually the **only** step that can be done by software (SPSS, R, Python, Excel, etc) meaning that the user must do all the work left: choose null and alternative hypothesis, decide what test to use, interpret the results.
 
 Some examples of hypothesis would be:
 
 | **Null hypothesis** $H_0$ | **Alternative hypothesis** $H_A$ |
 |:--|:--|
 | The coin is fair $\left( P(\text{Heads}) = P(\text{Tails}) = \frac{1}{2} \right)$ | The coin is biased towards Heads $\left(P(\text{Heads}) > \frac{1}{2} \right)$ |
-| Ratio of success for the new drug is 75% $\left(\pi = 0.75 \right)$ | New drug is more effective than previous version $\left(\pi>0.75 \right)$ |
-| There is no difference in average of blood pressure between two groups $\left(\mu_1 - \mu_2 = 0 \right)$ | Average blood pressure among two groups is different $\left(\mu_1 - \mu_2 \neq 0 \right)$ |
+| The ratio of success for the new drug is 75% $\left(\pi = 0.75 \right)$ | A drug is more effective than previous version $\left(\pi>0.75 \right)$ |
+| There is no difference in the average of blood pressure between two groups $\left(\mu_1 - \mu_2 = 0 \right)$ | Average blood pressure among two groups is different $\left(\mu_1 - \mu_2 \neq 0 \right)$ |
 
 *Note that significance testing checks the population parameters, not sample statistics, that's why we use Greek letters.*
 
 **Difference between population and sample**:
 
-One of the main purposes of statistics is to estimate the **population parameter** based on the **sample statistic**. For example, you would like like to know what is the effect of the new drug for the subjects who have a specific disease ($\pi$ - proportion of success). Performing an experiment on a whole **population** (every subject who has a disease) would give you a true ratio $\pi$ when drug was effective vs. when it was not. However, performing such experiment would be extremely expensive and often not possible to perform. What you could do instead is to get a **sample** from your population (some number of subjects with a given disease), perform an experiment of them and then generalize the results to the whole population based on the point estimate $p$ and confidence interval.
+One of the main purposes of statistics is to estimate the **population parameter** based on the **sample statistic**. For example, you would like to know what is the effect of the new drug for the subjects who have a specific disease ($\pi$ - the proportion of success). Performing an experiment on a whole **population** (every subject who has a disease) would give you a true ratio $\pi$ when the drug was effective vs. when it was not. However, performing such experiment would be extremely expensive and often not possible to perform. What you could do instead is to get a **sample** from your population (some number of subjects with a given disease), perform an experiment of them, and then generalize the results to the whole population based on the point estimate $p$ and confidence interval.
 
 <center><img src="pop-chart.jpeg" width="500"></img></center>
 
@@ -132,7 +132,7 @@ One of the main purposes of statistics is to estimate the **population parameter
 
 Let's take a look at a simple example to build an intuition about p-value and alpha. 
 
-Image you have a coin and you are not sure if it's fair or not. You flip the coin once and it comes up Heads. Would you assume that the coin is unfair (is it more likely to get Heads, rather than Tails)? 
+Imagine you have a coin and you are not sure if it's fair or not. You flip the coin once and it comes up Heads. Would you assume that the coin is unfair (is it more likely to get Heads, rather than Tails)? 
 
 What about two Heads out of two flips? Three? Four? Five?
 
@@ -192,7 +192,7 @@ Most people would doubt the fairness of the coin after five Heads out of five co
 
 $$P(\text{5 Heads}) = \left( \frac{1}{2} \right) ^ 5 = 0.0313$$
 
-In other words, there is about 3% of getting five Heads in a row assuming that the coin is fair. This seems to be a really low probability to be true, that is why most people would assume that this coin is not fair, but rather probability of Heads $p(\text{Heads}) > \frac{1}{2}$.
+In other words, there is about 3% of getting five Heads in a row assuming that the coin is fair. This seems to be a really low probability to be true, that is why most people would assume that this coin is not fair, but rather the probability of Heads $p(\text{Heads}) > \frac{1}{2}$.
 
 If we have used NHST framework it would look as follows:
 
@@ -200,7 +200,7 @@ If we have used NHST framework it would look as follows:
 * $H_A$: coin is unfair, $p(\text{Heads}) > \frac{1}{2}$
 * $\alpha = 0.05$
 
-We flipped the coin 5 times and got 5 heads. Now, assuming that the coin is fair we calculate the probability of this event (which was 0.0313). Note that we used $p=\frac{1}{2}$ in formula since we assume that coin is fair (null hypothesis is true). This probability of 0.0313 is our p-value. $\text{p-value} < \alpha$, that is why we reject the null hypothesis, saying that data provides enough evidence that coin is nor fair and probability of Heads is greater than $\frac{1}{2}$.
+We flipped the coin 5 times and got 5 heads. Now, assuming that the coin is fair we calculate the probability of this event (which was 0.0313). Note that we used $p=\frac{1}{2}$ in the formula since we assume that coin is fair (null hypothesis is true). This probability of 0.0313 is our p-value. $\text{p-value} < \alpha$, that is why we reject the null hypothesis, saying that data provides enough evidence that coin is nor fair and the probability of Heads is greater than $\frac{1}{2}$.
 
 ```{r echo=FALSE, fig.align='center', fig.height=3, fig.width=5}
 x <- 0:5
@@ -220,11 +220,11 @@ ggplot() +
 
 ### One-tailed vs Two-tailed Test
 
-Our alternative hypothesis in this example was that the coin is unfair and $p(\text{Heads}) > \frac{1}{2}$, which is also called a **one-tailed significance test**. In such case we are interested only in probabilities of obtaining results **more extreme** as 5 out of 5 Heads. Due to the experiment design there was no outcome that are more extreme as 5 out of 5 Heads (since we cannot get 6 Heads out of 5 coin flips). 
+Our alternative hypothesis in this example was that the coin is unfair and $p(\text{Heads}) > \frac{1}{2}$, which is also called a **one-tailed significance test**. In such case we are interested only in probabilities of obtaining results **more extreme** as 5 out of 5 Heads. Due to the experiment design there was no outcome that was more extreme as 5 out of 5 Heads (since we couldn't get 6 Heads out of 5 coin flips). 
 
-Another type of test would be **two-tailed** significance test. In this way we would be interested in probabilities of obtaining results **more or as extreme** as obtained data. Alternative hypothesis would be:
+Another type of test would be **two-tailed** significance test. In this way we would be interested in probabilities of obtaining results **more or as extreme** as obtained data. The alternative hypothesis would be:
 
-* $H_A$: coin is unfair, $p(\text{Heads}) \neq \frac{1}{2}$ ($p(\text{Heads}) < \frac{1}{2}$ or $p(\text{Heads}) > \frac{1}{2}$)
+* $H_A$: the coin is unfair, $p(\text{Heads}) \neq \frac{1}{2}$ ($p(\text{Heads}) < \frac{1}{2}$ or $p(\text{Heads}) > \frac{1}{2}$)
 
 As you can see, under the two-tailed testing we are not concerned about the direction of alternative hypothesis.
 
@@ -243,7 +243,7 @@ ggplot() +
   theme_classic()
 ```
 
-Since now $\text{p-value} > \alpha$ we would fail to reject null hypothesis saying there is not enough evidence to claim that the coin is not fair.
+Since now $\text{p-value} > \alpha$ we would fail to reject the null hypothesis saying there is not enough evidence to claim that the coin is not fair.
 
 ## Inference for a mean
 
@@ -251,16 +251,16 @@ In this section we are going to look at a significance testing for the populatio
 
 $$\text{Statistic} = \frac{\text{Point Estimate} - \text{Null Value}}{\text{SE}}$$
 
-* Point Estimate - the data we have observed (one sample mean, difference in two means, etc)
+* Point Estimate - the data we have observed (one sample mean, a difference in two means, etc)
 * Null Value - the value under the null hypothesis
 * SE - standard error of the sample, $SE = \frac{s}{\sqrt{n}}$
-* Statistic - calculated value of simulated distribution ($t$ distribution, $\chi^2$ distribution, etc)
+* Statistic - the calculated value of a simulated distribution ($t$ distribution, $\chi^2$ distribution, etc)
 
 After we have calculated the statistic we can find the p-value (with the help of tables, R/Python).
 
 ## Data Set
 
-For this tutorial we are going to look at **Memory Test on Drugged Islanders Data** data set from Kaggle[^1].
+For this tutorial, we are going to look at **Memory Test on Drugged Islanders Data** data set from Kaggle[^1].
 
 Context of the problem:
 
@@ -281,21 +281,21 @@ sample_n(islander_data, 5) %>% kable()
 
 ## One Sample Test
 
-**The $t$-distribution**[^2] is useful for describing the distribution of the sample mean when the population standard deviation $\sigma$ is unknown (which is almost always). That's why this test is also called **One Sample $t$-Test**[^3].
+**The $t$-distribution**[^2] is useful for describing the distribution of the sample mean when the population standard deviation $\sigma$ is unknown (which is almost always). That's why this test is also called the **One Sample $t$-Test**[^3].
 
 As the name of the test suggests, we are going to look at a single mean and whether it's significantly different from the null value.
 
 However, in order to perform $t$-test couple of conditions need to be met:
 
 1. **Independence**: sampled observations need to be independent (for example, it would be a bad idea to include relatives like parents-children for a Memory Test experiment, since results can be affected by inheritance).
-2. **Randomness**: probability of occurrence of each observation in a sample is equally likely (for example, it the population of interest is islanders, men and women should have equal chances to be added to the experiment).
+2. **Randomness**: the probability of occurrence of each observation in a sample is equally likely (for example, it the population of interest is islanders, men and women should have equal chances to be added to the experiment).
 3. **Approximate Normality**. The sample distribution size needs to be approximately normal, especially if the sample size is not large enough $(\geq30)$ for Central Limit Theorem[^4].
 
-Also, test may be affected by extreme values (outliers) that are better to be removed.
+Also, the test may be affected by extreme values (outliers) that are better to be removed.
 
 ### Example
 
-Let's assume that previous studies suggest that average time to finish a memory test after 1mg of Alprazolam is 60 seconds. We have observed new data and we want to check if there is enough evidence to claim that average time to finish a memory test is actually <60 seconds.
+Let's assume that previous studies suggest that the average time to finish a memory test after 1mg of Alprazolam is 60 seconds. We have observed new data and we want to check if there is enough evidence to claim that the average time to finish a memory test is actually <60 seconds.
 
 * $H_0$: Average time to finish a memory test after 1mg of Alprazolam is 60 seconds, $\mu = 60$
 * $H_A$: Average time to finish a memory test after 1mg of Alprazolam is less than 60 seconds, $\mu < 60$
@@ -331,7 +331,7 @@ Note that under the Shapiro–Wilk test we have:
 * $H_0$: sample is normally distributed.
 * $H_A$: sample isn't normally distributed.
 
-p-value of $0.3$ means that we failed to reject the null hypothesis, meaning that there is not enough evidence to claim that sample is not normally distributed. 
+p-value of $0.3$ means that we failed to reject the null hypothesis, meaning that there is not enough evidence to claim that the sample is not normally distributed. 
 
 Using formula from above we can calculate point estimate (average value of the set), null estimate (60 seconds) and standard error.
 
@@ -415,7 +415,7 @@ nhst_result(pval, alpha)
 
 > As we can see, we failed to reject the null hypothesis, or in other words, there is not enough evidence to claim that the average time to finish a memory test after 1mg of Alprazolam is less than 60 seconds.
 
-But would you be still be able to get conclusion of the test without software, if you did all the calculations by hand? The answer is "definetely yes". When you have calculated $t_\text{stat}$ (which was `r t_stat` in our example) you could compare this value to $t_\text{critical}$. $t_\text{critical}$ is the $\alpha$ (for one-tailed test) or $\alpha/2$ (for two-tailed test) quantile of $t$-distribution, that can be easily found in any of t-tables. 
+But would you still be able to get the conclusion of the test without software, if you did all the calculations by hand? The answer is "definitely yes". When you have calculated $t_\text{stat}$ (which was `r t_stat` in our example) you could compare this value to $t_\text{critical}$. $t_\text{critical}$ is the $\alpha$ (for one-tailed test) or $\alpha/2$ (for two-tailed test) quantile of $t$-distribution, that can be easily found in any of t-tables. 
 
 We need to find a value of $t_\text{critical}$ creates an area of 0.05 (our $\alpha$ level) under the curve for a $t$ distribution with 22 degrees of freedom:
 
@@ -491,7 +491,7 @@ ggplot() +
   theme_classic() 
 ```
 
-If out calculated $t$ statistic (black line) would be on the left side from ctitical $t$ value (red line) we would reject the null hypothesis, since we would be sure that p-value (red area) is < 0.05. Here we see that our $t$ statistic is greater than $t_\text{critical}$, so we fail to reject the null hypothesis. It's always a good idea to draw a test distribution.
+If out calculated $t$ statistic (black line) would be on the left side from critical $t$ value (red line) we would reject the null hypothesis, since we would be sure that the p-value (red area) is < 0.05. Here we see that our $t$ statistic is greater than $t_\text{critical}$, so we fail to reject the null hypothesis. It's always a good idea to draw a test distribution.
 
 Alternatively, we can let R and Python do all the calculations for us:
 
@@ -532,7 +532,7 @@ print(f"Calculated test statistic: {t_stat: .4f}\np-value: {p_val/2: .4f}")
 
 ## Two Sample Test (Independent Groups)
 
-Now we are going to compare the mean values of two groups and check if there is statistically significant difference between them. The same way, in order to perform Two-Sample $t$-test the condition of **independence** need to be met, meaning that you cannot compare difference of a memory test result before and after the pill for the same person. Also, for two sample $t$ test the **variance of two groups need to be equal**. There is a way[^6] to perform $t$-test when variances are not equal but it will not be covered here. 
+Now we are going to compare the mean values of two groups and check if there is a statistically significant difference between them. In the same way, to perform Two-Sample $t$-test the condition of **independence** needs to be met, meaning that you cannot compare the difference of a memory test result before and after the pill for the same person. Also, for the two sample $t$ test the **variance of two groups need to be equal**. There is a way[^6] to perform $t$-test when variances are not equal but it will not be covered here. 
 
 ### Example
 
@@ -631,7 +631,7 @@ p-value = 0.5, so we failed to reject the null hypothesis that samples are norma
 
 **Check that variances are equal:**
 
-For this purpose we are going to use the proportion of two variances $\frac{s_1^2}{s_2^2}$ to estimate the proportion of population variances $\frac{\sigma_1^2}{\sigma_2^2}$ using **$F$-distribution**[^7].
+For this purpose, we are going to use the proportion of two variances $\frac{s_1^2}{s_2^2}$ to estimate the proportion of population variances $\frac{\sigma_1^2}{\sigma_2^2}$ using **$F$-distribution**[^7].
 
 * $H_0$: population variances are equal $\frac{\sigma_1^2}{\sigma_2^2} = 1$.
 * $H_A$: population variances are different $\frac{\sigma_1^2}{\sigma_2^2} \neq 1$.
@@ -645,7 +645,7 @@ pval <- pf(var_ratio, n_alp-1, n_pla-1, lower.tail = FALSE) * 2
 print(paste0("p-value is: ", round(pval, 3)))
 ```
 
-p-value is 0.9 so we failed to reject null hypothesis that population variances are equal.
+p-value is 0.9 so we failed to reject the null hypothesis that population variances are equal.
 
 <details><summary>**R**</summary>
 <p>
@@ -758,7 +758,7 @@ But what if we still need to compare difference in **dependent** groups (for exa
 
 ### Example
 
-Let's now check if there is a significance difference (in any direction, so two-tailed test) in memory test results before and after 0.75mg of Triazolam. Now we are going to use the variable `Diff` which was calculated as `Mem_Score_After - Mem_Score_Before`.
+Let's now check if there is a significant difference (in any direction, so two-tailed test) in memory test results before and after 0.75mg of Triazolam. Now we are going to use the variable `Diff` which was calculated as `Mem_Score_After - Mem_Score_Before`.
 
 * $H_0$: There is no difference in test results before and after 0.75mg of Triazolam, $\mu_{\text{diff}} = 0$
 * $H_A$: There is a difference in test results before and after 0.75mg of Triazolam, $\mu_{\text{diff}} \neq 0$
@@ -884,19 +884,19 @@ ggplot() +
   theme_classic()
 ```
 
-> p-value is 0.8, which is greater than $\alpha$, that's why failed to reject null hypothesis. In other words, there is not enough evidence to claim that there is a difference in memory test results before and after 0.75mg of Triazolam.
+> p-value is 0.8, which is greater than $\alpha$, that's why failed to reject the null hypothesis. In other words, there is not enough evidence to claim that there is a difference in memory test results before and after 0.75mg of Triazolam.
 
 ## Comparing More than Two Means (ANOVA)
 
-Imagine that you want to compare the difference of the means in three or more sample. There is no way to do this using $t$-test, however it can be done using **ANOVA** (ANalysis Of VAriance) and $F$ statistic. In general form the hypothesis for ANOVA are described as:
+Imagine that you want to compare the difference between the means in three or more samples. There is no way to do this using $t$-test, however, it can be done using **ANOVA** (ANalysis Of VAriance) and $F$ statistic. In the general form the hypothesis for ANOVA are described as:
 
 * $H_0$: there is no difference among the group means, $\mu_1=\mu_2=...=\mu_k$
 * $H_A$: at least two groups are significantly different (but it doesn't specify which pair exactly).
-* $k$ - number of groups.
+* $k$ - the number of groups.
 
 Test statistic $F$ can be calculated as:
 
-$$F_\text{calc} = \frac{\text{Variability beetween groups}}{\text{Variability within groups}}$$
+$$F_\text{calc} = \frac{\text{Variability between groups}}{\text{Variability within groups}}$$
 
 Conditions that need to be met for ANOVA:
 
@@ -1004,14 +1004,14 @@ $$SST = \sum_{i=1}^n \left[ (y_i - \bar{y})^2 \right]$$
 
 * $\bar{y}$: total average value.
 
-$SSG$: sum of squares for groups, measures the variability between groups. Explained variability.
+$SSG$: the sum of squares for groups, measures the variability between groups. Explained variability.
 
 $$SSG = \sum_{j=1}^k \left[ n_j (\bar{y_j} - \bar{y})^2 \right]$$
 
 * $n_j$: number of samples in $j$ group.
 * $\bar{y_j}$: average value for the $j$ group.
 
-$SSE$: sum of squares for error, measures the variability within groups. Unexplained variability.
+$SSE$: the sum of squares for error, measures the variability within groups. Unexplained variability.
 
 We can rewrite the formula for $F$ statistic:
 
@@ -1148,7 +1148,7 @@ print(f"Calculated test statistic: {F_stat: .4f}\np-value: {p_val: .4f}")
 
 ## Summary
 
-I hope that you have better understanding of algorithms for inference for a population means after this tutorial. As you could see, calculation of p-value can be easily done by R/Python, however there is lots of work for us before and after the calculations. We always need to choose the right test, check conditions for this test and interpret the results in context of the problem, etc. Also, making decision based only on p-value isn't always enough and also we need to take into account an **effect size**, that will be described in later tutorial.
+I hope that you have a better understanding of algorithms for inference for a population means after this tutorial. As you could see, calculation of p-value can be easily done by R/Python, however, there is lots of work for us before and after the calculations. We always need to choose the right test, check conditions for this test, and interpret the results in the context of the problem, etc. Also, making decisions based only on p-value isn't always enough, and also we need to take into account an **effect size**, that will be described in a later tutorial.
 
 ## References
 

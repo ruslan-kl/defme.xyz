@@ -49,14 +49,14 @@ from scipy import stats</code></pre>
 nhst_result &lt;- function(pval, alpha){
   if(pval &lt; alpha) {
     print(paste0(&quot;p-value is less than alpha (&quot;, 
-                 alpha, &quot;). Reject null hypothesis.&quot;))
+                 alpha, &quot;). Reject the null hypothesis.&quot;))
   } else {print(paste0(&quot;p-value is greater than alpha (&quot;, 
-                     alpha, &quot;). Fail to reject null hypothesis.&quot;))}
+                     alpha, &quot;). Fail to reject the null hypothesis.&quot;))}
 }</code></pre>
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>The concept of hypothesis testing is analogous to concept of criminal trials. Consider that you are a judge during a trial and there is a person for a criminal offense. You must decide if the defendant is innocent or guilty. Your basic knowledge is that the person is innocent and after evidence comes in you need to make a choice - is there enough evidence to claim that the defendant is guilty?</p>
+<p>The concept of hypothesis testing is analogous to the concept of criminal trials. Consider that you are a judge during a trial and there is a person for a criminal offense. You must decide if the defendant is innocent or guilty. Your basic knowledge is that the person is innocent and after evidence comes in you need to make a choice - is there enough evidence to claim that the defendant is guilty?</p>
 <center>
 <figure>
 <img src="balance.png" width="300"/>
@@ -75,8 +75,8 @@ Image by <a href="https://pixabay.com/users/OpenClipart-Vectors-30363/?utm_sourc
 <thead>
 <tr class="header">
 <th align="center"></th>
-<th align="center">Defendant is actually innocent</th>
-<th align="center">Defendant is actually guilty</th>
+<th align="center">The defendant is innocent</th>
+<th align="center">The defendant is guilty</th>
 </tr>
 </thead>
 <tbody>
@@ -96,10 +96,10 @@ Image by <a href="https://pixabay.com/users/OpenClipart-Vectors-30363/?utm_sourc
 <ol style="list-style-type: decimal">
 <li><strong>Null hypothesis</strong> <span class="math inline">\(H_0\)</span>, which tells us that defendant is innocent (nothing is happening).</li>
 <li><strong>Alternative hypothesis</strong> <span class="math inline">\(H_A\)</span>, which tells us that defendant is guilty (something is actually happening).</li>
-<li><strong>Significance level</strong> <span class="math inline">\(\alpha\)</span>, which is the probability of an sending innocent person to jail (probability of rejecting the null hypothesis <span class="math inline">\(H_0\)</span> when the it is true). That is also called a <strong>Type I error</strong>.</li>
+<li><strong>Significance level</strong> <span class="math inline">\(\alpha\)</span>, which is the probability of sending an innocent person to jail (probability of rejecting the null hypothesis <span class="math inline">\(H_0\)</span> when it is true). That is also called a <strong>Type I error</strong>.</li>
 </ol>
-<p>Probability of setting the criminal free is usually denoted as <span class="math inline">\(\beta\)</span> (probability of accepting the null hypothesis <span class="math inline">\(H_0\)</span> when the it is false). That is also called a <strong>Type II error</strong></p>
-<p>We can rewrite the previous table in general form:</p>
+<p>The probability of setting the criminal free is usually denoted as <span class="math inline">\(\beta\)</span> (probability of accepting the null hypothesis <span class="math inline">\(H_0\)</span> when it is false). That is also called a <strong>Type II error</strong></p>
+<p>We can rewrite the previous table in the general form:</p>
 <table>
 <thead>
 <tr class="header">
@@ -121,22 +121,22 @@ Image by <a href="https://pixabay.com/users/OpenClipart-Vectors-30363/?utm_sourc
 </tr>
 </tbody>
 </table>
-<p>Sure you don’t want to send innocent person to jail, but what level of significance <span class="math inline">\(\alpha\)</span> would you choose? Usually alpha is set up to 0.05, meaning that we let ourselves to have <span class="math inline">\(5\%\)</span> possibility chance of wrong decision. Another common values of alpha are <span class="math inline">\(0.1, 0.01\)</span>. If we set a low threshold for <span class="math inline">\(\alpha\)</span> (for example 0.001), then it will require more evidence to convict an innocent person. On the other hand, if we set a higher threshold for <span class="math inline">\(\alpha\)</span> (for example 0.1), then less evidence is required.</p>
-<p>In statistical hypothesis testing framework we usually calculate the <strong>p-value</strong>* and check whether it is greater or less than a significance level <span class="math inline">\(\alpha\)</span>.</p>
-<p><strong>p-value</strong> is the probability of obtaining results as extreme as the observed results under the assumptions that null hypothesis is true. In order to be able to reject null hypothesis p-value needs to be lower than significance level <span class="math inline">\(\alpha\)</span>.</p>
+<p>Sure you don’t want to send an innocent person to jail, but what level of significance <span class="math inline">\(\alpha\)</span> would you choose? Usually alpha is set up to 0.05, meaning that we let ourselves have a <span class="math inline">\(5\%\)</span> possibility chance of wrong decision. Other common values of alpha are <span class="math inline">\(0.1, 0.01\)</span>. If we set a low threshold for <span class="math inline">\(\alpha\)</span> (for example 0.001), then it will require more evidence to convict an innocent person. On the other hand, if we set a higher threshold for <span class="math inline">\(\alpha\)</span> (for example 0.1), then less evidence is required.</p>
+<p>In the statistical hypothesis testing framework we usually calculate the <strong>p-value</strong>* and check whether it is greater or less than a significance level <span class="math inline">\(\alpha\)</span>.</p>
+<p>The <strong>p-value</strong> is the probability of obtaining results as extreme as the observed results under the assumption that null hypothesis is true. To be able to reject the null hypothesis p-value needs to be lower than the significance level <span class="math inline">\(\alpha\)</span>.</p>
 <ul>
 <li><span class="math inline">\(P(\text{Data | }H_0 \text{ is true}) \leq \alpha\)</span>: reject the null hypothesis in favor of the alternative hypothesis.</li>
 <li><span class="math inline">\(P(\text{Data | }H_0 \text{ is true}) &gt; \alpha\)</span>: fail (not enough evidence) to reject the null hypothesis.</li>
 </ul>
 <p><strong>Steps for hypothesis testing</strong>:</p>
 <ol style="list-style-type: decimal">
-<li>Formulate null and alternative hypothesis.</li>
+<li>Formulate the null and alternative hypotheses.</li>
 <li>Choose a proper test for a given problem.</li>
 <li>Set the significance level <span class="math inline">\(\alpha\)</span>.</li>
 <li><span style="background-color: #9ce0ff">Calculate the desired statistic and p-value associated with it.</span></li>
-<li>Interpret the results in a context of a problem.</li>
+<li>Interpret the results in the context of a problem.</li>
 </ol>
-<p>Note that the <span class="math inline">\(4.\)</span> point is highlighted. This is usually the <strong>only</strong> step that can be done by software (SPSS, R, Python, Excel, etc) meaning that user must do all the work left: choose null and alternative hypothesis, decide what test to use, interpret the results.</p>
+<p>Note that the <span class="math inline">\(4.\)</span> point is highlighted. This is usually the <strong>only</strong> step that can be done by software (SPSS, R, Python, Excel, etc) meaning that the user must do all the work left: choose null and alternative hypothesis, decide what test to use, interpret the results.</p>
 <p>Some examples of hypothesis would be:</p>
 <table>
 <colgroup>
@@ -155,18 +155,18 @@ Image by <a href="https://pixabay.com/users/OpenClipart-Vectors-30363/?utm_sourc
 <td align="left">The coin is biased towards Heads <span class="math inline">\(\left(P(\text{Heads}) &gt; \frac{1}{2} \right)\)</span></td>
 </tr>
 <tr class="even">
-<td align="left">Ratio of success for the new drug is 75% <span class="math inline">\(\left(\pi = 0.75 \right)\)</span></td>
-<td align="left">New drug is more effective than previous version <span class="math inline">\(\left(\pi&gt;0.75 \right)\)</span></td>
+<td align="left">The ratio of success for the new drug is 75% <span class="math inline">\(\left(\pi = 0.75 \right)\)</span></td>
+<td align="left">A drug is more effective than previous version <span class="math inline">\(\left(\pi&gt;0.75 \right)\)</span></td>
 </tr>
 <tr class="odd">
-<td align="left">There is no difference in average of blood pressure between two groups <span class="math inline">\(\left(\mu_1 - \mu_2 = 0 \right)\)</span></td>
+<td align="left">There is no difference in the average of blood pressure between two groups <span class="math inline">\(\left(\mu_1 - \mu_2 = 0 \right)\)</span></td>
 <td align="left">Average blood pressure among two groups is different <span class="math inline">\(\left(\mu_1 - \mu_2 \neq 0 \right)\)</span></td>
 </tr>
 </tbody>
 </table>
 <p><em>Note that significance testing checks the population parameters, not sample statistics, that’s why we use Greek letters.</em></p>
 <p><strong>Difference between population and sample</strong>:</p>
-<p>One of the main purposes of statistics is to estimate the <strong>population parameter</strong> based on the <strong>sample statistic</strong>. For example, you would like like to know what is the effect of the new drug for the subjects who have a specific disease (<span class="math inline">\(\pi\)</span> - proportion of success). Performing an experiment on a whole <strong>population</strong> (every subject who has a disease) would give you a true ratio <span class="math inline">\(\pi\)</span> when drug was effective vs. when it was not. However, performing such experiment would be extremely expensive and often not possible to perform. What you could do instead is to get a <strong>sample</strong> from your population (some number of subjects with a given disease), perform an experiment of them and then generalize the results to the whole population based on the point estimate <span class="math inline">\(p\)</span> and confidence interval.</p>
+<p>One of the main purposes of statistics is to estimate the <strong>population parameter</strong> based on the <strong>sample statistic</strong>. For example, you would like to know what is the effect of the new drug for the subjects who have a specific disease (<span class="math inline">\(\pi\)</span> - the proportion of success). Performing an experiment on a whole <strong>population</strong> (every subject who has a disease) would give you a true ratio <span class="math inline">\(\pi\)</span> when the drug was effective vs. when it was not. However, performing such experiment would be extremely expensive and often not possible to perform. What you could do instead is to get a <strong>sample</strong> from your population (some number of subjects with a given disease), perform an experiment of them, and then generalize the results to the whole population based on the point estimate <span class="math inline">\(p\)</span> and confidence interval.</p>
 <center>
 <img src="pop-chart.jpeg" width="500"></img>
 </center>
@@ -174,7 +174,7 @@ Image by <a href="https://pixabay.com/users/OpenClipart-Vectors-30363/?utm_sourc
 <div id="intuitive-example" class="section level2">
 <h2>Intuitive Example</h2>
 <p>Let’s take a look at a simple example to build an intuition about p-value and alpha.</p>
-<p>Image you have a coin and you are not sure if it’s fair or not. You flip the coin once and it comes up Heads. Would you assume that the coin is unfair (is it more likely to get Heads, rather than Tails)?</p>
+<p>Imagine you have a coin and you are not sure if it’s fair or not. You flip the coin once and it comes up Heads. Would you assume that the coin is unfair (is it more likely to get Heads, rather than Tails)?</p>
 <p>What about two Heads out of two flips? Three? Four? Five?</p>
 <table align="center">
 <tr>
@@ -290,26 +290,26 @@ Probability
 </table>
 <p>Most people would doubt the fairness of the coin after five Heads out of five coin flips. If we calculate the probability of 5 Heads in a row we get:</p>
 <p><span class="math display">\[P(\text{5 Heads}) = \left( \frac{1}{2} \right) ^ 5 = 0.0313\]</span></p>
-<p>In other words, there is about 3% of getting five Heads in a row assuming that the coin is fair. This seems to be a really low probability to be true, that is why most people would assume that this coin is not fair, but rather probability of Heads <span class="math inline">\(p(\text{Heads}) &gt; \frac{1}{2}\)</span>.</p>
+<p>In other words, there is about 3% of getting five Heads in a row assuming that the coin is fair. This seems to be a really low probability to be true, that is why most people would assume that this coin is not fair, but rather the probability of Heads <span class="math inline">\(p(\text{Heads}) &gt; \frac{1}{2}\)</span>.</p>
 <p>If we have used NHST framework it would look as follows:</p>
 <ul>
 <li><span class="math inline">\(H_0\)</span>: coin is fair, <span class="math inline">\(p(\text{Heads}) = \frac{1}{2}\)</span></li>
 <li><span class="math inline">\(H_A\)</span>: coin is unfair, <span class="math inline">\(p(\text{Heads}) &gt; \frac{1}{2}\)</span></li>
 <li><span class="math inline">\(\alpha = 0.05\)</span></li>
 </ul>
-<p>We flipped the coin 5 times and got 5 heads. Now, assuming that the coin is fair we calculate the probability of this event (which was 0.0313). Note that we used <span class="math inline">\(p=\frac{1}{2}\)</span> in formula since we assume that coin is fair (null hypothesis is true). This probability of 0.0313 is our p-value. <span class="math inline">\(\text{p-value} &lt; \alpha\)</span>, that is why we reject the null hypothesis, saying that data provides enough evidence that coin is nor fair and probability of Heads is greater than <span class="math inline">\(\frac{1}{2}\)</span>.</p>
+<p>We flipped the coin 5 times and got 5 heads. Now, assuming that the coin is fair we calculate the probability of this event (which was 0.0313). Note that we used <span class="math inline">\(p=\frac{1}{2}\)</span> in the formula since we assume that coin is fair (null hypothesis is true). This probability of 0.0313 is our p-value. <span class="math inline">\(\text{p-value} &lt; \alpha\)</span>, that is why we reject the null hypothesis, saying that data provides enough evidence that coin is nor fair and the probability of Heads is greater than <span class="math inline">\(\frac{1}{2}\)</span>.</p>
 <p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-4-1.png" width="480" style="display: block; margin: auto;" /></p>
 <div id="one-tailed-vs-two-tailed-test" class="section level3">
 <h3>One-tailed vs Two-tailed Test</h3>
-<p>Our alternative hypothesis in this example was that the coin is unfair and <span class="math inline">\(p(\text{Heads}) &gt; \frac{1}{2}\)</span>, which is also called a <strong>one-tailed significance test</strong>. In such case we are interested only in probabilities of obtaining results <strong>more extreme</strong> as 5 out of 5 Heads. Due to the experiment design there was no outcome that are more extreme as 5 out of 5 Heads (since we cannot get 6 Heads out of 5 coin flips).</p>
-<p>Another type of test would be <strong>two-tailed</strong> significance test. In this way we would be interested in probabilities of obtaining results <strong>more or as extreme</strong> as obtained data. Alternative hypothesis would be:</p>
+<p>Our alternative hypothesis in this example was that the coin is unfair and <span class="math inline">\(p(\text{Heads}) &gt; \frac{1}{2}\)</span>, which is also called a <strong>one-tailed significance test</strong>. In such case we are interested only in probabilities of obtaining results <strong>more extreme</strong> as 5 out of 5 Heads. Due to the experiment design there was no outcome that was more extreme as 5 out of 5 Heads (since we couldn’t get 6 Heads out of 5 coin flips).</p>
+<p>Another type of test would be <strong>two-tailed</strong> significance test. In this way we would be interested in probabilities of obtaining results <strong>more or as extreme</strong> as obtained data. The alternative hypothesis would be:</p>
 <ul>
-<li><span class="math inline">\(H_A\)</span>: coin is unfair, <span class="math inline">\(p(\text{Heads}) \neq \frac{1}{2}\)</span> (<span class="math inline">\(p(\text{Heads}) &lt; \frac{1}{2}\)</span> or <span class="math inline">\(p(\text{Heads}) &gt; \frac{1}{2}\)</span>)</li>
+<li><span class="math inline">\(H_A\)</span>: the coin is unfair, <span class="math inline">\(p(\text{Heads}) \neq \frac{1}{2}\)</span> (<span class="math inline">\(p(\text{Heads}) &lt; \frac{1}{2}\)</span> or <span class="math inline">\(p(\text{Heads}) &gt; \frac{1}{2}\)</span>)</li>
 </ul>
 <p>As you can see, under the two-tailed testing we are not concerned about the direction of alternative hypothesis.</p>
 <p>In our example outcome of 0 Heads (5 Tails) out of 5 flips has the same probability as observed probability of 5 Heads out of 5 flips. Hence, <span class="math inline">\(\text{p-value} = P(0) + P(5) = 0.0313 + 0.0313 = 0.0616\)</span>.</p>
 <p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;" /></p>
-<p>Since now <span class="math inline">\(\text{p-value} &gt; \alpha\)</span> we would fail to reject null hypothesis saying there is not enough evidence to claim that the coin is not fair.</p>
+<p>Since now <span class="math inline">\(\text{p-value} &gt; \alpha\)</span> we would fail to reject the null hypothesis saying there is not enough evidence to claim that the coin is not fair.</p>
 </div>
 </div>
 <div id="inference-for-a-mean" class="section level2">
@@ -317,16 +317,16 @@ Probability
 <p>In this section we are going to look at a significance testing for the population mean. The general formula looks as following:</p>
 <p><span class="math display">\[\text{Statistic} = \frac{\text{Point Estimate} - \text{Null Value}}{\text{SE}}\]</span></p>
 <ul>
-<li>Point Estimate - the data we have observed (one sample mean, difference in two means, etc)</li>
+<li>Point Estimate - the data we have observed (one sample mean, a difference in two means, etc)</li>
 <li>Null Value - the value under the null hypothesis</li>
 <li>SE - standard error of the sample, <span class="math inline">\(SE = \frac{s}{\sqrt{n}}\)</span></li>
-<li>Statistic - calculated value of simulated distribution (<span class="math inline">\(t\)</span> distribution, <span class="math inline">\(\chi^2\)</span> distribution, etc)</li>
+<li>Statistic - the calculated value of a simulated distribution (<span class="math inline">\(t\)</span> distribution, <span class="math inline">\(\chi^2\)</span> distribution, etc)</li>
 </ul>
 <p>After we have calculated the statistic we can find the p-value (with the help of tables, R/Python).</p>
 </div>
 <div id="data-set" class="section level2">
 <h2>Data Set</h2>
-<p>For this tutorial we are going to look at <strong>Memory Test on Drugged Islanders Data</strong> data set from Kaggle<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.</p>
+<p>For this tutorial, we are going to look at <strong>Memory Test on Drugged Islanders Data</strong> data set from Kaggle<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.</p>
 <p>Context of the problem:</p>
 <p>An experiment on the effects of anti-anxiety medicine on memory recall when being primed with happy or sad memories. The participants were done on novel Islanders whom mimic real-life humans in response to external factors. Participants were above 25+ years old to ensure a fully developed pre-frontal cortex, a region responsible for higher level cognition and memory recall.</p>
 <table>
@@ -370,77 +370,77 @@ sample_n(islander_data, 5) %&gt;% kable()</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Kaito</td>
-<td align="left">McCarthy</td>
-<td align="right">48</td>
-<td align="left">H</td>
-<td align="right">1</td>
-<td align="left">A</td>
-<td align="right">53.5</td>
-<td align="right">56.3</td>
-<td align="right">2.8</td>
-</tr>
-<tr class="even">
-<td align="left">Momoko</td>
-<td align="left">Durand</td>
-<td align="right">50</td>
+<td align="left">Eva</td>
+<td align="left">Takahashi</td>
+<td align="right">31</td>
 <td align="left">S</td>
 <td align="right">2</td>
 <td align="left">S</td>
-<td align="right">76.8</td>
-<td align="right">78.5</td>
-<td align="right">1.7</td>
+<td align="right">84.5</td>
+<td align="right">44.1</td>
+<td align="right">-40.4</td>
 </tr>
-<tr class="odd">
-<td align="left">Florencia</td>
+<tr class="even">
+<td align="left">Evan</td>
 <td align="left">Carrasco</td>
-<td align="right">29</td>
-<td align="left">H</td>
+<td align="right">52</td>
+<td align="left">S</td>
 <td align="right">1</td>
 <td align="left">A</td>
-<td align="right">59.7</td>
-<td align="right">55.1</td>
-<td align="right">-4.6</td>
+<td align="right">41.6</td>
+<td align="right">40.7</td>
+<td align="right">-0.9</td>
+</tr>
+<tr class="odd">
+<td align="left">Ciara</td>
+<td align="left">Durand</td>
+<td align="right">54</td>
+<td align="left">H</td>
+<td align="right">2</td>
+<td align="left">T</td>
+<td align="right">55.2</td>
+<td align="right">51.7</td>
+<td align="right">-3.5</td>
 </tr>
 <tr class="even">
-<td align="left">Sara</td>
-<td align="left">Castro</td>
-<td align="right">35</td>
+<td align="left">Victor</td>
+<td align="left">Price</td>
+<td align="right">28</td>
 <td align="left">H</td>
 <td align="right">2</td>
 <td align="left">S</td>
-<td align="right">46.0</td>
-<td align="right">43.2</td>
-<td align="right">-2.8</td>
+<td align="right">79.7</td>
+<td align="right">88.9</td>
+<td align="right">9.2</td>
 </tr>
 <tr class="odd">
-<td align="left">Erin</td>
-<td align="left">Lopez</td>
-<td align="right">36</td>
+<td align="left">Lukas</td>
+<td align="left">Castro</td>
+<td align="right">80</td>
 <td align="left">S</td>
 <td align="right">3</td>
-<td align="left">S</td>
-<td align="right">61.4</td>
-<td align="right">57.5</td>
-<td align="right">-3.9</td>
+<td align="left">T</td>
+<td align="right">58.4</td>
+<td align="right">63.6</td>
+<td align="right">5.2</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div id="one-sample-test" class="section level2">
 <h2>One Sample Test</h2>
-<p><strong>The <span class="math inline">\(t\)</span>-distribution</strong><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> is useful for describing the distribution of the sample mean when the population standard deviation <span class="math inline">\(\sigma\)</span> is unknown (which is almost always). That’s why this test is also called <strong>One Sample <span class="math inline">\(t\)</span>-Test</strong><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.</p>
+<p><strong>The <span class="math inline">\(t\)</span>-distribution</strong><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> is useful for describing the distribution of the sample mean when the population standard deviation <span class="math inline">\(\sigma\)</span> is unknown (which is almost always). That’s why this test is also called the <strong>One Sample <span class="math inline">\(t\)</span>-Test</strong><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.</p>
 <p>As the name of the test suggests, we are going to look at a single mean and whether it’s significantly different from the null value.</p>
 <p>However, in order to perform <span class="math inline">\(t\)</span>-test couple of conditions need to be met:</p>
 <ol style="list-style-type: decimal">
 <li><strong>Independence</strong>: sampled observations need to be independent (for example, it would be a bad idea to include relatives like parents-children for a Memory Test experiment, since results can be affected by inheritance).</li>
-<li><strong>Randomness</strong>: probability of occurrence of each observation in a sample is equally likely (for example, it the population of interest is islanders, men and women should have equal chances to be added to the experiment).</li>
+<li><strong>Randomness</strong>: the probability of occurrence of each observation in a sample is equally likely (for example, it the population of interest is islanders, men and women should have equal chances to be added to the experiment).</li>
 <li><strong>Approximate Normality</strong>. The sample distribution size needs to be approximately normal, especially if the sample size is not large enough <span class="math inline">\((\geq30)\)</span> for Central Limit Theorem<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>.</li>
 </ol>
-<p>Also, test may be affected by extreme values (outliers) that are better to be removed.</p>
+<p>Also, the test may be affected by extreme values (outliers) that are better to be removed.</p>
 <div id="example" class="section level3">
 <h3>Example</h3>
-<p>Let’s assume that previous studies suggest that average time to finish a memory test after 1mg of Alprazolam is 60 seconds. We have observed new data and we want to check if there is enough evidence to claim that average time to finish a memory test is actually &lt;60 seconds.</p>
+<p>Let’s assume that previous studies suggest that the average time to finish a memory test after 1mg of Alprazolam is 60 seconds. We have observed new data and we want to check if there is enough evidence to claim that the average time to finish a memory test is actually &lt;60 seconds.</p>
 <ul>
 <li><span class="math inline">\(H_0\)</span>: Average time to finish a memory test after 1mg of Alprazolam is 60 seconds, <span class="math inline">\(\mu = 60\)</span></li>
 <li><span class="math inline">\(H_A\)</span>: Average time to finish a memory test after 1mg of Alprazolam is less than 60 seconds, <span class="math inline">\(\mu &lt; 60\)</span></li>
@@ -487,7 +487,7 @@ hist(temp_df$Mem_Score_After,
 <li><span class="math inline">\(H_0\)</span>: sample is normally distributed.</li>
 <li><span class="math inline">\(H_A\)</span>: sample isn’t normally distributed.</li>
 </ul>
-<p>p-value of <span class="math inline">\(0.3\)</span> means that we failed to reject the null hypothesis, meaning that there is not enough evidence to claim that sample is not normally distributed.</p>
+<p>p-value of <span class="math inline">\(0.3\)</span> means that we failed to reject the null hypothesis, meaning that there is not enough evidence to claim that the sample is not normally distributed.</p>
 <p>Using formula from above we can calculate point estimate (average value of the set), null estimate (60 seconds) and standard error.</p>
 <pre class="r"><code>alpha &lt;- 0.05
 null_estimate &lt;- 60
@@ -533,11 +533,11 @@ print(paste0(&quot;p-value is: &quot;, round(pval, 3)))
 ## [1] &quot;p-value is: 0.337&quot;
 alpha &lt;- 0.05
 nhst_result(pval, alpha)
-## [1] &quot;p-value is greater than alpha (0.05). Fail to reject null hypothesis.&quot;</code></pre>
+## [1] &quot;p-value is greater than alpha (0.05). Fail to reject the null hypothesis.&quot;</code></pre>
 <blockquote>
 <p>As we can see, we failed to reject the null hypothesis, or in other words, there is not enough evidence to claim that the average time to finish a memory test after 1mg of Alprazolam is less than 60 seconds.</p>
 </blockquote>
-<p>But would you be still be able to get conclusion of the test without software, if you did all the calculations by hand? The answer is “definetely yes”. When you have calculated <span class="math inline">\(t_\text{stat}\)</span> (which was -0.4255 in our example) you could compare this value to <span class="math inline">\(t_\text{critical}\)</span>. <span class="math inline">\(t_\text{critical}\)</span> is the <span class="math inline">\(\alpha\)</span> (for one-tailed test) or <span class="math inline">\(\alpha/2\)</span> (for two-tailed test) quantile of <span class="math inline">\(t\)</span>-distribution, that can be easily found in any of t-tables.</p>
+<p>But would you still be able to get the conclusion of the test without software, if you did all the calculations by hand? The answer is “definitely yes”. When you have calculated <span class="math inline">\(t_\text{stat}\)</span> (which was -0.4255 in our example) you could compare this value to <span class="math inline">\(t_\text{critical}\)</span>. <span class="math inline">\(t_\text{critical}\)</span> is the <span class="math inline">\(\alpha\)</span> (for one-tailed test) or <span class="math inline">\(\alpha/2\)</span> (for two-tailed test) quantile of <span class="math inline">\(t\)</span>-distribution, that can be easily found in any of t-tables.</p>
 <p>We need to find a value of <span class="math inline">\(t_\text{critical}\)</span> creates an area of 0.05 (our <span class="math inline">\(\alpha\)</span> level) under the curve for a <span class="math inline">\(t\)</span> distribution with 22 degrees of freedom:</p>
 <center>
 <img src="ttable.jpg" width="400"></img>
@@ -577,7 +577,7 @@ ggplot() +
 </p>
 </details>
 <p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-16-1.png" width="480" style="display: block; margin: auto;" /></p>
-<p>If out calculated <span class="math inline">\(t\)</span> statistic (black line) would be on the left side from ctitical <span class="math inline">\(t\)</span> value (red line) we would reject the null hypothesis, since we would be sure that p-value (red area) is &lt; 0.05. Here we see that our <span class="math inline">\(t\)</span> statistic is greater than <span class="math inline">\(t_\text{critical}\)</span>, so we fail to reject the null hypothesis. It’s always a good idea to draw a test distribution.</p>
+<p>If out calculated <span class="math inline">\(t\)</span> statistic (black line) would be on the left side from critical <span class="math inline">\(t\)</span> value (red line) we would reject the null hypothesis, since we would be sure that the p-value (red area) is &lt; 0.05. Here we see that our <span class="math inline">\(t\)</span> statistic is greater than <span class="math inline">\(t_\text{critical}\)</span>, so we fail to reject the null hypothesis. It’s always a good idea to draw a test distribution.</p>
 <p>Alternatively, we can let R and Python do all the calculations for us:</p>
 <details>
 <summary><strong>R</strong></summary>
@@ -619,7 +619,7 @@ print(f&quot;Calculated test statistic: {t_stat: .4f}\np-value: {p_val/2: .4f}&q
 </div>
 <div id="two-sample-test-independent-groups" class="section level2">
 <h2>Two Sample Test (Independent Groups)</h2>
-<p>Now we are going to compare the mean values of two groups and check if there is statistically significant difference between them. The same way, in order to perform Two-Sample <span class="math inline">\(t\)</span>-test the condition of <strong>independence</strong> need to be met, meaning that you cannot compare difference of a memory test result before and after the pill for the same person. Also, for two sample <span class="math inline">\(t\)</span> test the <strong>variance of two groups need to be equal</strong>. There is a way<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> to perform <span class="math inline">\(t\)</span>-test when variances are not equal but it will not be covered here.</p>
+<p>Now we are going to compare the mean values of two groups and check if there is a statistically significant difference between them. In the same way, to perform Two-Sample <span class="math inline">\(t\)</span>-test the condition of <strong>independence</strong> needs to be met, meaning that you cannot compare the difference of a memory test result before and after the pill for the same person. Also, for the two sample <span class="math inline">\(t\)</span> test the <strong>variance of two groups need to be equal</strong>. There is a way<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> to perform <span class="math inline">\(t\)</span>-test when variances are not equal but it will not be covered here.</p>
 <div id="example-1" class="section level3">
 <h3>Example</h3>
 <p>Let’s check if there is a difference in memory test results after 5 mg of Alprazolam and 3 tabs of sugar pills (placebo).</p>
@@ -723,7 +723,7 @@ shapiro.test(pla_sample$Mem_Score_After)
 ## W = 0.96, p-value = 0.5</code></pre>
 <p>p-value = 0.5, so we failed to reject the null hypothesis that samples are normally distributed.</p>
 <p><strong>Check that variances are equal:</strong></p>
-<p>For this purpose we are going to use the proportion of two variances <span class="math inline">\(\frac{s_1^2}{s_2^2}\)</span> to estimate the proportion of population variances <span class="math inline">\(\frac{\sigma_1^2}{\sigma_2^2}\)</span> using <strong><span class="math inline">\(F\)</span>-distribution</strong><a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>.</p>
+<p>For this purpose, we are going to use the proportion of two variances <span class="math inline">\(\frac{s_1^2}{s_2^2}\)</span> to estimate the proportion of population variances <span class="math inline">\(\frac{\sigma_1^2}{\sigma_2^2}\)</span> using <strong><span class="math inline">\(F\)</span>-distribution</strong><a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>.</p>
 <ul>
 <li><span class="math inline">\(H_0\)</span>: population variances are equal <span class="math inline">\(\frac{\sigma_1^2}{\sigma_2^2} = 1\)</span>.</li>
 <li><span class="math inline">\(H_A\)</span>: population variances are different <span class="math inline">\(\frac{\sigma_1^2}{\sigma_2^2} \neq 1\)</span>.</li>
@@ -734,7 +734,7 @@ var_ratio &lt;- var_alp / var_pla
 pval &lt;- pf(var_ratio, n_alp-1, n_pla-1, lower.tail = FALSE) * 2
 print(paste0(&quot;p-value is: &quot;, round(pval, 3)))</code></pre>
 <pre><code>## [1] &quot;p-value is: 0.896&quot;</code></pre>
-<p>p-value is 0.9 so we failed to reject null hypothesis that population variances are equal.</p>
+<p>p-value is 0.9 so we failed to reject the null hypothesis that population variances are equal.</p>
 <details>
 <summary><strong>R</strong></summary>
 <p>
@@ -788,7 +788,7 @@ print(paste0(&quot;p-value is: &quot;, round(pval, 3)))
 ## [1] &quot;p-value is: 0.001&quot;
 alpha &lt;- 0.05
 nhst_result(pval, alpha)
-## [1] &quot;p-value is less than alpha (0.05). Reject null hypothesis.&quot;</code></pre>
+## [1] &quot;p-value is less than alpha (0.05). Reject the null hypothesis.&quot;</code></pre>
 <blockquote>
 <p>We reject the null hypothesis, or in other words, there is evidence that the average time to finish a memory test after 5 mg of Alprazolam and 3 tabs of sugar pills is different.</p>
 </blockquote>
@@ -838,7 +838,7 @@ print(f&quot;Calculated test statistic: {t_stat: .4f}\np-value: {p_val: .5f}&quo
 <p>But what if we still need to compare difference in <strong>dependent</strong> groups (for example before and after the drug)? We cannot use <span class="math inline">\(t\)</span>-test for paired sample, however we can use a single sample <span class="math inline">\(t\)</span>-test for a <strong>sample of differences</strong>.</p>
 <div id="example-2" class="section level3">
 <h3>Example</h3>
-<p>Let’s now check if there is a significance difference (in any direction, so two-tailed test) in memory test results before and after 0.75mg of Triazolam. Now we are going to use the variable <code>Diff</code> which was calculated as <code>Mem_Score_After - Mem_Score_Before</code>.</p>
+<p>Let’s now check if there is a significant difference (in any direction, so two-tailed test) in memory test results before and after 0.75mg of Triazolam. Now we are going to use the variable <code>Diff</code> which was calculated as <code>Mem_Score_After - Mem_Score_Before</code>.</p>
 <ul>
 <li><span class="math inline">\(H_0\)</span>: There is no difference in test results before and after 0.75mg of Triazolam, <span class="math inline">\(\mu_{\text{diff}} = 0\)</span></li>
 <li><span class="math inline">\(H_A\)</span>: There is a difference in test results before and after 0.75mg of Triazolam, <span class="math inline">\(\mu_{\text{diff}} \neq 0\)</span></li>
@@ -988,20 +988,20 @@ ggplot() +
 </details>
 <p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-39-1.png" width="480" style="display: block; margin: auto;" /></p>
 <blockquote>
-<p>p-value is 0.8, which is greater than <span class="math inline">\(\alpha\)</span>, that’s why failed to reject null hypothesis. In other words, there is not enough evidence to claim that there is a difference in memory test results before and after 0.75mg of Triazolam.</p>
+<p>p-value is 0.8, which is greater than <span class="math inline">\(\alpha\)</span>, that’s why failed to reject the null hypothesis. In other words, there is not enough evidence to claim that there is a difference in memory test results before and after 0.75mg of Triazolam.</p>
 </blockquote>
 </div>
 </div>
 <div id="comparing-more-than-two-means-anova" class="section level2">
 <h2>Comparing More than Two Means (ANOVA)</h2>
-<p>Imagine that you want to compare the difference of the means in three or more sample. There is no way to do this using <span class="math inline">\(t\)</span>-test, however it can be done using <strong>ANOVA</strong> (ANalysis Of VAriance) and <span class="math inline">\(F\)</span> statistic. In general form the hypothesis for ANOVA are described as:</p>
+<p>Imagine that you want to compare the difference between the means in three or more samples. There is no way to do this using <span class="math inline">\(t\)</span>-test, however, it can be done using <strong>ANOVA</strong> (ANalysis Of VAriance) and <span class="math inline">\(F\)</span> statistic. In the general form the hypothesis for ANOVA are described as:</p>
 <ul>
 <li><span class="math inline">\(H_0\)</span>: there is no difference among the group means, <span class="math inline">\(\mu_1=\mu_2=...=\mu_k\)</span></li>
 <li><span class="math inline">\(H_A\)</span>: at least two groups are significantly different (but it doesn’t specify which pair exactly).</li>
-<li><span class="math inline">\(k\)</span> - number of groups.</li>
+<li><span class="math inline">\(k\)</span> - the number of groups.</li>
 </ul>
 <p>Test statistic <span class="math inline">\(F\)</span> can be calculated as:</p>
-<p><span class="math display">\[F_\text{calc} = \frac{\text{Variability beetween groups}}{\text{Variability within groups}}\]</span></p>
+<p><span class="math display">\[F_\text{calc} = \frac{\text{Variability between groups}}{\text{Variability within groups}}\]</span></p>
 <p>Conditions that need to be met for ANOVA:</p>
 <ul>
 <li><strong>Within Group Independence</strong>: sampled observations must be independent.</li>
@@ -1200,13 +1200,13 @@ Condition is met.
 <ul>
 <li><span class="math inline">\(\bar{y}\)</span>: total average value.</li>
 </ul>
-<p><span class="math inline">\(SSG\)</span>: sum of squares for groups, measures the variability between groups. Explained variability.</p>
+<p><span class="math inline">\(SSG\)</span>: the sum of squares for groups, measures the variability between groups. Explained variability.</p>
 <p><span class="math display">\[SSG = \sum_{j=1}^k \left[ n_j (\bar{y_j} - \bar{y})^2 \right]\]</span></p>
 <ul>
 <li><span class="math inline">\(n_j\)</span>: number of samples in <span class="math inline">\(j\)</span> group.</li>
 <li><span class="math inline">\(\bar{y_j}\)</span>: average value for the <span class="math inline">\(j\)</span> group.</li>
 </ul>
-<p><span class="math inline">\(SSE\)</span>: sum of squares for error, measures the variability within groups. Unexplained variability.</p>
+<p><span class="math inline">\(SSE\)</span>: the sum of squares for error, measures the variability within groups. Unexplained variability.</p>
 <p>We can rewrite the formula for <span class="math inline">\(F\)</span> statistic:</p>
 <p><span class="math display">\[F = \frac{MSG}{MSE}\]</span></p>
 <p><span class="math inline">\(MSG\)</span>: Mean Squares for groups. Average variability <strong>between</strong> groups calculated as the total variability (sum of squares) scaled by degrees of freedom.</p>
@@ -1279,7 +1279,7 @@ print(paste0(&quot;p-value is: &quot;, round(pval, 3)))
 ## [1] &quot;p-value is: 0.603&quot;
 alpha &lt;- 0.05
 nhst_result(pval, alpha)
-## [1] &quot;p-value is greater than alpha (0.05). Fail to reject null hypothesis.&quot;</code></pre>
+## [1] &quot;p-value is greater than alpha (0.05). Fail to reject the null hypothesis.&quot;</code></pre>
 <blockquote>
 <p>We failed to reject the null hypothesis meaning there is not enough evidence to claim that at least one pair of group is significantly different.</p>
 </blockquote>
@@ -1343,7 +1343,7 @@ print(f&quot;Calculated test statistic: {F_stat: .4f}\np-value: {p_val: .4f}&quo
 </div>
 <div id="summary" class="section level2">
 <h2>Summary</h2>
-<p>I hope that you have better understanding of algorithms for inference for a population means after this tutorial. As you could see, calculation of p-value can be easily done by R/Python, however there is lots of work for us before and after the calculations. We always need to choose the right test, check conditions for this test and interpret the results in context of the problem, etc. Also, making decision based only on p-value isn’t always enough and also we need to take into account an <strong>effect size</strong>, that will be described in later tutorial.</p>
+<p>I hope that you have a better understanding of algorithms for inference for a population means after this tutorial. As you could see, calculation of p-value can be easily done by R/Python, however, there is lots of work for us before and after the calculations. We always need to choose the right test, check conditions for this test, and interpret the results in the context of the problem, etc. Also, making decisions based only on p-value isn’t always enough, and also we need to take into account an <strong>effect size</strong>, that will be described in a later tutorial.</p>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
