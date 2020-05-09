@@ -110,7 +110,7 @@ In statistical hypothesis testing framework we usually calculate the **p-value**
 4. <span style="background-color: #9ce0ff">Calculate the desired statistic and p-value associated with it.</span>
 5. Interpret the results in a context of a problem.
 
-Note that the $4.$ point is highlighted. This is usually the **only** step that is can be done by software (SPSS, R, Python, Excel, etc) meaning that user must do all the work left: choose null and alternative hypothesis, decide what test to use, interpret the results.
+Note that the $4.$ point is highlighted. This is usually the **only** step that can be done by software (SPSS, R, Python, Excel, etc) meaning that user must do all the work left: choose null and alternative hypothesis, decide what test to use, interpret the results.
 
 Some examples of hypothesis would be:
 
