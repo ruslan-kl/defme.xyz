@@ -27,7 +27,7 @@ tags: ["Statistics", "Probability", "R", "Bayesian Inference"]
 
 ## <a name="termoinology">Terminology</a>
 
-* **Prevalence** in epidemiology is the proportion of a particular population found to be affected by a medical condition [[1]](#1). For example, according to Public Health Center of Ukraine [[2]](#2) HIV/AIDS review (01.04.2019) [[3]](#3) 42,8 of 100000 people in Ukraine have HIV [[4]](#4). Prevalence of HIV if that case is going to equal: 
+* **Prevalence** in epidemiology is the proportion of a particular population found to be affected by a medical condition [[1]](#1). For example, according to the Public Health Center of Ukraine [[2]](#2) HIV/AIDS review (01.04.2019) [[3]](#3) 42,8 of 100000 people in Ukraine have HIV [[4]](#4). Prevalence of HIV if that case is going to equal: 
 
  $$\text{Prevalence} = \frac{42.8}{100000} = 0.000428$$
 
@@ -37,7 +37,7 @@ tags: ["Statistics", "Probability", "R", "Bayesian Inference"]
 
  * **Specificity** (also called *the true negative rate*) measures the proportion of actual negatives that are correctly identified as such (e.g., the percentage of healthy people who are correctly identified as not having the condition). [[5]](#5)
 
- For example, we tested 1000 people who have HIV and 1000 people who don't have have with the Test "X". Test showed following results:
+ For example, we tested 1000 people who have HIV and 1000 people who don't have HIV with a Test "X". The rest showed the following results:
 
 | | Actual: Doesn't have a disease | Actual: Has a disease | Total |
 |:-:|:-:|:-:|:-:|
@@ -49,49 +49,49 @@ tags: ["Statistics", "Probability", "R", "Bayesian Inference"]
 
  $$\text{Sensitivity} = \frac{985}{1000} = 0.985$$
 
- We will denote it as $P(\text{"+"|HIV})$ - probability of positive test result given that person has HIV.
+ We will denote it as $P(\text{"+"|HIV})$ - the probability of positive test result given that person has HIV.
 
-* In 990 cases out of 1000 test correctly predicted that person doesn't have HIV, so:
+* In 990 cases out of 1000 test correctly predicted that a person doesn't have HIV, so:
 
  $$\text{Specificity} = \frac{990}{1000} = 0.99$$
 
- We will denote it as $P(\text{"-"|no HIV})$ - probability of negative test result given that person doesn't have HIV.
+ We will denote it as $P(\text{"-"|no HIV})$ - the probability of negative test result given that person doesn't have HIV.
 
- This is co called **conditional probability** [[6]](#6). We assume that event after the $|$ sign has occured and measure the probability of a new event (before the $|$ sign).
+ This is co-called **conditional probability** [[6]](#6). We assume that event after the $|$ sign has occurred and measure the probability of a new event (before the $|$ sign).
 
- Usually, tests provide sensitivity and specificity scores from manufacturer. For example, express HIV test CITO TEST claims to have $99.99\%$ sensitivity and $99.99\%$ specificity [[7]](#7).
+ Usually, tests provide sensitivity and specificity scores from the manufacturer. For example, express HIV test CITO TEST claims to have $99.99\%$ sensitivity and $99.99\%$ specificity [[7]](#7).
  
 
 ## <a name="measure">Measuring the probability of having a disease</a>
 
 ### <a name="init0">Initial state</a>
 
-Imagine that a person comes for HIV test and we don't have any information about his HIV status nor his lifestyle or partner/parents' status. What is the probability that this person has HIV before doing the test? 
+Imagine that a person comes for an HIV test and we don't have any information about his HIV status nor his lifestyle or partner/parents' status. What is the probability that this person has HIV before doing the test? 
 
 Since we don't have information and we don't want to make wrong assumptions we assign the prevalence of HIV in the population he came from as the probability that he has HIV. So:
 
 $$P(\text{HIV}) = 0.000428$$
 
-Now, subject has taken the express CITO test and it resulted **positive**. As we have seen before, the sensitivity of that test is really high ($99.99\%$), however does it really mean that this subject has HIV?
+Now, the subject has taken the express CITO test and it resulted in **positive**. As we have seen before, the sensitivity of that test is high ($99.99\%$), however, does it really mean that this subject has HIV?
 
 ### <a name="bayes-update">Updating probability using Bayes's Rule</a>
 
 > In probability theory and statistics, **Bayes’s theorem** (alternatively Bayes’s law or Bayes’s rule) describes the probability of an event, based on prior knowledge of conditions that might be related to the event. [[8]](#8)
 
-Imagine, we have to dependent events $A$ and $B$. We want to measure the probability that event $B$ will occur **given** that event $A$ has occured. Accoring to Bayes's Rule:
+Imagine, we have to dependent events $A$ and $B$. We want to measure the probability that event $B$ will occur **given** that event $A$ has occurred. According to the Bayes's Rule:
 
 $$P(\text{B|A}) = \frac{P(\text{A|B}) \times P(\text{B})}{P(\text{A})}$$
 
 where:
 
-- $P(\text{B|A})$ - posterior probability of event $B$;
+- $P(\text{B|A})$ - the posterior probability of event $B$;
 - $P(\text{B})$, $P(\text{A})$ - prior probabilities of events $B$ and $A$;
-- $P(\text{A|B})$ - likelihood 
+- $P(\text{A|B})$ - the likelihood 
 
-In our HIV test example we want to know what is the probability that person actually has HIV, given that he was tested positive. Using Bayes's rule:
+In our HIV test example we want to know what is the probability that a person actually has HIV, given that he was tested positive. Using Bayes's rule:
 
 $$P(\text{HIV|"+"}) = \frac{P(\text{"+"|HIV}) \times P(\text{HIV})}{P(\text{"+"})}$$
-We have the values of numerator, however we don't have the value in denumerator (probability of being tested positive). We can easily calculate it using **probability trees** [[9]](#9).
+We have the values of the numerator, however, we don't have the value in the denumerator (probability of being tested positive). We can easily calculate it using **probability trees** [[9]](#9).
 
 ### <a name="prob-trees">Probability trees</a>
 
@@ -99,14 +99,14 @@ We have the values of numerator, however we don't have the value in denumerator 
 
 <center><img src="https://i.ibb.co/SK1WtnK/Deepin-Screenshot-select-area-20200321194239.png" width="800"></img></center>
 
-We start from the initial node (`Subject`). We have two options - subject might have HIV or might not have HIV. We assumed that probability of HIV for that person is equal to prevalance of HIV. 
+We start from the initial node (`Subject`). We have two options - the subject might have HIV or might not have HIV. We assumed that the probability of HIV for that person is equal to the prevalance of HIV. 
 
-Let's look at `Disease` node. At this point we say that person **has** HIV (with the probability 0.000428) and now two options would be:
+Let's look at the `Disease` node. At this point we say that person **has** HIV (with the probability 0.000428) and now two options would be:
 
-1) person will be tested **positive** ($P(\text{"+"|HIV})$, sensitivity of a test)
-2) person will be tested **negative** ($P(\text{"-"|HIV})$, unknown).
+1) a person will be tested **positive** ($P(\text{"+"|HIV})$, the sensitivity of a test)
+2) a person will be tested **negative** ($P(\text{"-"|HIV})$, unknown).
 
-We don't have $P(\text{"-"|HIV})$, however we can easily calculate it since this two events are **complementary** [[10]](#10). Hence:
+We don't have $P(\text{"-"|HIV})$, however, we can easily calculate it since these two events are **complementary** [[10]](#10). Hence:
 
 $$P(\text{"-"|HIV}) = 1 - P(\text{"+"|HIV})$$
 $$P(\text{"-"|HIV}) = 1 - 0.9999 = 0.0001$$
@@ -137,11 +137,11 @@ We could also rewrite this equation for the general case:
 $$P(\text{HIV|"+"}) = \frac{P(\text{"+"|HIV}) \times P(\text{HIV})}{P(\text{"+"|HIV}) \times P(\text{HIV}) + P(\text{"+"|no HIV}) \times P(\text{no HIV})}$$
 
 $$P(\text{HIV|"+"}) = \frac{0.9999 \times 0.000428}{0.0005279144} = 0.8106564$$
-Note, that the probability that the subject has HIV is about $81\%$. This is due to the relevantly small prevalence of a disease in a population. Even though the test has high sensitivity it doesn't guarantee that you have a diseases in $99.99\%$ of cases.
+Note, that the probability that the subject has HIV is about $81\%$. This is due to the relevantly small prevalence of a disease in a population. Even though the test has high sensitivity it doesn't guarantee that you have a disease in $99.99\%$ of cases.
 
 ## <a name="r">Using R</a>
 
-We still have $19\%$ chance that person doesn't have HIV. What would be the next step to be sure with diagnosis? We can do the second test! The only difference now is that the initial (prior) probability of HIV for this subject is going to be $0.8106564$, not $0.000428$ since now we have some information. We are going to use R to do the calculations:
+We still have a $19\%$ chance that a person doesn't have HIV. What would be the next step to be sure with the diagnosis? We can do the second test! The only difference now is that the initial (prior) probability of HIV for this subject is going to be $0.8106564$, not $0.000428$ since now we have some information. We are going to use R to do the calculations:
 
 <details><summary>**Custom R functions**</summary>
 <p>
@@ -220,12 +220,12 @@ After the second test the probability that person has HIV is around $99.9\%$. So
 
 ## <a name="another-example">One more example</a>
 
-What would happen if test had a bit lower sensitivity/specificity score? Assume the test has following performance:
+What would happen if the test had a bit lower sensitivity/specificity score? Assume the test has the following performance:
 
 * $P(\text{"+"|HIV}) = 0.98$
 * $P(\text{"-"|no HIV}) = 0.98$
 
-Prevalence of HIV stays the same.
+The prevalence of HIV stays the same.
 
 ### Initial state
 
@@ -281,12 +281,12 @@ We can see that after taking new test with slightly worst scores only after thre
 
 ## <a name="hyp-test">Bayesian Hypothesis Testing</a>
 
-Image you have two hypothesis:
+Imagine you have two hypotheses:
 
 * $H_1$: Subject has HIV
-* $H_2$: Sudject doesn't have HIV
+* $H_2$: Subject doesn't have HIV
 
-You want to check if there is enough evidence against one of the hypothesis to reject or accept it. This can be achieved using **Bayes factor** [[12]](#12), which can be find as:
+You want to check if there is enough evidence against one of the hypothesis to reject or accept it. This can be achieved using the **Bayes factor** [[12]](#12), which can be found as:
 
 $$BF(H_1:H_2) = \frac{\text{Posterior Odds}}{\text{Prior Odds}}$$
 $$\text{Prior Odds} = PrO(H_1:H_2) = \frac{P(H_1)}{P(H_2)}$$
@@ -364,4 +364,4 @@ $BF(H_1:H_2) > 100$, therefore we have decisive evidence for $H_1$ (subject has 
 * <a name="10">[10]:</a> https://en.wikipedia.org/wiki/Complementary_event
 * <a name="11">[11]:</a> https://en.wikipedia.org/wiki/Joint_probability_distribution
 * <a name="12">[12]:</a> https://en.wikipedia.org/wiki/Bayes_factor
-* (Not listed before, but great example of probability trees using `Rgraphviz`): http://www.harrysurden.com/wordpress/archives/292
+* (Not listed before, but a great example of probability trees using `Rgraphviz`): http://www.harrysurden.com/wordpress/archives/292

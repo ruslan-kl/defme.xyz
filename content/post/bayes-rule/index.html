@@ -39,7 +39,7 @@ unsplash-logo
 <div id="terminology" class="section level2">
 <h2><a name="termoinology">Terminology</a></h2>
 <ul>
-<li><strong>Prevalence</strong> in epidemiology is the proportion of a particular population found to be affected by a medical condition <a href="#1">[1]</a>. For example, according to Public Health Center of Ukraine <a href="#2">[2]</a> HIV/AIDS review (01.04.2019) <a href="#3">[3]</a> 42,8 of 100000 people in Ukraine have HIV <a href="#4">[4]</a>. Prevalence of HIV if that case is going to equal:</li>
+<li><strong>Prevalence</strong> in epidemiology is the proportion of a particular population found to be affected by a medical condition <a href="#1">[1]</a>. For example, according to the Public Health Center of Ukraine <a href="#2">[2]</a> HIV/AIDS review (01.04.2019) <a href="#3">[3]</a> 42,8 of 100000 people in Ukraine have HIV <a href="#4">[4]</a>. Prevalence of HIV if that case is going to equal:</li>
 </ul>
 <p><span class="math display">\[\text{Prevalence} = \frac{42.8}{100000} = 0.000428\]</span></p>
 <ul>
@@ -47,7 +47,7 @@ unsplash-logo
 <li><p><strong>Sensitivity</strong> (also called <em>the true positive rate</em>, <em>the recall</em>, or <em>probability of detection</em> in some fields) measures the proportion of actual positives that are correctly identified as such (e.g., the percentage of sick people who are correctly identified as having the condition).</p></li>
 <li><p><strong>Specificity</strong> (also called <em>the true negative rate</em>) measures the proportion of actual negatives that are correctly identified as such (e.g., the percentage of healthy people who are correctly identified as not having the condition). <a href="#5">[5]</a></p></li>
 </ul>
-<p>For example, we tested 1000 people who have HIV and 1000 people who don’t have have with the Test “X”. Test showed following results:</p>
+<p>For example, we tested 1000 people who have HIV and 1000 people who don’t have HIV with a Test “X”. The rest showed the following results:</p>
 <table>
 <thead>
 <tr class="header">
@@ -82,40 +82,40 @@ unsplash-logo
 <li>In 985 cases out of 1000 test correctly predicted that person has HIV, so:</li>
 </ul>
 <p><span class="math display">\[\text{Sensitivity} = \frac{985}{1000} = 0.985\]</span></p>
-<p>We will denote it as <span class="math inline">\(P(\text{&quot;+&quot;|HIV})\)</span> - probability of positive test result given that person has HIV.</p>
+<p>We will denote it as <span class="math inline">\(P(\text{&quot;+&quot;|HIV})\)</span> - the probability of positive test result given that person has HIV.</p>
 <ul>
-<li>In 990 cases out of 1000 test correctly predicted that person doesn’t have HIV, so:</li>
+<li>In 990 cases out of 1000 test correctly predicted that a person doesn’t have HIV, so:</li>
 </ul>
 <p><span class="math display">\[\text{Specificity} = \frac{990}{1000} = 0.99\]</span></p>
-<p>We will denote it as <span class="math inline">\(P(\text{&quot;-&quot;|no HIV})\)</span> - probability of negative test result given that person doesn’t have HIV.</p>
-<p>This is co called <strong>conditional probability</strong> <a href="#6">[6]</a>. We assume that event after the <span class="math inline">\(|\)</span> sign has occured and measure the probability of a new event (before the <span class="math inline">\(|\)</span> sign).</p>
-<p>Usually, tests provide sensitivity and specificity scores from manufacturer. For example, express HIV test CITO TEST claims to have <span class="math inline">\(99.99\%\)</span> sensitivity and <span class="math inline">\(99.99\%\)</span> specificity <a href="#7">[7]</a>.</p>
+<p>We will denote it as <span class="math inline">\(P(\text{&quot;-&quot;|no HIV})\)</span> - the probability of negative test result given that person doesn’t have HIV.</p>
+<p>This is co-called <strong>conditional probability</strong> <a href="#6">[6]</a>. We assume that event after the <span class="math inline">\(|\)</span> sign has occurred and measure the probability of a new event (before the <span class="math inline">\(|\)</span> sign).</p>
+<p>Usually, tests provide sensitivity and specificity scores from the manufacturer. For example, express HIV test CITO TEST claims to have <span class="math inline">\(99.99\%\)</span> sensitivity and <span class="math inline">\(99.99\%\)</span> specificity <a href="#7">[7]</a>.</p>
 </div>
 <div id="measuring-the-probability-of-having-a-disease" class="section level2">
 <h2><a name="measure">Measuring the probability of having a disease</a></h2>
 <div id="initial-state" class="section level3">
 <h3><a name="init0">Initial state</a></h3>
-<p>Imagine that a person comes for HIV test and we don’t have any information about his HIV status nor his lifestyle or partner/parents’ status. What is the probability that this person has HIV before doing the test?</p>
+<p>Imagine that a person comes for an HIV test and we don’t have any information about his HIV status nor his lifestyle or partner/parents’ status. What is the probability that this person has HIV before doing the test?</p>
 <p>Since we don’t have information and we don’t want to make wrong assumptions we assign the prevalence of HIV in the population he came from as the probability that he has HIV. So:</p>
 <p><span class="math display">\[P(\text{HIV}) = 0.000428\]</span></p>
-<p>Now, subject has taken the express CITO test and it resulted <strong>positive</strong>. As we have seen before, the sensitivity of that test is really high (<span class="math inline">\(99.99\%\)</span>), however does it really mean that this subject has HIV?</p>
+<p>Now, the subject has taken the express CITO test and it resulted in <strong>positive</strong>. As we have seen before, the sensitivity of that test is high (<span class="math inline">\(99.99\%\)</span>), however, does it really mean that this subject has HIV?</p>
 </div>
 <div id="updating-probability-using-bayess-rule" class="section level3">
 <h3><a name="bayes-update">Updating probability using Bayes’s Rule</a></h3>
 <blockquote>
 <p>In probability theory and statistics, <strong>Bayes’s theorem</strong> (alternatively Bayes’s law or Bayes’s rule) describes the probability of an event, based on prior knowledge of conditions that might be related to the event. <a href="#8">[8]</a></p>
 </blockquote>
-<p>Imagine, we have to dependent events <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>. We want to measure the probability that event <span class="math inline">\(B\)</span> will occur <strong>given</strong> that event <span class="math inline">\(A\)</span> has occured. Accoring to Bayes’s Rule:</p>
+<p>Imagine, we have to dependent events <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>. We want to measure the probability that event <span class="math inline">\(B\)</span> will occur <strong>given</strong> that event <span class="math inline">\(A\)</span> has occurred. According to the Bayes’s Rule:</p>
 <p><span class="math display">\[P(\text{B|A}) = \frac{P(\text{A|B}) \times P(\text{B})}{P(\text{A})}\]</span></p>
 <p>where:</p>
 <ul>
-<li><span class="math inline">\(P(\text{B|A})\)</span> - posterior probability of event <span class="math inline">\(B\)</span>;</li>
+<li><span class="math inline">\(P(\text{B|A})\)</span> - the posterior probability of event <span class="math inline">\(B\)</span>;</li>
 <li><span class="math inline">\(P(\text{B})\)</span>, <span class="math inline">\(P(\text{A})\)</span> - prior probabilities of events <span class="math inline">\(B\)</span> and <span class="math inline">\(A\)</span>;</li>
-<li><span class="math inline">\(P(\text{A|B})\)</span> - likelihood</li>
+<li><span class="math inline">\(P(\text{A|B})\)</span> - the likelihood</li>
 </ul>
-<p>In our HIV test example we want to know what is the probability that person actually has HIV, given that he was tested positive. Using Bayes’s rule:</p>
+<p>In our HIV test example we want to know what is the probability that a person actually has HIV, given that he was tested positive. Using Bayes’s rule:</p>
 <p><span class="math display">\[P(\text{HIV|&quot;+&quot;}) = \frac{P(\text{&quot;+&quot;|HIV}) \times P(\text{HIV})}{P(\text{&quot;+&quot;})}\]</span>
-We have the values of numerator, however we don’t have the value in denumerator (probability of being tested positive). We can easily calculate it using <strong>probability trees</strong> <a href="#9">[9]</a>.</p>
+We have the values of the numerator, however, we don’t have the value in the denumerator (probability of being tested positive). We can easily calculate it using <strong>probability trees</strong> <a href="#9">[9]</a>.</p>
 </div>
 <div id="probability-trees" class="section level3">
 <h3><a name="prob-trees">Probability trees</a></h3>
@@ -125,13 +125,13 @@ We have the values of numerator, however we don’t have the value in denumerato
 <center>
 <img src="https://i.ibb.co/SK1WtnK/Deepin-Screenshot-select-area-20200321194239.png" width="800"></img>
 </center>
-<p>We start from the initial node (<code>Subject</code>). We have two options - subject might have HIV or might not have HIV. We assumed that probability of HIV for that person is equal to prevalance of HIV.</p>
-<p>Let’s look at <code>Disease</code> node. At this point we say that person <strong>has</strong> HIV (with the probability 0.000428) and now two options would be:</p>
+<p>We start from the initial node (<code>Subject</code>). We have two options - the subject might have HIV or might not have HIV. We assumed that the probability of HIV for that person is equal to the prevalance of HIV.</p>
+<p>Let’s look at the <code>Disease</code> node. At this point we say that person <strong>has</strong> HIV (with the probability 0.000428) and now two options would be:</p>
 <ol style="list-style-type: decimal">
-<li>person will be tested <strong>positive</strong> (<span class="math inline">\(P(\text{&quot;+&quot;|HIV})\)</span>, sensitivity of a test)</li>
-<li>person will be tested <strong>negative</strong> (<span class="math inline">\(P(\text{&quot;-&quot;|HIV})\)</span>, unknown).</li>
+<li>a person will be tested <strong>positive</strong> (<span class="math inline">\(P(\text{&quot;+&quot;|HIV})\)</span>, the sensitivity of a test)</li>
+<li>a person will be tested <strong>negative</strong> (<span class="math inline">\(P(\text{&quot;-&quot;|HIV})\)</span>, unknown).</li>
 </ol>
-<p>We don’t have <span class="math inline">\(P(\text{&quot;-&quot;|HIV})\)</span>, however we can easily calculate it since this two events are <strong>complementary</strong> <a href="#10">[10]</a>. Hence:</p>
+<p>We don’t have <span class="math inline">\(P(\text{&quot;-&quot;|HIV})\)</span>, however, we can easily calculate it since these two events are <strong>complementary</strong> <a href="#10">[10]</a>. Hence:</p>
 <p><span class="math display">\[P(\text{&quot;-&quot;|HIV}) = 1 - P(\text{&quot;+&quot;|HIV})\]</span>
 <span class="math display">\[P(\text{&quot;-&quot;|HIV}) = 1 - 0.9999 = 0.0001\]</span></p>
 <p>We can do the following for the <code>no Disease</code> node.</p>
@@ -149,12 +149,12 @@ In other words, the probability of being tested <strong>positive</strong> is <sp
 We could also rewrite this equation for the general case:</p>
 <p><span class="math display">\[P(\text{HIV|&quot;+&quot;}) = \frac{P(\text{&quot;+&quot;|HIV}) \times P(\text{HIV})}{P(\text{&quot;+&quot;|HIV}) \times P(\text{HIV}) + P(\text{&quot;+&quot;|no HIV}) \times P(\text{no HIV})}\]</span></p>
 <p><span class="math display">\[P(\text{HIV|&quot;+&quot;}) = \frac{0.9999 \times 0.000428}{0.0005279144} = 0.8106564\]</span>
-Note, that the probability that the subject has HIV is about <span class="math inline">\(81\%\)</span>. This is due to the relevantly small prevalence of a disease in a population. Even though the test has high sensitivity it doesn’t guarantee that you have a diseases in <span class="math inline">\(99.99\%\)</span> of cases.</p>
+Note, that the probability that the subject has HIV is about <span class="math inline">\(81\%\)</span>. This is due to the relevantly small prevalence of a disease in a population. Even though the test has high sensitivity it doesn’t guarantee that you have a disease in <span class="math inline">\(99.99\%\)</span> of cases.</p>
 </div>
 </div>
 <div id="using-r" class="section level2">
 <h2><a name="r">Using R</a></h2>
-<p>We still have <span class="math inline">\(19\%\)</span> chance that person doesn’t have HIV. What would be the next step to be sure with diagnosis? We can do the second test! The only difference now is that the initial (prior) probability of HIV for this subject is going to be <span class="math inline">\(0.8106564\)</span>, not <span class="math inline">\(0.000428\)</span> since now we have some information. We are going to use R to do the calculations:</p>
+<p>We still have a <span class="math inline">\(19\%\)</span> chance that a person doesn’t have HIV. What would be the next step to be sure with the diagnosis? We can do the second test! The only difference now is that the initial (prior) probability of HIV for this subject is going to be <span class="math inline">\(0.8106564\)</span>, not <span class="math inline">\(0.000428\)</span> since now we have some information. We are going to use R to do the calculations:</p>
 <details>
 <summary><strong>Custom R functions</strong></summary>
 <p>
@@ -227,12 +227,12 @@ p &lt;- BayesRuleProba(
 </div>
 <div id="one-more-example" class="section level2">
 <h2><a name="another-example">One more example</a></h2>
-<p>What would happen if test had a bit lower sensitivity/specificity score? Assume the test has following performance:</p>
+<p>What would happen if the test had a bit lower sensitivity/specificity score? Assume the test has the following performance:</p>
 <ul>
 <li><span class="math inline">\(P(\text{&quot;+&quot;|HIV}) = 0.98\)</span></li>
 <li><span class="math inline">\(P(\text{&quot;-&quot;|no HIV}) = 0.98\)</span></li>
 </ul>
-<p>Prevalence of HIV stays the same.</p>
+<p>The prevalence of HIV stays the same.</p>
 <div id="initial-state-2" class="section level3">
 <h3>Initial state</h3>
 <pre class="r"><code>sensitivity &lt;- 0.98
@@ -284,12 +284,12 @@ p &lt;- BayesRuleProba(
 </div>
 <div id="bayesian-hypothesis-testing" class="section level2">
 <h2><a name="hyp-test">Bayesian Hypothesis Testing</a></h2>
-<p>Image you have two hypothesis:</p>
+<p>Imagine you have two hypotheses:</p>
 <ul>
 <li><span class="math inline">\(H_1\)</span>: Subject has HIV</li>
-<li><span class="math inline">\(H_2\)</span>: Sudject doesn’t have HIV</li>
+<li><span class="math inline">\(H_2\)</span>: Subject doesn’t have HIV</li>
 </ul>
-<p>You want to check if there is enough evidence against one of the hypothesis to reject or accept it. This can be achieved using <strong>Bayes factor</strong> <a href="#12">[12]</a>, which can be find as:</p>
+<p>You want to check if there is enough evidence against one of the hypothesis to reject or accept it. This can be achieved using the <strong>Bayes factor</strong> <a href="#12">[12]</a>, which can be found as:</p>
 <p><span class="math display">\[BF(H_1:H_2) = \frac{\text{Posterior Odds}}{\text{Prior Odds}}\]</span>
 <span class="math display">\[\text{Prior Odds} = PrO(H_1:H_2) = \frac{P(H_1)}{P(H_2)}\]</span>
 <span class="math display">\[\text{Posterior Odds} = PO(H_1:H_2) = \frac{P(H_1|\text{data})}{P(H_2|\text{data})}\]</span>
@@ -360,6 +360,6 @@ print(paste0(&quot;Bayes Factor (H1:H2): &quot;, round(bayes_factor, 6)))</code>
 <li><a name="10">[10]:</a> <a href="https://en.wikipedia.org/wiki/Complementary_event" class="uri">https://en.wikipedia.org/wiki/Complementary_event</a></li>
 <li><a name="11">[11]:</a> <a href="https://en.wikipedia.org/wiki/Joint_probability_distribution" class="uri">https://en.wikipedia.org/wiki/Joint_probability_distribution</a></li>
 <li><a name="12">[12]:</a> <a href="https://en.wikipedia.org/wiki/Bayes_factor" class="uri">https://en.wikipedia.org/wiki/Bayes_factor</a></li>
-<li>(Not listed before, but great example of probability trees using <code>Rgraphviz</code>): <a href="http://www.harrysurden.com/wordpress/archives/292" class="uri">http://www.harrysurden.com/wordpress/archives/292</a></li>
+<li>(Not listed before, but a great example of probability trees using <code>Rgraphviz</code>): <a href="http://www.harrysurden.com/wordpress/archives/292" class="uri">http://www.harrysurden.com/wordpress/archives/292</a></li>
 </ul>
 </div>
