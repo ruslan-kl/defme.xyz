@@ -1,7 +1,7 @@
 ---
 title: "Null Hypothesis Significance Testing, part 1"
 subtitle: "Inference for a population mean: $t$-tests & ANOVA "
-summary: Basic concept of NHST and p-value. Overview of the inference for a population mean one/two-sample $t$-tests and ANOVA.
+summary: Basic concept of the NHST and the idea of p-value. Overview of the inference for a population mean using one/two-sample $t$-tests and ANOVA.
 image:
   caption: 'Image credit: <a href="https://pixabay.com/ru/users/geralt-9301/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2692575">Gerd Altmann</a> from <a href="https://pixabay.com/ru/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2692575">Pixabay</a>'
   focal_point: ""
@@ -254,7 +254,7 @@ $$\text{Statistic} = \frac{\text{Point Estimate} - \text{Null Value}}{\text{SE}}
 * Point Estimate - the data we have observed (one sample mean, a difference in two means, etc)
 * Null Value - the value under the null hypothesis
 * SE - standard error of the sample, $SE = \frac{s}{\sqrt{n}}$
-* Statistic - the calculated value of a simulated distribution ($t$ distribution, $\chi^2$ distribution, etc)
+* Statistic - the calculated value of a simulated distribution ($t$ distribution, $Z$ distribution, etc)
 
 After we have calculated the statistic we can find the p-value (with the help of tables, R/Python).
 
@@ -289,7 +289,7 @@ However, in order to perform $t$-test couple of conditions need to be met:
 
 1. **Independence**: sampled observations need to be independent (for example, it would be a bad idea to include relatives like parents-children for a Memory Test experiment, since results can be affected by inheritance).
 2. **Randomness**: the probability of occurrence of each observation in a sample is equally likely (for example, it the population of interest is islanders, men and women should have equal chances to be added to the experiment).
-3. **Approximate Normality**. The sample distribution size needs to be approximately normal, especially if the sample size is not large enough $(\geq30)$ for Central Limit Theorem[^4].
+3. **Approximate Normality**.
 
 Also, the test may be affected by extreme values (outliers) that are better to be removed.
 
@@ -319,19 +319,6 @@ temp_df %>%
             n = n()) %>% 
   kable()
 ```
-
-**Check for normality using Shapiro–Wilk test**[^5]:
-
-```{r}
-shapiro.test(temp_df$Mem_Score_After)
-```
-
-Note that under the Shapiro–Wilk test we have:
-
-* $H_0$: sample is normally distributed.
-* $H_A$: sample isn't normally distributed.
-
-p-value of $0.3$ means that we failed to reject the null hypothesis, meaning that there is not enough evidence to claim that the sample is not normally distributed. 
 
 Using formula from above we can calculate point estimate (average value of the set), null estimate (60 seconds) and standard error.
 
@@ -413,7 +400,9 @@ alpha <- 0.05
 nhst_result(pval, alpha)
 ```
 
-> As we can see, we failed to reject the null hypothesis, or in other words, there is not enough evidence to claim that the average time to finish a memory test after 1mg of Alprazolam is less than 60 seconds.
+{{% alert note %}}
+As we can see, we failed to reject the null hypothesis, or in other words, there is not enough evidence to claim that the average time to finish a memory test after 1mg of Alprazolam is less than 60 seconds.
+{{% /alert %}}
 
 But would you still be able to get the conclusion of the test without software, if you did all the calculations by hand? The answer is "definitely yes". When you have calculated $t_\text{stat}$ (which was `r t_stat` in our example) you could compare this value to $t_\text{critical}$. $t_\text{critical}$ is the $\alpha$ (for one-tailed test) or $\alpha/2$ (for two-tailed test) quantile of $t$-distribution, that can be easily found in any of t-tables. 
 
@@ -532,7 +521,7 @@ print(f"Calculated test statistic: {t_stat: .4f}\np-value: {p_val/2: .4f}")
 
 ## Two Sample Test (Independent Groups)
 
-Now we are going to compare the mean values of two groups and check if there is a statistically significant difference between them. In the same way, to perform Two-Sample $t$-test the condition of **independence** needs to be met, meaning that you cannot compare the difference of a memory test result before and after the pill for the same person. Also, for the two sample $t$ test the **variance of two groups need to be equal**. There is a way[^6] to perform $t$-test when variances are not equal but it will not be covered here. 
+Now we are going to compare the mean values of two groups and check if there is a statistically significant difference between them. In the same way, to perform Two-Sample $t$-test the condition of **independence** needs to be met, meaning that you cannot compare the difference of a memory test result before and after the pill for the same person. Also, for the two sample $t$ test the **variance of two groups need to be equal**. There is a way[^4] to perform $t$-test when variances are not equal but it will not be covered here. 
 
 ### Example
 
@@ -619,19 +608,9 @@ n_pla <- length(pla_sample$Mem_Score_After)
 df <- n_alp + n_pla - 2 
 ```
 
-**Check for normality:**
-
-```{r, collapse=TRUE}
-# normality check
-shapiro.test(alp_sample$Mem_Score_After)
-shapiro.test(pla_sample$Mem_Score_After)
-```
-
-p-value = 0.5, so we failed to reject the null hypothesis that samples are normally distributed.
-
 **Check that variances are equal:**
 
-For this purpose, we are going to use the proportion of two variances $\frac{s_1^2}{s_2^2}$ to estimate the proportion of population variances $\frac{\sigma_1^2}{\sigma_2^2}$ using **$F$-distribution**[^7].
+For this purpose, we are going to use the proportion of two variances $\frac{s_1^2}{s_2^2}$ to estimate the proportion of population variances $\frac{\sigma_1^2}{\sigma_2^2}$ using **$F$-distribution**[^5].
 
 * $H_0$: population variances are equal $\frac{\sigma_1^2}{\sigma_2^2} = 1$.
 * $H_A$: population variances are different $\frac{\sigma_1^2}{\sigma_2^2} \neq 1$.
@@ -718,7 +697,9 @@ alpha <- 0.05
 nhst_result(pval, alpha)
 ```
 
-> We reject the null hypothesis, or in other words, there is evidence that the average time to finish a memory test after 5 mg of Alprazolam and 3 tabs of sugar pills is different.
+{{% alert note %}}
+We reject the null hypothesis, or in other words, there is evidence that the average time to finish a memory test after 5 mg of Alprazolam and 3 tabs of sugar pills is different.
+{{% /alert %}}
 
 <details><summary>**R**</summary>
 <p>
@@ -789,15 +770,6 @@ temp_df %>%
             std = sd(Diff)) %>% 
   kable()
 ```
-
-**Check for normality:**
-
-```{r}
-# normality check
-shapiro.test(temp_df$Diff[temp_df$Diff > -20])
-```
-
-p-value is 0.4, so we failed to reject the null hypothesis that sample is normally distributed.
 
 <details><summary>**R**</summary>
 <p>
@@ -884,7 +856,9 @@ ggplot() +
   theme_classic()
 ```
 
-> p-value is 0.8, which is greater than $\alpha$, that's why failed to reject the null hypothesis. In other words, there is not enough evidence to claim that there is a difference in memory test results before and after 0.75mg of Triazolam.
+{{% alert note %}}
+p-value is 0.8, which is greater than $\alpha$, that's why failed to reject the null hypothesis. In other words, there is not enough evidence to claim that there is a difference in memory test results before and after 0.75mg of Triazolam.
+{{% /alert %}}
 
 ## Comparing More than Two Means (ANOVA)
 
@@ -902,7 +876,7 @@ Conditions that need to be met for ANOVA:
 
 * **Within Group Independence**: sampled observations must be independent.
 * **Between Group Independence**: non-paired groups.
-* **Approximate Normality** of sample distributions.
+* **Approximate Normality**.
 * **Equal Variance** among groups.
 
 ### Example
@@ -967,19 +941,6 @@ oned_sample <- temp_df$Diff[temp_df$Dosage == 1]
 twod_sample <- temp_df$Diff[temp_df$Dosage == 2]
 threed_sample <- temp_df$Diff[temp_df$Dosage == 3]
 ```
-
-<details><summary>**Check for normality**</summary>
-<p>
-```{r, collapse=TRUE}
-# check for normality
-shapiro.test(oned_sample)
-shapiro.test(twod_sample)
-shapiro.test(threed_sample)
-```
-
-Condition is met. 
-</p>
-</details>
 
 <details><summary>**Check for equal variances**</summary>
 <p>
@@ -1110,7 +1071,9 @@ alpha <- 0.05
 nhst_result(pval, alpha)
 ```
 
-> We failed to reject the null hypothesis meaning there is not enough evidence to claim that at least one pair of group is significantly different.
+{{% alert note %}}
+We failed to reject the null hypothesis meaning there is not enough evidence to claim that at least one pair of group is significantly different.
+{{% /alert %}}
 
 As you can see there is a lot of calculations, so most of the time we rely on software:
 
@@ -1155,7 +1118,5 @@ I hope that you have a better understanding of algorithms for inference for a po
 [^1]: https://www.kaggle.com/steveahn/memory-test-on-drugged-islanders-data
 [^2]: https://en.wikipedia.org/wiki/Student%27s_t-distribution
 [^3]: https://en.wikipedia.org/wiki/Student%27s_t-test
-[^4]: https://en.wikipedia.org/wiki/Central_limit_theorem
-[^5]: https://en.wikipedia.org/wiki/Shapiro%E2%80%93Wilk_test
-[^6]: http://www.real-statistics.com/students-t-distribution/two-sample-t-test-uequal-variances/
-[^7]: https://en.wikipedia.org/wiki/F-distribution
+[^4]: http://www.real-statistics.com/students-t-distribution/two-sample-t-test-uequal-variances/
+[^5]: https://en.wikipedia.org/wiki/F-distribution

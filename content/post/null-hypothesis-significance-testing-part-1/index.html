@@ -1,7 +1,7 @@
 ---
 title: "Null Hypothesis Significance Testing, part 1"
 subtitle: "Inference for a population mean: $t$-tests & ANOVA "
-summary: Basic concept of NHST and p-value. Overview of the inference for a population mean one/two-sample $t$-tests and ANOVA.
+summary: Basic concept of the NHST and the idea of p-value. Overview of the inference for a population mean using one/two-sample $t$-tests and ANOVA.
 image:
   caption: 'Image credit: <a href="https://pixabay.com/ru/users/geralt-9301/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2692575">Gerd Altmann</a> from <a href="https://pixabay.com/ru/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2692575">Pixabay</a>'
   focal_point: ""
@@ -298,7 +298,7 @@ Probability
 <li><span class="math inline">\(\alpha = 0.05\)</span></li>
 </ul>
 <p>We flipped the coin 5 times and got 5 heads. Now, assuming that the coin is fair we calculate the probability of this event (which was 0.0313). Note that we used <span class="math inline">\(p=\frac{1}{2}\)</span> in the formula since we assume that coin is fair (null hypothesis is true). This probability of 0.0313 is our p-value. <span class="math inline">\(\text{p-value} &lt; \alpha\)</span>, that is why we reject the null hypothesis, saying that data provides enough evidence that coin is nor fair and the probability of Heads is greater than <span class="math inline">\(\frac{1}{2}\)</span>.</p>
-<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-4-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/null-hypothesis-significance-testing-part-1/index_files/figure-html/unnamed-chunk-4-1.png" width="480" style="display: block; margin: auto;" /></p>
 <div id="one-tailed-vs-two-tailed-test" class="section level3">
 <h3>One-tailed vs Two-tailed Test</h3>
 <p>Our alternative hypothesis in this example was that the coin is unfair and <span class="math inline">\(p(\text{Heads}) &gt; \frac{1}{2}\)</span>, which is also called a <strong>one-tailed significance test</strong>. In such case we are interested only in probabilities of obtaining results <strong>more extreme</strong> as 5 out of 5 Heads. Due to the experiment design there was no outcome that was more extreme as 5 out of 5 Heads (since we couldn’t get 6 Heads out of 5 coin flips).</p>
@@ -308,7 +308,7 @@ Probability
 </ul>
 <p>As you can see, under the two-tailed testing we are not concerned about the direction of alternative hypothesis.</p>
 <p>In our example outcome of 0 Heads (5 Tails) out of 5 flips has the same probability as observed probability of 5 Heads out of 5 flips. Hence, <span class="math inline">\(\text{p-value} = P(0) + P(5) = 0.0313 + 0.0313 = 0.0616\)</span>.</p>
-<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/null-hypothesis-significance-testing-part-1/index_files/figure-html/unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>Since now <span class="math inline">\(\text{p-value} &gt; \alpha\)</span> we would fail to reject the null hypothesis saying there is not enough evidence to claim that the coin is not fair.</p>
 </div>
 </div>
@@ -320,7 +320,7 @@ Probability
 <li>Point Estimate - the data we have observed (one sample mean, a difference in two means, etc)</li>
 <li>Null Value - the value under the null hypothesis</li>
 <li>SE - standard error of the sample, <span class="math inline">\(SE = \frac{s}{\sqrt{n}}\)</span></li>
-<li>Statistic - the calculated value of a simulated distribution (<span class="math inline">\(t\)</span> distribution, <span class="math inline">\(\chi^2\)</span> distribution, etc)</li>
+<li>Statistic - the calculated value of a simulated distribution (<span class="math inline">\(t\)</span> distribution, <span class="math inline">\(Z\)</span> distribution, etc)</li>
 </ul>
 <p>After we have calculated the statistic we can find the p-value (with the help of tables, R/Python).</p>
 </div>
@@ -370,59 +370,59 @@ sample_n(islander_data, 5) %&gt;% kable()</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Eva</td>
-<td align="left">Takahashi</td>
-<td align="right">31</td>
+<td align="left">Liam</td>
+<td align="left">Fiala</td>
+<td align="right">25</td>
 <td align="left">S</td>
 <td align="right">2</td>
-<td align="left">S</td>
-<td align="right">84.5</td>
-<td align="right">44.1</td>
-<td align="right">-40.4</td>
+<td align="left">T</td>
+<td align="right">41.5</td>
+<td align="right">46.8</td>
+<td align="right">5.3</td>
 </tr>
 <tr class="even">
-<td align="left">Evan</td>
+<td align="left">William</td>
 <td align="left">Carrasco</td>
-<td align="right">52</td>
-<td align="left">S</td>
+<td align="right">62</td>
+<td align="left">H</td>
 <td align="right">1</td>
-<td align="left">A</td>
-<td align="right">41.6</td>
-<td align="right">40.7</td>
+<td align="left">T</td>
+<td align="right">96.0</td>
+<td align="right">102.0</td>
+<td align="right">6.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Lan</td>
+<td align="left">Summers</td>
+<td align="right">33</td>
+<td align="left">H</td>
+<td align="right">1</td>
+<td align="left">S</td>
+<td align="right">53.0</td>
+<td align="right">52.1</td>
 <td align="right">-0.9</td>
 </tr>
-<tr class="odd">
-<td align="left">Ciara</td>
-<td align="left">Durand</td>
-<td align="right">54</td>
-<td align="left">H</td>
-<td align="right">2</td>
-<td align="left">T</td>
-<td align="right">55.2</td>
-<td align="right">51.7</td>
-<td align="right">-3.5</td>
-</tr>
 <tr class="even">
-<td align="left">Victor</td>
-<td align="left">Price</td>
-<td align="right">28</td>
+<td align="left">Momoko</td>
+<td align="left">Durand</td>
+<td align="right">50</td>
+<td align="left">S</td>
+<td align="right">2</td>
+<td align="left">S</td>
+<td align="right">76.8</td>
+<td align="right">78.5</td>
+<td align="right">1.7</td>
+</tr>
+<tr class="odd">
+<td align="left">Kaito</td>
+<td align="left">Lopez</td>
+<td align="right">37</td>
 <td align="left">H</td>
 <td align="right">2</td>
 <td align="left">S</td>
-<td align="right">79.7</td>
-<td align="right">88.9</td>
-<td align="right">9.2</td>
-</tr>
-<tr class="odd">
-<td align="left">Lukas</td>
-<td align="left">Castro</td>
-<td align="right">80</td>
-<td align="left">S</td>
-<td align="right">3</td>
-<td align="left">T</td>
-<td align="right">58.4</td>
-<td align="right">63.6</td>
-<td align="right">5.2</td>
+<td align="right">41.0</td>
+<td align="right">47.0</td>
+<td align="right">6.0</td>
 </tr>
 </tbody>
 </table>
@@ -435,7 +435,7 @@ sample_n(islander_data, 5) %&gt;% kable()</code></pre>
 <ol style="list-style-type: decimal">
 <li><strong>Independence</strong>: sampled observations need to be independent (for example, it would be a bad idea to include relatives like parents-children for a Memory Test experiment, since results can be affected by inheritance).</li>
 <li><strong>Randomness</strong>: the probability of occurrence of each observation in a sample is equally likely (for example, it the population of interest is islanders, men and women should have equal chances to be added to the experiment).</li>
-<li><strong>Approximate Normality</strong>. The sample distribution size needs to be approximately normal, especially if the sample size is not large enough <span class="math inline">\((\geq30)\)</span> for Central Limit Theorem<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>.</li>
+<li><strong>Approximate Normality</strong>.</li>
 </ol>
 <p>Also, the test may be affected by extreme values (outliers) that are better to be removed.</p>
 <div id="example" class="section level3">
@@ -452,7 +452,7 @@ sample_n(islander_data, 5) %&gt;% kable()</code></pre>
 hist(temp_df$Mem_Score_After, 
      main = &quot;Distribution of Memory Test Results\nafter 1mg of Alprazolam&quot;,
      xlab = &quot;Average time to finish a memory test&quot;)</code></pre>
-<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/null-hypothesis-significance-testing-part-1/index_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p><strong>Summary statistics:</strong></p>
 <pre class="r"><code>temp_df %&gt;% 
   summarise(mean = mean(Mem_Score_After),
@@ -475,19 +475,6 @@ hist(temp_df$Mem_Score_After,
 </tr>
 </tbody>
 </table>
-<p><strong>Check for normality using Shapiro–Wilk test</strong><a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>:</p>
-<pre class="r"><code>shapiro.test(temp_df$Mem_Score_After)</code></pre>
-<pre><code>## 
-##  Shapiro-Wilk normality test
-## 
-## data:  temp_df$Mem_Score_After
-## W = 0.95, p-value = 0.3</code></pre>
-<p>Note that under the Shapiro–Wilk test we have:</p>
-<ul>
-<li><span class="math inline">\(H_0\)</span>: sample is normally distributed.</li>
-<li><span class="math inline">\(H_A\)</span>: sample isn’t normally distributed.</li>
-</ul>
-<p>p-value of <span class="math inline">\(0.3\)</span> means that we failed to reject the null hypothesis, meaning that there is not enough evidence to claim that the sample is not normally distributed.</p>
 <p>Using formula from above we can calculate point estimate (average value of the set), null estimate (60 seconds) and standard error.</p>
 <pre class="r"><code>alpha &lt;- 0.05
 null_estimate &lt;- 60
@@ -527,16 +514,16 @@ ggplot() +
   theme_classic()</code></pre>
 </p>
 </details>
-<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-12-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/null-hypothesis-significance-testing-part-1/index_files/figure-html/unnamed-chunk-11-1.png" width="480" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>pval &lt;- pt(t_stat, df)
 print(paste0(&quot;p-value is: &quot;, round(pval, 3)))
 ## [1] &quot;p-value is: 0.337&quot;
 alpha &lt;- 0.05
 nhst_result(pval, alpha)
 ## [1] &quot;p-value is greater than alpha (0.05). Fail to reject the null hypothesis.&quot;</code></pre>
-<blockquote>
-<p>As we can see, we failed to reject the null hypothesis, or in other words, there is not enough evidence to claim that the average time to finish a memory test after 1mg of Alprazolam is less than 60 seconds.</p>
-</blockquote>
+<p>{{% alert note %}}
+As we can see, we failed to reject the null hypothesis, or in other words, there is not enough evidence to claim that the average time to finish a memory test after 1mg of Alprazolam is less than 60 seconds.
+{{% /alert %}}</p>
 <p>But would you still be able to get the conclusion of the test without software, if you did all the calculations by hand? The answer is “definitely yes”. When you have calculated <span class="math inline">\(t_\text{stat}\)</span> (which was -0.4255 in our example) you could compare this value to <span class="math inline">\(t_\text{critical}\)</span>. <span class="math inline">\(t_\text{critical}\)</span> is the <span class="math inline">\(\alpha\)</span> (for one-tailed test) or <span class="math inline">\(\alpha/2\)</span> (for two-tailed test) quantile of <span class="math inline">\(t\)</span>-distribution, that can be easily found in any of t-tables.</p>
 <p>We need to find a value of <span class="math inline">\(t_\text{critical}\)</span> creates an area of 0.05 (our <span class="math inline">\(\alpha\)</span> level) under the curve for a <span class="math inline">\(t\)</span> distribution with 22 degrees of freedom:</p>
 <center>
@@ -576,7 +563,7 @@ ggplot() +
   theme_classic() </code></pre>
 </p>
 </details>
-<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-16-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/null-hypothesis-significance-testing-part-1/index_files/figure-html/unnamed-chunk-15-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>If out calculated <span class="math inline">\(t\)</span> statistic (black line) would be on the left side from critical <span class="math inline">\(t\)</span> value (red line) we would reject the null hypothesis, since we would be sure that the p-value (red area) is &lt; 0.05. Here we see that our <span class="math inline">\(t\)</span> statistic is greater than <span class="math inline">\(t_\text{critical}\)</span>, so we fail to reject the null hypothesis. It’s always a good idea to draw a test distribution.</p>
 <p>Alternatively, we can let R and Python do all the calculations for us:</p>
 <details>
@@ -619,7 +606,7 @@ print(f&quot;Calculated test statistic: {t_stat: .4f}\np-value: {p_val/2: .4f}&q
 </div>
 <div id="two-sample-test-independent-groups" class="section level2">
 <h2>Two Sample Test (Independent Groups)</h2>
-<p>Now we are going to compare the mean values of two groups and check if there is a statistically significant difference between them. In the same way, to perform Two-Sample <span class="math inline">\(t\)</span>-test the condition of <strong>independence</strong> needs to be met, meaning that you cannot compare the difference of a memory test result before and after the pill for the same person. Also, for the two sample <span class="math inline">\(t\)</span> test the <strong>variance of two groups need to be equal</strong>. There is a way<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> to perform <span class="math inline">\(t\)</span>-test when variances are not equal but it will not be covered here.</p>
+<p>Now we are going to compare the mean values of two groups and check if there is a statistically significant difference between them. In the same way, to perform Two-Sample <span class="math inline">\(t\)</span>-test the condition of <strong>independence</strong> needs to be met, meaning that you cannot compare the difference of a memory test result before and after the pill for the same person. Also, for the two sample <span class="math inline">\(t\)</span> test the <strong>variance of two groups need to be equal</strong>. There is a way<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> to perform <span class="math inline">\(t\)</span>-test when variances are not equal but it will not be covered here.</p>
 <div id="example-1" class="section level3">
 <h3>Example</h3>
 <p>Let’s check if there is a difference in memory test results after 5 mg of Alprazolam and 3 tabs of sugar pills (placebo).</p>
@@ -641,7 +628,7 @@ print(f&quot;Calculated test statistic: {t_stat: .4f}\np-value: {p_val/2: .4f}&q
   theme_classic()</code></pre>
 </p>
 </details>
-<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-20-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/null-hypothesis-significance-testing-part-1/index_files/figure-html/unnamed-chunk-19-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p><strong>Summary statistics:</strong></p>
 <pre class="r"><code>islander_data %&gt;% 
   filter(Drug %in% c(&quot;A&quot;, &quot;S&quot;) &amp; Dosage == 3) %&gt;% 
@@ -707,23 +694,8 @@ n_pla &lt;- length(pla_sample$Mem_Score_After)
 
 # degrees of freedom
 df &lt;- n_alp + n_pla - 2 </code></pre>
-<p><strong>Check for normality:</strong></p>
-<pre class="r"><code># normality check
-shapiro.test(alp_sample$Mem_Score_After)
-## 
-##  Shapiro-Wilk normality test
-## 
-## data:  alp_sample$Mem_Score_After
-## W = 0.97, p-value = 0.7
-shapiro.test(pla_sample$Mem_Score_After)
-## 
-##  Shapiro-Wilk normality test
-## 
-## data:  pla_sample$Mem_Score_After
-## W = 0.96, p-value = 0.5</code></pre>
-<p>p-value = 0.5, so we failed to reject the null hypothesis that samples are normally distributed.</p>
 <p><strong>Check that variances are equal:</strong></p>
-<p>For this purpose, we are going to use the proportion of two variances <span class="math inline">\(\frac{s_1^2}{s_2^2}\)</span> to estimate the proportion of population variances <span class="math inline">\(\frac{\sigma_1^2}{\sigma_2^2}\)</span> using <strong><span class="math inline">\(F\)</span>-distribution</strong><a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>.</p>
+<p>For this purpose, we are going to use the proportion of two variances <span class="math inline">\(\frac{s_1^2}{s_2^2}\)</span> to estimate the proportion of population variances <span class="math inline">\(\frac{\sigma_1^2}{\sigma_2^2}\)</span> using <strong><span class="math inline">\(F\)</span>-distribution</strong><a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>.</p>
 <ul>
 <li><span class="math inline">\(H_0\)</span>: population variances are equal <span class="math inline">\(\frac{\sigma_1^2}{\sigma_2^2} = 1\)</span>.</li>
 <li><span class="math inline">\(H_A\)</span>: population variances are different <span class="math inline">\(\frac{\sigma_1^2}{\sigma_2^2} \neq 1\)</span>.</li>
@@ -782,16 +754,16 @@ ggplot() +
   theme_classic()</code></pre>
 </p>
 </details>
-<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-28-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/null-hypothesis-significance-testing-part-1/index_files/figure-html/unnamed-chunk-26-1.png" width="480" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>pval &lt;- pt(-t_stat, df)*2
 print(paste0(&quot;p-value is: &quot;, round(pval, 3)))
 ## [1] &quot;p-value is: 0.001&quot;
 alpha &lt;- 0.05
 nhst_result(pval, alpha)
 ## [1] &quot;p-value is less than alpha (0.05). Reject the null hypothesis.&quot;</code></pre>
-<blockquote>
-<p>We reject the null hypothesis, or in other words, there is evidence that the average time to finish a memory test after 5 mg of Alprazolam and 3 tabs of sugar pills is different.</p>
-</blockquote>
+<p>{{% alert note %}}
+We reject the null hypothesis, or in other words, there is evidence that the average time to finish a memory test after 5 mg of Alprazolam and 3 tabs of sugar pills is different.
+{{% /alert %}}</p>
 <details>
 <summary><strong>R</strong></summary>
 <p>
@@ -850,7 +822,7 @@ print(f&quot;Calculated test statistic: {t_stat: .4f}\np-value: {p_val: .5f}&quo
 hist(temp_df$Diff, 
      main = &quot;Distribution of Difference of Memory Test Results\nbefore and after 0.75mg of Triazolam&quot;,
      xlab = &quot;Average time to finish a memory test&quot;)</code></pre>
-<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-32-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="/post/null-hypothesis-significance-testing-part-1/index_files/figure-html/unnamed-chunk-30-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>There are two outliers (difference in test results is less than <span class="math inline">\(-20\)</span>) that need to be removed for further analysis:</p>
 <pre class="r"><code>temp_df[temp_df$Diff &lt; -20, ] %&gt;% kable()</code></pre>
 <table>
@@ -915,15 +887,6 @@ hist(temp_df$Diff,
 </tr>
 </tbody>
 </table>
-<p><strong>Check for normality:</strong></p>
-<pre class="r"><code># normality check
-shapiro.test(temp_df$Diff[temp_df$Diff &gt; -20])</code></pre>
-<pre><code>## 
-##  Shapiro-Wilk normality test
-## 
-## data:  temp_df$Diff[temp_df$Diff &gt; -20]
-## W = 0.95, p-value = 0.4</code></pre>
-<p>p-value is 0.4, so we failed to reject the null hypothesis that sample is normally distributed.</p>
 <details>
 <summary><strong>R</strong></summary>
 <p>
@@ -986,10 +949,10 @@ ggplot() +
   theme_classic()</code></pre>
 </p>
 </details>
-<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-39-1.png" width="480" style="display: block; margin: auto;" /></p>
-<blockquote>
-<p>p-value is 0.8, which is greater than <span class="math inline">\(\alpha\)</span>, that’s why failed to reject the null hypothesis. In other words, there is not enough evidence to claim that there is a difference in memory test results before and after 0.75mg of Triazolam.</p>
-</blockquote>
+<p><img src="/post/null-hypothesis-significance-testing-part-1/index_files/figure-html/unnamed-chunk-36-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>{{% alert note %}}
+p-value is 0.8, which is greater than <span class="math inline">\(\alpha\)</span>, that’s why failed to reject the null hypothesis. In other words, there is not enough evidence to claim that there is a difference in memory test results before and after 0.75mg of Triazolam.
+{{% /alert %}}</p>
 </div>
 </div>
 <div id="comparing-more-than-two-means-anova" class="section level2">
@@ -1006,7 +969,7 @@ ggplot() +
 <ul>
 <li><strong>Within Group Independence</strong>: sampled observations must be independent.</li>
 <li><strong>Between Group Independence</strong>: non-paired groups.</li>
-<li><strong>Approximate Normality</strong> of sample distributions.</li>
+<li><strong>Approximate Normality</strong>.</li>
 <li><strong>Equal Variance</strong> among groups.</li>
 </ul>
 <div id="example-3" class="section level3">
@@ -1026,7 +989,7 @@ ggplot() +
   theme_classic()</code></pre>
 </p>
 </details>
-<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-41-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/null-hypothesis-significance-testing-part-1/index_files/figure-html/unnamed-chunk-38-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>There are some outliers that need to be removed for further analysis:</p>
 <pre class="r"><code>islander_data %&gt;% 
   filter(Drug == &quot;T&quot; &amp; (Diff &lt; -15 | Diff &gt; 15)) %&gt;% 
@@ -1125,31 +1088,6 @@ ggplot() +
 oned_sample &lt;- temp_df$Diff[temp_df$Dosage == 1]
 twod_sample &lt;- temp_df$Diff[temp_df$Dosage == 2]
 threed_sample &lt;- temp_df$Diff[temp_df$Dosage == 3]</code></pre>
-<details>
-<summary><strong>Check for normality</strong></summary>
-<p>
-<pre class="r"><code># check for normality
-shapiro.test(oned_sample)
-## 
-##  Shapiro-Wilk normality test
-## 
-## data:  oned_sample
-## W = 0.96, p-value = 0.6
-shapiro.test(twod_sample)
-## 
-##  Shapiro-Wilk normality test
-## 
-## data:  twod_sample
-## W = 0.93, p-value = 0.2
-shapiro.test(threed_sample)
-## 
-##  Shapiro-Wilk normality test
-## 
-## data:  threed_sample
-## W = 0.95, p-value = 0.4</code></pre>
-Condition is met.
-</p>
-</details>
 <details>
 <summary><strong>Check for equal variances</strong></summary>
 <p>
@@ -1273,16 +1211,16 @@ ggplot() +
   theme_classic()</code></pre>
 </p>
 </details>
-<p><img src="/post/nhst-pt1/index_files/figure-html/unnamed-chunk-49-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/null-hypothesis-significance-testing-part-1/index_files/figure-html/unnamed-chunk-45-1.png" width="480" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>pval &lt;- pf(F_stat, df_group, df_error, lower.tail = FALSE)
 print(paste0(&quot;p-value is: &quot;, round(pval, 3)))
 ## [1] &quot;p-value is: 0.603&quot;
 alpha &lt;- 0.05
 nhst_result(pval, alpha)
 ## [1] &quot;p-value is greater than alpha (0.05). Fail to reject the null hypothesis.&quot;</code></pre>
-<blockquote>
-<p>We failed to reject the null hypothesis meaning there is not enough evidence to claim that at least one pair of group is significantly different.</p>
-</blockquote>
+<p>{{% alert note %}}
+We failed to reject the null hypothesis meaning there is not enough evidence to claim that at least one pair of group is significantly different.
+{{% /alert %}}</p>
 <p>As you can see there is a lot of calculations, so most of the time we rely on software:</p>
 <details>
 <summary><strong>R</strong></summary>
@@ -1354,9 +1292,7 @@ print(f&quot;Calculated test statistic: {F_stat: .4f}\np-value: {p_val: .4f}&quo
 <li id="fn1"><p><a href="https://www.kaggle.com/steveahn/memory-test-on-drugged-islanders-data" class="uri">https://www.kaggle.com/steveahn/memory-test-on-drugged-islanders-data</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
 <li id="fn2"><p><a href="https://en.wikipedia.org/wiki/Student%27s_t-distribution" class="uri">https://en.wikipedia.org/wiki/Student%27s_t-distribution</a><a href="#fnref2" class="footnote-back">↩</a></p></li>
 <li id="fn3"><p><a href="https://en.wikipedia.org/wiki/Student%27s_t-test" class="uri">https://en.wikipedia.org/wiki/Student%27s_t-test</a><a href="#fnref3" class="footnote-back">↩</a></p></li>
-<li id="fn4"><p><a href="https://en.wikipedia.org/wiki/Central_limit_theorem" class="uri">https://en.wikipedia.org/wiki/Central_limit_theorem</a><a href="#fnref4" class="footnote-back">↩</a></p></li>
-<li id="fn5"><p><a href="https://en.wikipedia.org/wiki/Shapiro%E2%80%93Wilk_test" class="uri">https://en.wikipedia.org/wiki/Shapiro%E2%80%93Wilk_test</a><a href="#fnref5" class="footnote-back">↩</a></p></li>
-<li id="fn6"><p><a href="http://www.real-statistics.com/students-t-distribution/two-sample-t-test-uequal-variances/" class="uri">http://www.real-statistics.com/students-t-distribution/two-sample-t-test-uequal-variances/</a><a href="#fnref6" class="footnote-back">↩</a></p></li>
-<li id="fn7"><p><a href="https://en.wikipedia.org/wiki/F-distribution" class="uri">https://en.wikipedia.org/wiki/F-distribution</a><a href="#fnref7" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p><a href="http://www.real-statistics.com/students-t-distribution/two-sample-t-test-uequal-variances/" class="uri">http://www.real-statistics.com/students-t-distribution/two-sample-t-test-uequal-variances/</a><a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p><a href="https://en.wikipedia.org/wiki/F-distribution" class="uri">https://en.wikipedia.org/wiki/F-distribution</a><a href="#fnref5" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
