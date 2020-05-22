@@ -1,0 +1,720 @@
+---
+title: "Null Hypothesis Significance Testing, part 2"
+subtitle: "Inference for a population proportion: binomial test, χ$^2$ test."
+summary: Introduction to the inference for a population proportion using binomial test and $\chi^2$ test for independence. 
+image:
+  caption: 'Image credit: <a href="https://pixabay.com/users/thedigitalartist-202249/">TheDigitalArtist</a> from <a href="https://pixabay.com/">Pixabay</a>'
+  focal_point: ""
+  placement: 3
+  preview_only: true
+date: "2020-05-22"
+categories: ["Statistics"]
+tags: ["Statistics", "Probability"]
+---
+
+
+
+<p style="font-size:15px">
+<i> Cover image credit: <b><a href="https://pixabay.com/users/thedigitalartist-202249/">TheDigitalArtist</a></b> from <b><a href="https://pixabay.com/">Pixabay</a></b></i>
+</p>
+<div id="table-of-contents" class="section level2">
+<h2>Table of contents</h2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#data-set">Data Set</a></li>
+<li><a href="#inference-for-a-proportion">Inference for a proportion</a>
+<ul>
+<li><a href="#single-proportion">Single Proportion</a></li>
+<li><a href="#multiple-proportions">Multiple Proportions</a></li>
+</ul></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+<pre class="r"><code># r import
+library(tidyverse)
+library(knitr)
+library(reticulate)
+library(corrplot)
+
+options(digits = 4)
+use_python(&quot;/home/ruslan/anaconda3/bin/python3.7&quot;)</code></pre>
+<pre class="python"><code># python import
+import pandas as pd
+from scipy import stats</code></pre>
+<pre class="r"><code># custom functions
+nhst_result &lt;- function(pval, alpha){
+  if(pval &lt; alpha) {
+    print(paste0(&quot;p-value is less than alpha (&quot;, 
+                 alpha, &quot;). Reject the null hypothesis.&quot;))
+  } else {print(paste0(&quot;p-value is greater than alpha (&quot;, 
+                     alpha, &quot;). Fail to reject the null hypothesis.&quot;))}
+}</code></pre>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>In the previous part<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> we’ve looked and the basic idea of the statistical testing and the inference for a population mean (<span class="math inline">\(\mu\)</span>). Here we are going to look at the inference for a population proportion (<span class="math inline">\(p\)</span> or <span class="math inline">\(\pi\)</span>).</p>
+</div>
+<div id="data-set" class="section level2">
+<h2>Data Set</h2>
+<p>We are going to look at the <strong>Student Alcohol Consumption</strong> dataset (Math sample) from Kaggle<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>.</p>
+<p><strong>Context of the problem</strong>:
+The data were obtained in a survey of student’s math and Portuguese language courses in secondary school. It contains a lot of interesting social, gender and study information about students.</p>
+<p>Data set consist of 30 explanatory variables such as weekly study time or parents education level and three target variables which show the final grade for a math exam:</p>
+<ul>
+<li><code>G1</code> - first period grade (numeric: from 0 to 20)</li>
+<li><code>G2</code> - second period grade (numeric: from 0 to 20)</li>
+<li><code>G3</code> - final grade (numeric: from 0 to 20, output target)</li>
+</ul>
+<p>Original paper: P. Cortez and A. Silva. Using Data Mining to Predict Secondary School Student Performance. In A. Brito and J. Teixeira Eds., Proceedings of 5th FUture BUsiness TEChnology Conference (FUBUTEC 2008) pp. 5-12, Porto, Portugal, April, 2008, EUROSIS, ISBN 978-9077381-39-7<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.</p>
+<pre class="r"><code>students_data &lt;- read_csv(&quot;data/student-mat.csv&quot;)
+sample_n(students_data, 5) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">school</th>
+<th align="left">sex</th>
+<th align="right">age</th>
+<th align="left">address</th>
+<th align="left">famsize</th>
+<th align="left">Pstatus</th>
+<th align="right">Medu</th>
+<th align="right">Fedu</th>
+<th align="left">Mjob</th>
+<th align="left">Fjob</th>
+<th align="left">reason</th>
+<th align="left">guardian</th>
+<th align="right">traveltime</th>
+<th align="right">studytime</th>
+<th align="right">failures</th>
+<th align="left">schoolsup</th>
+<th align="left">famsup</th>
+<th align="left">paid</th>
+<th align="left">activities</th>
+<th align="left">nursery</th>
+<th align="left">higher</th>
+<th align="left">internet</th>
+<th align="left">romantic</th>
+<th align="right">famrel</th>
+<th align="right">freetime</th>
+<th align="right">goout</th>
+<th align="right">Dalc</th>
+<th align="right">Walc</th>
+<th align="right">health</th>
+<th align="right">absences</th>
+<th align="right">G1</th>
+<th align="right">G2</th>
+<th align="right">G3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">GP</td>
+<td align="left">M</td>
+<td align="right">16</td>
+<td align="left">U</td>
+<td align="left">LE3</td>
+<td align="left">T</td>
+<td align="right">4</td>
+<td align="right">3</td>
+<td align="left">teacher</td>
+<td align="left">other</td>
+<td align="left">course</td>
+<td align="left">mother</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="left">no</td>
+<td align="left">no</td>
+<td align="left">no</td>
+<td align="left">yes</td>
+<td align="left">no</td>
+<td align="left">yes</td>
+<td align="left">yes</td>
+<td align="left">no</td>
+<td align="right">5</td>
+<td align="right">4</td>
+<td align="right">5</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">GP</td>
+<td align="left">M</td>
+<td align="right">18</td>
+<td align="left">U</td>
+<td align="left">GT3</td>
+<td align="left">T</td>
+<td align="right">4</td>
+<td align="right">4</td>
+<td align="left">teacher</td>
+<td align="left">services</td>
+<td align="left">home</td>
+<td align="left">father</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="left">no</td>
+<td align="left">yes</td>
+<td align="left">no</td>
+<td align="left">yes</td>
+<td align="left">yes</td>
+<td align="left">yes</td>
+<td align="left">yes</td>
+<td align="left">no</td>
+<td align="right">4</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">MS</td>
+<td align="left">M</td>
+<td align="right">17</td>
+<td align="left">U</td>
+<td align="left">LE3</td>
+<td align="left">T</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="left">services</td>
+<td align="left">services</td>
+<td align="left">course</td>
+<td align="left">mother</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="left">no</td>
+<td align="left">no</td>
+<td align="left">no</td>
+<td align="left">no</td>
+<td align="left">no</td>
+<td align="left">yes</td>
+<td align="left">yes</td>
+<td align="left">no</td>
+<td align="right">2</td>
+<td align="right">4</td>
+<td align="right">5</td>
+<td align="right">3</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">14</td>
+<td align="right">16</td>
+<td align="right">16</td>
+</tr>
+<tr class="even">
+<td align="left">GP</td>
+<td align="left">M</td>
+<td align="right">18</td>
+<td align="left">U</td>
+<td align="left">LE3</td>
+<td align="left">T</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="left">services</td>
+<td align="left">health</td>
+<td align="left">home</td>
+<td align="left">father</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="left">no</td>
+<td align="left">yes</td>
+<td align="left">yes</td>
+<td align="left">no</td>
+<td align="left">yes</td>
+<td align="left">yes</td>
+<td align="left">yes</td>
+<td align="left">no</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">4</td>
+<td align="right">4</td>
+<td align="right">13</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">8</td>
+</tr>
+<tr class="odd">
+<td align="left">GP</td>
+<td align="left">F</td>
+<td align="right">17</td>
+<td align="left">U</td>
+<td align="left">LE3</td>
+<td align="left">T</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="left">services</td>
+<td align="left">services</td>
+<td align="left">course</td>
+<td align="left">father</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="left">no</td>
+<td align="left">no</td>
+<td align="left">yes</td>
+<td align="left">yes</td>
+<td align="left">yes</td>
+<td align="left">yes</td>
+<td align="left">yes</td>
+<td align="left">yes</td>
+<td align="right">3</td>
+<td align="right">4</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">10</td>
+<td align="right">9</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="inference-for-a-proportion" class="section level2">
+<h2>Inference for a Proportion</h2>
+<p>We have already discussed how can you run a test for a <em>continuous</em> random variable (such as wight, distance, glucose level, etc.). But what if your variable of interest is not continuos but rather discreet (for example, ratio of success for a new drug, the exam score, etc.)?</p>
+<div id="single-proportion" class="section level3">
+<h3>Single Proportion</h3>
+<p>Imagine that previous research suggests that on average 60% of students pass the final math exam. Can we say that this rate became larger after the new data came in?</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: Student success rate for a final math exam is 60%, <span class="math inline">\(\pi=0.6\)</span>.</li>
+<li><span class="math inline">\(H_A\)</span>: Student success rate for a final math exam is greater than 60%, <span class="math inline">\(\pi&gt;0.6\)</span></li>
+<li><span class="math inline">\(\alpha = 0.05\)</span></li>
+</ul>
+<p>According to the paper, exam is passed is the score is greater than 9, wo we are going to create a new variable with binary outcome <code>pass</code>/<code>fail</code>:</p>
+<pre class="r"><code>students_data &lt;- students_data %&gt;%
+    mutate(final_score = if_else(G3 &gt; 9, &quot;pass&quot;, &quot;fail&quot;))
+
+p_sample &lt;- mean(students_data$final_score == &quot;pass&quot;)
+print(paste0(&quot;p = &quot;, round(p_sample, 4)))</code></pre>
+<pre><code>## [1] &quot;p = 0.6709&quot;</code></pre>
+<details>
+<summary>Code</summary>
+<p>
+<pre class="r"><code>ggplot(data = students_data, aes(x = final_score, fill = final_score)) +
+    geom_bar() +
+    labs(title = &quot;Final Math Exam Results&quot;,
+         x = &quot;Result&quot;)</code></pre>
+</p>
+</details>
+<p><img src="/post/null-hypothesis-significance-testing-part-2/index_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>Now, the variable <code>final_score</code> is actually falling under <strong>Binomial distribution</strong><a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>. We have (kind of) looked already how to deal with binomial distributed variables under the null hypothesis testing framework in this <strong>intuitive example</strong><a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>, but let’s dig into more details.</p>
+<p>We are going to use the <strong>binomial test</strong><a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> in order to find the p-value.</p>
+<p>The idea stays the same, we want to know the probability of observing data as extreme as we got during the experiment (<span class="math inline">\(p=0.67\)</span>) under the assumption that the null hypothesis is true (<span class="math inline">\(\pi=0.6\)</span>). The Binomial distribution is defined as:</p>
+<p><span class="math display">\[P(X=k) = C_n^k p^k (1-p)^{n-k}\]</span></p>
+<ul>
+<li><span class="math inline">\(n\)</span> - number of trials;</li>
+<li><span class="math inline">\(p\)</span> - success probability for each trial;</li>
+<li><span class="math inline">\(k\)</span> - number of successes.</li>
+</ul>
+<p>Let’s draw the null distribution:</p>
+<details>
+<summary>Code</summary>
+<p>
+<pre class="r"><code>n &lt;- dim(students_data)[1] # total number of strudents
+p_null &lt;- 0.6
+n_passed &lt;- sum(students_data$final_score == &quot;pass&quot;) 
+
+x &lt;- 200:275
+b_dist &lt;- dbinom(x, p = p_null, size = n)
+
+fill &lt;- rep(&quot;red&quot;, length(x))
+fill[x &gt;= n_passed] &lt;- &quot;lightblue&quot;
+
+ggplot(data = students_data, aes(x = final_score, fill = final_score)) +
+    geom_bar() +
+    labs(title = &quot;Final Math Exam Results&quot;,
+         x = &quot;Result&quot;)</code></pre>
+</p>
+</details>
+<p><img src="/post/null-hypothesis-significance-testing-part-2/index_files/figure-html/unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>We would expect 237 students of 395 to pass the math exam under the assumption that the null hypothesis is true (<span class="math inline">\(n \times \pi = 395 \times 0.6 = 237\)</span>). That is the expected value of a null distribution. We have observed 265 students who have passed the test. So now the p-value is the sum of probabilities for <span class="math inline">\(x\)</span> greater or equal to 265:</p>
+<p><span class="math display">\[\text{p-value} = P(X=237) + P(X=238) + ... + P(X=395)\]</span></p>
+<p><span class="math display">\[P(X=237) = C_{395}^{237} \times 0.6^{237} \times (1-0.6)^{395-237}\]</span></p>
+<p><span class="math display">\[P(X=238) = C_{395}^{238} \times 0.6^{238} \times (1-0.6)^{395-238}\]</span></p>
+<p><span class="math display">\[...\]</span></p>
+<p><span class="math display">\[P(X=395) = C_{395}^{395} \times 0.6^{395} \times (1-0.6)^{395-395}\]</span></p>
+<p>As we can see, that is a lot of calculations to do by hand. There is a way to use <strong>Normal approximation</strong><a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> which would allow to calculate the p-value with less effort, but we are going to rely on R:</p>
+<pre class="r"><code>pval &lt;- 1 - pbinom(q = n_passed, p = p_null, size = n)
+print(paste0(&quot;p-value is: &quot;, round(pval, 3)))</code></pre>
+<pre><code>## [1] &quot;p-value is: 0.002&quot;</code></pre>
+<pre class="r"><code>alpha &lt;- 0.05
+nhst_result(pval, alpha)</code></pre>
+<pre><code>## [1] &quot;p-value is less than alpha (0.05). Reject the null hypothesis.&quot;</code></pre>
+<p>{{% alert note %}}
+We <strong>reject the null hypothesis</strong>, or in other words, observed data suggests that the average score for the math exam among students is greater than 60%.
+{{% /alert %}}</p>
+<p>And of course, there are implementations for a binomial test that allow skipping most of the calculations:</p>
+<details>
+<summary><strong>R</strong></summary>
+<p>
+<p>Built-in <code>binom.test</code> function:</p>
+<pre class="r"><code>binom.test(n_passed, n, p_null, &quot;greater&quot;)</code></pre>
+<pre><code>## 
+##  Exact binomial test
+## 
+## data:  n_passed and n
+## number of successes = 265, number of trials = 395, p-value = 0.002
+## alternative hypothesis: true probability of success is greater than 0.6
+## 95 percent confidence interval:
+##  0.6299 1.0000
+## sample estimates:
+## probability of success 
+##                 0.6709</code></pre>
+</p>
+</details>
+<details>
+<summary><strong>Python</strong></summary>
+<p>
+<p><code>binom_test</code> function from <code>scipy.stats</code> module:</p>
+<pre class="python"><code>students_data = pd.read_csv(&quot;data/student-mat.csv&quot;)
+students_data[&quot;final_score&quot;] = students_data[&quot;G3&quot;].apply(lambda x: &quot;pass&quot; if x&gt;9 else &quot;fail&quot;)
+
+p_null = 0.6
+n = students_data.shape[0]
+n_passed = sum(students_data[&quot;final_score&quot;] == &quot;pass&quot;)
+
+p_val = stats.binom_test(x=n_passed, n=n, p=p_null, alternative=&quot;greater&quot;)
+print(f&quot;p-value: {p_val: .4f}&quot;)</code></pre>
+<pre><code>## p-value:  0.0022</code></pre>
+</p>
+</details>
+</div>
+<div id="multiple-proportions" class="section level3">
+<h3>Multiple Proportions</h3>
+<p>Now say we want to compare propotion for multiple groups rather than just one. For this purpose one can use <strong><span class="math inline">\(\chi^2\)</span> test for independence</strong>. In general form, under the chi-square test we have following hypotheses:</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: There is no association between groups.</li>
+<li><span class="math inline">\(H_A\)</span>: There is an association between the groups (<em>one-sided test</em>).</li>
+</ul>
+<p><strong>Conditions for <span class="math inline">\(\chi^2\)</span> test</strong>:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Independence</strong></li>
+<li><strong>Sample size</strong> (each “cell” must have at least 5 expected cases)</li>
+</ol>
+<p>Test statistic <span class="math inline">\(\chi^2\)</span> (which is following <span class="math inline">\(\chi^2\)</span> distribution<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>) can be found as:</p>
+<p><span class="math display">\[\chi^2 = \sum_{i=1}^k \frac{(O-E)^2}{E}\]</span></p>
+<ul>
+<li><span class="math inline">\(O\)</span>: observed data in a “cell”</li>
+<li><span class="math inline">\(E\)</span>: expected data of a “cell”</li>
+<li><span class="math inline">\(k\)</span>: number of “cells”</li>
+</ul>
+<div id="example" class="section level4">
+<h4>Example</h4>
+<p>Does alcohol consumption level on weekends affect the student study results?</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: exam results and alcohol consumption are <strong>independent</strong>.</li>
+<li><span class="math inline">\(H_A\)</span>: exam results and alcohol consumption are <strong>dependent</strong> (results scores vary by alcohol consumption).</li>
+<li><span class="math inline">\(\alpha = 0.05\)</span></li>
+</ul>
+<p>There are 5 levels of alcohol consumption (from 1 - very low to 5 - very high). First, we can take a look at the cross tab to see the number of observations in each group:</p>
+<pre class="r"><code>ct &lt;- table(students_data$final_score, students_data$Walc)
+ct %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">1</th>
+<th align="right">2</th>
+<th align="right">3</th>
+<th align="right">4</th>
+<th align="right">5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>fail</td>
+<td align="right">50</td>
+<td align="right">25</td>
+<td align="right">25</td>
+<td align="right">20</td>
+<td align="right">10</td>
+</tr>
+<tr class="even">
+<td>pass</td>
+<td align="right">101</td>
+<td align="right">60</td>
+<td align="right">55</td>
+<td align="right">31</td>
+<td align="right">18</td>
+</tr>
+</tbody>
+</table>
+<p>Each cell has more than 5 observations, so we can say that the <strong>sample size</strong> condition is met.</p>
+<p>We are going to rewrite the previous cross table in the following way:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Weekend alcohol <br>consumption level</th>
+<th align="left">1</th>
+<th align="left">2</th>
+<th align="left">3</th>
+<th align="left">4</th>
+<th align="left">5</th>
+<th align="left">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>Failed</strong></td>
+<td align="left">50 (<strong>50</strong>)</td>
+<td align="left">25 (<strong>28</strong>)</td>
+<td align="left">25 (<strong>26</strong>)</td>
+<td align="left">20 (<strong>17</strong>)</td>
+<td align="left">10 (<strong>9</strong>)</td>
+<td align="left">130</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Passed</strong></td>
+<td align="left">101 (<strong>101</strong>)</td>
+<td align="left">60 (<strong>57</strong>)</td>
+<td align="left">55 (<strong>54</strong>)</td>
+<td align="left">31 (<strong>34</strong>)</td>
+<td align="left">18 (<strong>19</strong>)</td>
+<td align="left">265</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Total</strong></td>
+<td align="left">151</td>
+<td align="left">85</td>
+<td align="left">80</td>
+<td align="left">51</td>
+<td align="left">28</td>
+<td align="left">395</td>
+</tr>
+</tbody>
+</table>
+<p>Numbers in parentheses is the <strong>expected</strong> number of observations for each cell. Assuming that there is no association between the groups we expect 67.09% of students to pass the exam (<span class="math inline">\(p =\frac{\text{total passed}}{\text{total}} = \frac{265}{395}=0.6709\)</span>) in each group. Let’s take a look at a <code>1</code> level of alcohol consumption. Given that assumption we expect to observe 101 students who passed the exam (<span class="math inline">\(\text{total for 1 level} \times p = 151 \times 0.6709 = 101\)</span>). Hence we expect 50 students to fail the exam (<span class="math inline">\(151-101 = 50\)</span>).</p>
+<p>For the second (2) level of alcohol consumption we expect to observe 57 students who passed the exam (<span class="math inline">\(\text{total for 2 level} \times p = 85 \times 0.6709 = 57\)</span>) and 28 who failed (<span class="math inline">\(85-57 = 28\)</span>). And so on for each group. After we found the expected values for each cell we can calculate the <span class="math inline">\(\chi^2\)</span> value:</p>
+<p><span class="math display">\[\chi^2 = \frac{(50-50)^2}{50} + \frac{(25-28)^2}{28} + ... + \frac{(18-19)^2}{19}\]</span></p>
+<p>This is also may be a tough task to calculate by hand that’s why we usually rely on software.</p>
+<details>
+<summary><strong>R</strong></summary>
+<p>
+<p>Built-in <code>chisq.test</code> function:</p>
+<pre class="r"><code>results &lt;- chisq.test(ct, correct = FALSE)
+results</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  ct
+## X-squared = 1.6, df = 4, p-value = 0.8</code></pre>
+</p>
+</details>
+<details>
+<summary><strong>Python</strong></summary>
+<p>
+<p><code>chi2_contingency</code> function from <code>scipy.stats</code> module:</p>
+<pre class="python"><code>ct = pd.crosstab(students_data.final_score, students_data.Walc).to_numpy()
+chisq_stat, p_val, dof, expctd = stats.chi2_contingency(ct, correction=False)
+print(f&quot;Calculated test statistic: {chisq_stat: .4f}\np-value: {p_val: .4f}&quot;)</code></pre>
+<pre><code>## Calculated test statistic:  1.5919
+## p-value:  0.8102</code></pre>
+</p>
+</details>
+<p><br>
+A couple of notes:</p>
+<ul>
+<li>Degrees of freedom can be found as <span class="math inline">\(df=(C-1)(R-1)\)</span>, where <span class="math inline">\(C\)</span> - number of columns, <span class="math inline">\(R\)</span> - number of rows.</li>
+<li><code>correction</code> argument in chi-square test function is used for the <strong>Yates’s correction for continuity</strong><a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a>.</li>
+</ul>
+<details>
+<summary>Code</summary>
+<p>
+<pre class="r"><code>x &lt;- seq(0,10,0.1)
+df &lt;- 4
+chisq_dist &lt;- dchisq(x, df)
+chi_sq &lt;- results$statistic
+
+ggplot() +
+  geom_line(
+    mapping = aes(x = x, y = chisq_dist),
+    color = &quot;black&quot;, size = 1.5) +   
+  geom_vline(xintercept = chi_sq) +
+  geom_area(
+    mapping = aes(x = x[x &gt;= chi_sq], y = chisq_dist[x &gt;= chi_sq]),
+    fill=&quot;red&quot;, alpha=0.6) +
+  labs(title = &quot;Chi-square Distribution&quot;,
+       y = &quot;Density&quot;) +
+  theme_classic()</code></pre>
+</p>
+</details>
+<p><img src="/post/null-hypothesis-significance-testing-part-2/index_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>{{% alert note %}}
+We failed to reject the null hypothesis meaning there is not enough evidence to claim that alcohol consumption and exam score are dependent.
+{{% /alert %}}</p>
+<p>R also lets us explore the expected and observed count</p>
+<pre class="r"><code>results$observed %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">1</th>
+<th align="right">2</th>
+<th align="right">3</th>
+<th align="right">4</th>
+<th align="right">5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>fail</td>
+<td align="right">50</td>
+<td align="right">25</td>
+<td align="right">25</td>
+<td align="right">20</td>
+<td align="right">10</td>
+</tr>
+<tr class="even">
+<td>pass</td>
+<td align="right">101</td>
+<td align="right">60</td>
+<td align="right">55</td>
+<td align="right">31</td>
+<td align="right">18</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>results$expected %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">1</th>
+<th align="right">2</th>
+<th align="right">3</th>
+<th align="right">4</th>
+<th align="right">5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>fail</td>
+<td align="right">49.7</td>
+<td align="right">27.97</td>
+<td align="right">26.33</td>
+<td align="right">16.78</td>
+<td align="right">9.215</td>
+</tr>
+<tr class="even">
+<td>pass</td>
+<td align="right">101.3</td>
+<td align="right">57.03</td>
+<td align="right">53.67</td>
+<td align="right">34.22</td>
+<td align="right">18.785</td>
+</tr>
+</tbody>
+</table>
+<p>Also, we can check the <strong>residual</strong> values of each cell, that are defined as:</p>
+<p><span class="math display">\[r = \frac{O-E}{\sqrt{E}}\]</span></p>
+<pre class="r"><code>residuals_table &lt;- results$residuals
+kable(residuals_table)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">1</th>
+<th align="right">2</th>
+<th align="right">3</th>
+<th align="right">4</th>
+<th align="right">5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>fail</td>
+<td align="right">0.0431</td>
+<td align="right">-0.5624</td>
+<td align="right">-0.2590</td>
+<td align="right">0.7848</td>
+<td align="right">0.2585</td>
+</tr>
+<tr class="even">
+<td>pass</td>
+<td align="right">-0.0302</td>
+<td align="right">0.3939</td>
+<td align="right">0.1814</td>
+<td align="right">-0.5497</td>
+<td align="right">-0.1811</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>corrplot(residuals_table)</code></pre>
+<center>
+<img src="corrplot.png"></img>
+</center>
+<p>High residual values mean that this cell has the highest <strong>influence</strong> on a <span class="math inline">\(\chi^2\)</span> score. Another approach would be to find the percentage of contribution using the formula:</p>
+<p><span class="math display">\[\text{Cell Contribution} = \frac{r}{\chi^2} \times 100\%\]</span></p>
+<pre class="r"><code>contrib_table &lt;- 100 * residuals_table^2 / results$statistic
+kable(contrib_table)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">1</th>
+<th align="right">2</th>
+<th align="right">3</th>
+<th align="right">4</th>
+<th align="right">5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>fail</td>
+<td align="right">0.1167</td>
+<td align="right">19.870</td>
+<td align="right">4.215</td>
+<td align="right">38.69</td>
+<td align="right">4.199</td>
+</tr>
+<tr class="even">
+<td>pass</td>
+<td align="right">0.0572</td>
+<td align="right">9.748</td>
+<td align="right">2.068</td>
+<td align="right">18.98</td>
+<td align="right">2.060</td>
+</tr>
+</tbody>
+</table>
+<p>As we can see, the pairs of <code>fail &amp; 2</code>, <code>fail &amp; 4</code> and <code>pass &amp; 4</code> have the highest percentage of contribution (or in other words, they is some association).</p>
+</div>
+</div>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>This was a brief overview of how we can perform hypothesis testings when we deal with discreet variables. In the next (and I hope the final) part I will finally introduce a concept of test power and effect size and discuss why p-value alone is not sufficient for decision making.</p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://defme.xyz/post/null-hypothesis-significance-testing-part-1/" class="uri">https://defme.xyz/post/null-hypothesis-significance-testing-part-1/</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p><a href="https://www.kaggle.com/uciml/student-alcohol-consumption" class="uri">https://www.kaggle.com/uciml/student-alcohol-consumption</a><a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p><a href="http://www3.dsi.uminho.pt/pcortez/student.pdf" class="uri">http://www3.dsi.uminho.pt/pcortez/student.pdf</a><a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p><a href="https://en.wikipedia.org/wiki/Binomial_distribution" class="uri">https://en.wikipedia.org/wiki/Binomial_distribution</a><a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p><a href="https://defme.xyz/post/null-hypothesis-significance-testing-part-1/#intuitive-example" class="uri">https://defme.xyz/post/null-hypothesis-significance-testing-part-1/#intuitive-example</a><a href="#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p><a href="https://en.wikipedia.org/wiki/Binomial_test" class="uri">https://en.wikipedia.org/wiki/Binomial_test</a><a href="#fnref6" class="footnote-back">↩</a></p></li>
+<li id="fn7"><p><a href="https://defme.xyz/project/normal-approximation-to-binomial/" class="uri">https://defme.xyz/project/normal-approximation-to-binomial/</a><a href="#fnref7" class="footnote-back">↩</a></p></li>
+<li id="fn8"><p><a href="https://en.wikipedia.org/wiki/Chi-squared_distribution" class="uri">https://en.wikipedia.org/wiki/Chi-squared_distribution</a><a href="#fnref8" class="footnote-back">↩</a></p></li>
+<li id="fn9"><p><a href="https://en.wikipedia.org/wiki/Yates%27s_correction_for_continuity" class="uri">https://en.wikipedia.org/wiki/Yates%27s_correction_for_continuity</a><a href="#fnref9" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
