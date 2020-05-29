@@ -49,7 +49,7 @@ Plotly.R is free and open source and you can view the source, report issues or c
 
 ## <a name="data-viz">What is Data Visualization</a>
 
-First of all, let's start with the definiton what is "Data Visualization". Wikidepia defines it as:
+First of all, let's start with the definition what is "Data Visualization". Wikipedia defines it as:
 
 > **Data visualization** is the graphic representation of data. It involves producing images that communicate relationships among the represented data to viewers of the images. This communication is achieved through the use of a systematic mapping between graphic marks and data values in the creation of the visualization. This mapping establishes how data values will be represented visually, determining how and to what extent a property of a graphic mark, such as size or color, will change to reflect change in the value of a datum. [[1]](#1)
 
@@ -146,7 +146,7 @@ nobel_df %>%
 
 <iframe src="2.html" width="700" height="450" frameborder="0"></iframe>
 
-Note the use of `hovertemplate` in `plot_ly()` function. This argument allows to set custom text when hovering over plot points. We set `name` to empty string since it is not really needed for now. It might be of better use when we have nultiple objects on the plot to show a legend. 
+Note the use of `hovertemplate` in `plot_ly()` function. This argument allows to set custom text when hovering over plot points. We set `name` to empty string since it is not really needed for now. It might be of better use when we have multiple objects on the plot to show a legend. 
 
 As a summary we can say that line chart usually is used to show the connection between two variables:
 
@@ -258,7 +258,7 @@ fig2 <- fig2 %>%
                                   '<br><i>Ratio</i>: %{y: .2f}%'))
 ```
 
-Now we have two objects `fig1` (stacked area chart) and `fig2` (normalized stacked area chart). We can show them on one plot using **sublots**. The reason why we used `showlegend = FALSE` in `fig2` object is that we grouped two legends for subplot by adding `legendgroup` and we don't need to show the same lagend twice. 
+Now we have two objects `fig1` (stacked area chart) and `fig2` (normalized stacked area chart). We can show them on one plot using **subplots**. The reason why we used `showlegend = FALSE` in `fig2` object is that we grouped two legends for subplot by adding `legendgroup` and we don't need to show the same legend twice. 
 
 ```{r eval=FALSE}
 # `shareX` means that `x` axis will be the same for both plots
@@ -455,7 +455,7 @@ You can also add a third **numerical** variable for comparison. This type of plo
 
 > **A bubble chart** is a type of chart that displays three dimensions of data. Each entity with its triplet of associated data is plotted as a disk that expresses two of the vi values through the disk's xy location and the third through its size. Bubble charts can facilitate the understanding of social, economical, medical, and other scientific relationships. [[7]](#7)
 
-We will slghtly modify previous plot to add unemployment rate as a third variable:
+We will slightly modify previous plot to add unemployment rate as a third variable:
 
 ```{r eval=FALSE}
 edindex_df %>% 
@@ -515,7 +515,7 @@ edindex_df %>%
 
 ### <a name="pie-chart">Pie chart</a>
 
-Next type of chat is a bit controversial since it has been criticized among specialist since it can be hard to ompare different sections of a given chart, or to compare data across different charts.
+Next type of chat is a bit controversial since it has been criticized among specialist since it can be hard to compare different sections of a given chart, or to compare data across different charts.
 
 > **A pie chart** (or a circle chart) is a circular statistical graphic, which is divided into slices to illustrate numerical proportion. In a pie chart, the arc length of each slice (and consequently its central angle and area), is proportional to the quantity it represents. While it is named for its resemblance to a pie which has been sliced, there are variations on the way it can be presented. [[8]](#8)
 
@@ -535,11 +535,11 @@ nobel_df %>%
 <iframe src="10.html" width="700" height="450" frameborder="0"></iframe>
 
 
-It seems readable since we have jsut 6 categories but imageine what would happen if we had 15+ labels.
+It seems readable since we have just 6 categories but imagine what would happen if we had 15+ labels.
 
 **Summary**:
 
-* pie chart shows the normalized propotion of a **categorical** variable.
+* pie chart shows the normalized proportion of a **categorical** variable.
 
 ### <a name="heatmap">Heatmap</a>
 

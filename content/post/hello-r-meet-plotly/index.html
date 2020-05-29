@@ -58,7 +58,7 @@ library(plotly)</code></pre>
 </div>
 <div id="what-is-data-visualization" class="section level2">
 <h2><a name="data-viz">What is Data Visualization</a></h2>
-<p>First of all, let’s start with the definiton what is “Data Visualization”. Wikidepia defines it as:</p>
+<p>First of all, let’s start with the definition what is “Data Visualization”. Wikipedia defines it as:</p>
 <blockquote>
 <p><strong>Data visualization</strong> is the graphic representation of data. It involves producing images that communicate relationships among the represented data to viewers of the images. This communication is achieved through the use of a systematic mapping between graphic marks and data values in the creation of the visualization. This mapping establishes how data values will be represented visually, determining how and to what extent a property of a graphic mark, such as size or color, will change to reflect change in the value of a datum. <a href="#1">[1]</a></p>
 </blockquote>
@@ -340,7 +340,7 @@ nobel_df %&gt;%
     margin = list(t = 70))</code></pre>
 <iframe src="2.html" width="700" height="450" frameborder="0">
 </iframe>
-<p>Note the use of <code>hovertemplate</code> in <code>plot_ly()</code> function. This argument allows to set custom text when hovering over plot points. We set <code>name</code> to empty string since it is not really needed for now. It might be of better use when we have nultiple objects on the plot to show a legend.</p>
+<p>Note the use of <code>hovertemplate</code> in <code>plot_ly()</code> function. This argument allows to set custom text when hovering over plot points. We set <code>name</code> to empty string since it is not really needed for now. It might be of better use when we have multiple objects on the plot to show a legend.</p>
 <p>As a summary we can say that line chart usually is used to show the connection between two variables:</p>
 <ul>
 <li><code>x axis</code> - <strong>numerical</strong> variable (usually <strong>time series</strong>)</li>
@@ -476,7 +476,7 @@ fig2 &lt;- fig2 %&gt;%
             fillcolor = &#39;rgba(255, 188, 101, 0.8)&#39;,
             hovertemplate = paste(&#39;&lt;i&gt;Year&lt;/i&gt;: %{x}&#39;,
                                   &#39;&lt;br&gt;&lt;i&gt;Ratio&lt;/i&gt;: %{y: .2f}%&#39;))</code></pre>
-<p>Now we have two objects <code>fig1</code> (stacked area chart) and <code>fig2</code> (normalized stacked area chart). We can show them on one plot using <strong>sublots</strong>. The reason why we used <code>showlegend = FALSE</code> in <code>fig2</code> object is that we grouped two legends for subplot by adding <code>legendgroup</code> and we don’t need to show the same lagend twice.</p>
+<p>Now we have two objects <code>fig1</code> (stacked area chart) and <code>fig2</code> (normalized stacked area chart). We can show them on one plot using <strong>subplots</strong>. The reason why we used <code>showlegend = FALSE</code> in <code>fig2</code> object is that we grouped two legends for subplot by adding <code>legendgroup</code> and we don’t need to show the same legend twice.</p>
 <pre class="r"><code># `shareX` means that `x` axis will be the same for both plots
 subplot(fig1, fig2, nrows = 2, shareX = TRUE) %&gt;% 
   layout(title = &quot;&lt;b&gt;Total Awards by Year by Gender&lt;/b&gt;&quot;,
@@ -746,7 +746,7 @@ kable(head(edindex_df))</code></pre>
 <blockquote>
 <p><strong>A bubble chart</strong> is a type of chart that displays three dimensions of data. Each entity with its triplet of associated data is plotted as a disk that expresses two of the vi values through the disk’s xy location and the third through its size. Bubble charts can facilitate the understanding of social, economical, medical, and other scientific relationships. <a href="#7">[7]</a></p>
 </blockquote>
-<p>We will slghtly modify previous plot to add unemployment rate as a third variable:</p>
+<p>We will slightly modify previous plot to add unemployment rate as a third variable:</p>
 <pre class="r"><code>edindex_df %&gt;% 
   plot_ly(
     x = ~GDP, y = ~OOCP,
@@ -800,7 +800,7 @@ kable(head(edindex_df))</code></pre>
 </div>
 <div id="pie-chart" class="section level3">
 <h3><a name="pie-chart">Pie chart</a></h3>
-<p>Next type of chat is a bit controversial since it has been criticized among specialist since it can be hard to ompare different sections of a given chart, or to compare data across different charts.</p>
+<p>Next type of chat is a bit controversial since it has been criticized among specialist since it can be hard to compare different sections of a given chart, or to compare data across different charts.</p>
 <blockquote>
 <p><strong>A pie chart</strong> (or a circle chart) is a circular statistical graphic, which is divided into slices to illustrate numerical proportion. In a pie chart, the arc length of each slice (and consequently its central angle and area), is proportional to the quantity it represents. While it is named for its resemblance to a pie which has been sliced, there are variations on the way it can be presented. <a href="#8">[8]</a></p>
 </blockquote>
@@ -815,10 +815,10 @@ kable(head(edindex_df))</code></pre>
   layout(title = &quot;&lt;b&gt;Overall Proportion of Winning Categories&lt;/b&gt;&quot;)</code></pre>
 <iframe src="10.html" width="700" height="450" frameborder="0">
 </iframe>
-<p>It seems readable since we have jsut 6 categories but imageine what would happen if we had 15+ labels.</p>
+<p>It seems readable since we have just 6 categories but imagine what would happen if we had 15+ labels.</p>
 <p><strong>Summary</strong>:</p>
 <ul>
-<li>pie chart shows the normalized propotion of a <strong>categorical</strong> variable.</li>
+<li>pie chart shows the normalized proportion of a <strong>categorical</strong> variable.</li>
 </ul>
 </div>
 <div id="heatmap" class="section level3">
