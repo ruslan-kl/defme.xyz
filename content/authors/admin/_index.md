@@ -39,9 +39,35 @@ superuser: true
 }
 </style>
 
-I have been working in the Data Science since 2017. Recently have been involved in teaching Data Science [courses](https://devrepublik.com/data-science/) (online and offline) and webinars. I really enjoy writing short tutorials.Personal area of interest is how computer science can boost healthcare field. I like both R and Python the same.
-
-My life credo is "Never stop learning". When I am not learning, I am travelling or hiking. 
+```python
+class AboutMe():
+    
+    def __init__(self):
+        self.name = 'Ruslan'
+        self.last_name = 'Klymentiev'
+        self.interests = []
+    
+    def me(self, learning):
+        self.life_credo = 'Never stop learning'
+        if learning:
+            self.activity = 'learning'
+        else:
+            self.activity = 'travelling'
+            
+    def add_interest(self, interest):
+        self.interests.append(interest)
+        
+    def preferences(self, r, python):
+        self.love_is_equal = r == python 
+    
+    
+RK = AboutMe()
+RK.add_interest('neuroscience')
+RK.add_interest('healthcare')
+RK.preferences(r=True, python=True)
+RK.love_is_equal
+# True
+```
 
 <center>
 <a class="btn" href="CV_Klymentiev.pdf" target="_blank">
