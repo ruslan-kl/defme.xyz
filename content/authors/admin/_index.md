@@ -65,8 +65,8 @@ RK = AboutMe()
 RK.add_interest('neuroscience')
 RK.add_interest('healthcare')
 RK.preferences(r=True, python=True)
-RK.love_is_equal
-# True
+print(RK.love_is_equal)
+>> True
 ```
 
 <center>
