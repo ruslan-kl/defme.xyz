@@ -1,7 +1,7 @@
 ---
 title: Statistical Hypothesis Testing (in Russian)
 event: Webinar
-event_url: https://devrepublik.com/calendar/statistical-hypothesis-testing-p-class-my-button-regs-a-href-https-share-hsforms-com-1wvq_wedjruihtwngsaj43g49933-registration-a-p-fee-650-uah/2020-05-22/
+event_url: https://devrepublik.com/calendar/statistical-hypothesis-testing-p-class-my-button-regs-a-href-https-share-hsforms-com-1wvq_wedjruihtwngsaj43g49933-registration-a-p-fee-650-uah/2020-06-04/
 
 location: online
 
@@ -9,8 +9,8 @@ summary: All Data Scientists want just one thing and that’s disgusting. It’s
 
 # Talk start and end times.
 #   End time can optionally be hidden by prefixing the line with `#`.
-date: "2020-05-22T09:00:00Z"
-date_end: "2020-05-22T12:00:00Z"
+date: "2020-06-04T18:00:00Z"
+date_end: "2020-06-04T20:00:00Z"
 # all_day: false
 
 # Schedule page publish date (NOT talk date).
@@ -53,5 +53,5 @@ math: true
 All Data Scientists want just one thing and that’s disgusting. It’s “p-value < 0.05”. We are going to talk about how to set up and run statistical hypothesis tests, what’s the difference between null and alternative hypothesis, what is p-value and why we want it to be small. We will cover significance testing for population means and proportions, starting with theory and showing how it can be done in Python and R.
 
 {{% alert note %}}
-**[Register Now](https://devrepublik.com/calendar/statistical-hypothesis-testing-p-class-my-button-regs-a-href-https-share-hsforms-com-1wvq_wedjruihtwngsaj43g49933-registration-a-p-fee-650-uah/2020-05-22/)**
+**[Register Now](https://devrepublik.com/calendar/statistical-hypothesis-testing-p-class-my-button-regs-a-href-https-share-hsforms-com-1wvq_wedjruihtwngsaj43g49933-registration-a-p-fee-650-uah/2020-06-04/)**
 {{% /alert %}}
