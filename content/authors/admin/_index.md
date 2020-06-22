@@ -40,28 +40,29 @@ superuser: true
 </style>
 
 ```python
-class AboutMe():
+class AboutMe:
     
-    def __init__(self):
-        self.name = 'Ruslan'
-        self.last_name = 'Klymentiev'
+    def __init__(self, name=None):
+        self.name = name
         self.interests = []
     
-    def me(self, learning):
-        self.life_credo = 'Never stop learning'
+    def me(self, life_credo, learning=True):
+        self.life_credo = life_credo
         if learning:
             self.activity = 'learning'
         else:
             self.activity = 'travelling'
             
     def add_interest(self, interest):
-        self.interests.append(interest)
+        if interest not in self.interests:
+            self.interests.append(interest)
         
     def preferences(self, r, python):
         self.love_is_equal = r == python 
     
     
-RK = AboutMe()
+RK = AboutMe(name='Ruslan Klymentiev')
+RK.me(life_credo='Never stop learning')
 RK.add_interest('neuroscience')
 RK.add_interest('healthcare')
 RK.preferences(r=True, python=True)
