@@ -7,7 +7,7 @@ image:
   focal_point: ""
   placement: 3
   preview_only: true
-date: "2020-05-31"
+date: "2020-06-02"
 categories: ["Statistics"]
 tags: ["Statistics", "Probability"]
 ---
@@ -19,15 +19,14 @@ tags: ["Statistics", "Probability"]
 - [Introduction](#introduction)
 - [Power of the Test](#power-of-the-test)
 - [Effect Size](#effect-size)
-- [Why is it Important?](#why-is-it-important)
-- [Summary](#summary)
-- [References](#references)
 
 ```{r message=FALSE, warning=FALSE}
 # r import
 library(tidyverse)
+library(knitr)
 library(reticulate)
 library(pwr)
+library(metRology)
 library(effsize)
 
 options(digits = 4)
@@ -36,12 +35,25 @@ use_python("/home/ruslan/anaconda3/bin/python3.7")
 
 ```{python}
 # python import
+import pandas as pd
 from statsmodels.stats import power
 ```
 
+```{r}
+# custom functions
+nhst_result <- function(pval, alpha){
+  if(pval < alpha) {
+    print(paste0("p-value is less than alpha (", 
+                 alpha, "). Reject the null hypothesis."))
+  } else {print(paste0("p-value is greater than alpha (", 
+                     alpha, "). Fail to reject the null hypothesis."))}
+}
+```
+
+
 ## Introduction
 
-In two previous parts[^1]$^,$[^2] we have reviewed the idea of inference for a population mean and proportion under the null hypothesis significance testing framework. The idea is pretty simple - find the probability of the occurrence of experimental data using the assumption that null hypothesis is true (p-value), if it's lower than significance level ($\alpha$), then reject the null hypothesis in favor of an alternative hypothesis. $\alpha$ is the probability of rejecting $H_0$ when, in fact, it is true and we, obviously, want to keep it low. But as told before there might be another place for an error, and that is failing to reject the $H_0$ when in fact it is false. This is called **Type II** error and the probability of this is denoted as $\beta$. 
+In the two previous parts[^1]$^,$[^2] we have reviewed the idea of inference for a population mean and proportion under the null hypothesis significance testing framework. The idea is pretty simple - find the probability of the occurrence of experimental data using the assumption that null hypothesis is true (p-value), if it's lower than significance level ($\alpha$), then reject the null hypothesis in favor of an alternative hypothesis. $\alpha$ is the probability of rejecting $H_0$ when, in fact, it is true and we, obviously, want to keep it low. But as told before there might be another place for an error, and that is failing to reject the $H_0$ when in fact it is false. This is called **Type II** error and the probability of this is denoted as $\beta$. 
 
 |  | $H_0$ is true | $H_0$ is false |
 |:-:|:-:|:-:|
@@ -50,11 +62,11 @@ In two previous parts[^1]$^,$[^2] we have reviewed the idea of inference for a p
 
 ## Power of the Test
 
-The value of $1 - \beta$ is called the **power** of a test and we want the power to be high (or the $\beta$ to be small). Commonly used value for the power is 80% ($\beta = 0.2$).
+The value of $1 - \beta$ is called the **power** of a test and we also want the power to be high (or the $\beta$ to be small). Commonly used value for the power is 80% ($\beta = 0.2$).
 
-Let's imagine the following example. You are developing a new drug that helps people with insomnia. Study shows that people with mild insomnia sleep on average 4 hours a day. You would like to check whether your drug helps to increase the sleep time.
+Let's imagine the following example. You are developing a new drug that helps people with insomnia. Study shows that on average people with insomnia sleep on average 4 hours a day. You would like to check whether your drug helps to increase the sleep time.
 
-* $H_0$: a new drug has no effect on a sleep time for people with mild insomnia; $\mu = 4$
+* $H_0$: a new drug has no effect on a sleep time for people with insomnia; $\mu = 4$
 * $H_A$: a new drug increases the sleep duration; $\mu > 4$
 * $\alpha = 0.05$
 
@@ -165,12 +177,12 @@ ggplot() +
 
 Let's look deeper at this plot:
 
-* Black line is the **null distribution** with the parameters $\mu_0=4$ and $\sigma=1$. 
-* Gray line is the distribution of the data we would like to observe (**alternative distribution**) with the parameters $\mu_A=4.5$ and $\sigma=1$. 
+* Black line is the **null distribution** with the parameters $\mu_0=4$ and $\sigma=0.5$. 
+* Gray line is the distribution of the data we would like to observe (**alternative distribution**) with the parameters $\mu_A=4.5$ and $\sigma=0.5$. 
 * Red area is the **rejection area**, which is above the .95 quantile of the null distribution. We would reject the null hypothesis if the calculated $Z$ statistic is greater $Z$ critical.
 * Blue area is the **power** of a test. It's the probability of rejecting the null hypothesis when it is false.
 
-In such case we could find the power by finding the area under the curve of the alternative distribution:
+In such case we could find the power by finding the area under the curve of the observed data:
 
 $$\text{Power} = P \left( X \geq Z_{crit} \mid \mu = 4.5, \sigma = \frac{1}{\sqrt{15}} \right)$$
 
@@ -178,11 +190,11 @@ Critical value of $Z$ can be found as:
 
 $$Z_{crit} = Q_{0.95} \times \frac{\sigma}{\sqrt{n}}  + \mu_0$$
 
-Where $Q_{0.95}$ is the 0.95 quantile of the standard normal distribution. 
+Where $Q_{0.95}$ is the 0.85 quantile of the standard normal distribution. 
 
 $$Z_{crit} = 1.645 \times \frac{1}{\sqrt{15}} + 4 = 4.425$$
 
-The power of the test can be find using R:
+Now, the power of the test can be find using R (instead of calculating the integral):
 
 ```{r}
 Z_crit <- qnorm(0.95) * se + mu_null
@@ -190,9 +202,7 @@ power <- pnorm(Z_crit, mean = mu_alt, sd = se, lower.tail = FALSE)
 print(paste0("Power of the test is: ", round(power, 3)))
 ```
 
-It doesn't necessarily mean you we wouldn't be able to detect the difference of 0.5 as statistically significant, it just means our chances are 61.5% (which is less than commonly used 80%).
-
-We could also see that power is dependent on a sample size $n$ and the standard deviation $\sigma$. We don't really have control over $\sigma$, but we have control over the sample size. If we increase the sample size from 15 to 50 observations, the standard error will decrease and hence, the power will increase:
+As we can see, the highest possible power that can be achieved is 61.5%, which is lower than 80%. We could also see that power is dependent on a sample size $n$ and the standard deviation $\sigma$. We don't really have control over $\sigma$, but we have control over the sample size. If we increase the sample size from 15 to 50 observations, the standard error will decrease and hence, the power will increase:
 
 <details><summary>Code</summary>
 <p>
@@ -219,8 +229,7 @@ ggplot() +
     fill = "blue", alpha = 0.5) +
   geom_area(mapping = aes(x = x[x >= Z_crit], y = null_dist[x >= Z_crit]),
     fill = "red", alpha = 0.5) +
-  labs(y = "Density",
-       title = "Null and Alternative Distribution") +
+  labs(y = "Density") +
   theme_classic()
 ```
 </p>
@@ -249,8 +258,7 @@ ggplot() +
     fill = "blue", alpha = 0.5) +
   geom_area(mapping = aes(x = x[x >= Z_crit], y = null_dist[x >= Z_crit]),
     fill = "red", alpha = 0.5) +
-  labs(y = "Density",
-       title = "Null and Alternative Distribution") +
+  labs(y = "Density") +
   theme_classic()
 ```
 
@@ -261,7 +269,7 @@ power <- pnorm(Z_crit, mean = mu_alt, sd = se, lower.tail = FALSE)
 print(paste0("Power of the test is: ", round(power, 3)))
 ```
 
-In practice you want to know what sample size do you need to get be able to observe the difference with the desired levels of $\alpha$ and $\beta$ **before** the experiment.
+In practice you want to know what sample size do you need to get be able to observe the difference with the desired levels of \alpha$ and $\beta$ **before** the experiment.
 
 Since most of the times we don't know the population standard deviation $\sigma$ we use $t$ distribution. As you could see with the $Z$ test example, calculations usually are a bit complicated to do by hand, that's why we rely on R/Python.
 
@@ -295,7 +303,7 @@ print(f'Required sample size: {n: .2f}')
 <br>
 As we can see, the minimum sample size is 27 observations.
 
-Let's find out how sample size increases the power for the previous example:
+Let's find out how sample size changes the power in the previous example settings:
 
 ```{r}
 n <- 1:100
@@ -303,20 +311,6 @@ results <- power.t.test(n = n, sd = sd, d = 0.5,
                         type = "one.sample", alternative = "one.sided")
 power_arr <- results$power
 ```
-
-<details><summary>Code</summary>
-<p>
-```{r, eval=FALSE}
-ggplot() +
-  geom_line(aes(n, power_arr)) +
-  labs(x = "Sample Size",
-       y = "Power",
-       title = "Relationship between Sample Size and Power") +
-  theme_classic()
-```
-</p>
-</details>
-
 
 ```{r, echo=FALSE, fig.align='center', fig.height=3, fig.width=5}
 ggplot() +
@@ -327,13 +321,13 @@ ggplot() +
   theme_classic()
 ```
 
-As we can see, the power of a test increases as the sample size increases and reaches its maximum after ~60 observations. 
+As we can see, the power of a test increases as the sample size increases. 
 
 ## Effect Size
 
-Usually for calculating the sample size and power of the two sample test, one uses the **effect size** instead of the absolute difference between null and alternative values. The most frequently used type of an standardized effect size is **Cohen's $d$**, which can be defined as the difference between two means divided by a standard deviation for the data:
+Usually for calculating the sample size and power of the two sample test, one uses **effect size** instead of the absolute difference between null and alternative values. The most frequently used type of an effect size is **Cohen's $d$**, which can be defined asthe difference between two means divided by a standard deviation for the data:
 
-$$d = \frac{\bar{x_1} - \bar{x_2}}{s_{pooled}}$$
+$$d = \frac{\bar{x_1} - \bar{x_2}}{s_{pooled}} = \frac{\mu_1 - \mu_2}{s_{pooled}}$$
 
 $s_{pooled}$ - pooled standard deviation.
 
@@ -363,6 +357,8 @@ power.t.test(delta = 0.8, power = 0.8, sig.level = 0.05,
 ```
 
 Note, that you cannot pass the effect size inside the function, but you can pass the `delta` ($\mu_1-\mu_2$) and `sd` (standard deviation) that will lead to desired effect size.
+
+More examples of `pwr` package can be found at CRAN[^3].
 </p>
 </details>
 
@@ -377,13 +373,13 @@ print(f'Required sample size: {n: .2f}')
 ```
 </p>
 </details>
+<br>
 
 ## Why is it Important
 
 The question you might ask is why would we care about the effect size if results show significant statistical difference? The problem is than even if the p-value < $\alpha$, the observed effect size might be small ($d< 0.5$).
 
 > *With a sufficiently large sample, a statistical test will almost always demonstrate a significant difference, unless there is no effect whatsoever, that is, when the effect size is exactly zero; yet very small differences, even if significant, are often meaningless. Thus, reporting only the significant p-value for an analysis is not adequate for readers to fully understand the results.*[^3]
-
 Consider a following example. You are developing the drug for people with diabetes to reduce blood sugar level. You have a treatment (drug) and control (placebo) groups with 150 subjects in each. 
 
 * $H_0$: new drug doesn't reduce the sugar level ($\mu_t=\mu_c$);
@@ -396,7 +392,6 @@ Consider a following example. You are developing the drug for people with diabet
 set.seed(1)
 sample_control <- rnorm(n = 150, mean = 150, sd = 20)
 sample_treatment <- rnorm(n = 150, mean = 145, sd = 20)
-
 ttest_results <- t.test(sample_treatment, sample_control,
                         alternative = "less")
 ttest_results
@@ -453,7 +448,6 @@ cohen.d(sample_control, sample_treatment)
 set.seed(1)
 sample_control <- rnorm(n = 150, mean = 150, sd = 20)
 sample_treatment <- rnorm(n = 150, mean = 125, sd = 20)
-
 ttest_results <- t.test(sample_treatment, sample_control,
                         alternative = "less")
 ttest_results
@@ -506,12 +500,12 @@ cohen.d(sample_control, sample_treatment)
 ```
 
 {{% alert note %}}
-As we can see, both examples lead to a small p-value $<0.05$ so we reject null hypothesis in both cases. However, the effect size for the first case is small (<.25) meaning that even if we believe that there is a statistical difference between in two groups, this difference is not that big.
+As we can see, both examples lead to a small p-value $<0.05$ so we reject null hypothesis in both cases. However, the effect size for the first case is small (<.25) meaning that even if we believe that there is a statistical difference between two groups, this difference is not that big.
 {{% /alert %}}
 
 ## Summary
 
-I hope that all of these make sense now and ypu have a better picture of statistical hypothesis testing. The key point here is that low p-value is great, but not enough to make a decision (unless you specifically want to observe low effect size). And in order to avoid issues with low power and effect size you need to check what is the minimum sample size you need before the experiment.
+I hope that all of these make sense now and you have a better picture of statistical hypothesis testing. The key point here is that low p-value is great, but not enough to make a decision (unless you specifically want to observe low effect size). And in order to avoid issues with low power and effect size you need to check what is the minimum sample size you need before the experiment.
 
 In the first part I've described steps for the hypothesis testing framework, that could be updated now:
 

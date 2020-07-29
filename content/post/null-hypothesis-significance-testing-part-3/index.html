@@ -7,7 +7,7 @@ image:
   focal_point: ""
   placement: 3
   preview_only: true
-date: "2020-05-31"
+date: "2020-06-02"
 categories: ["Statistics"]
 tags: ["Statistics", "Probability"]
 ---
@@ -23,24 +23,32 @@ tags: ["Statistics", "Probability"]
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#power-of-the-test">Power of the Test</a></li>
 <li><a href="#effect-size">Effect Size</a></li>
-<li><a href="#why-is-it-important">Why is it Important?</a></li>
-<li><a href="#summary">Summary</a></li>
-<li><a href="#references">References</a></li>
 </ul>
 <pre class="r"><code># r import
 library(tidyverse)
+library(knitr)
 library(reticulate)
 library(pwr)
+library(metRology)
 library(effsize)
 
 options(digits = 4)
 use_python(&quot;/home/ruslan/anaconda3/bin/python3.7&quot;)</code></pre>
 <pre class="python"><code># python import
+import pandas as pd
 from statsmodels.stats import power</code></pre>
+<pre class="r"><code># custom functions
+nhst_result &lt;- function(pval, alpha){
+  if(pval &lt; alpha) {
+    print(paste0(&quot;p-value is less than alpha (&quot;, 
+                 alpha, &quot;). Reject the null hypothesis.&quot;))
+  } else {print(paste0(&quot;p-value is greater than alpha (&quot;, 
+                     alpha, &quot;). Fail to reject the null hypothesis.&quot;))}
+}</code></pre>
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>In two previous parts<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a><span class="math inline">\(^,\)</span><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> we have reviewed the idea of inference for a population mean and proportion under the null hypothesis significance testing framework. The idea is pretty simple - find the probability of the occurrence of experimental data using the assumption that null hypothesis is true (p-value), if it’s lower than significance level (<span class="math inline">\(\alpha\)</span>), then reject the null hypothesis in favor of an alternative hypothesis. <span class="math inline">\(\alpha\)</span> is the probability of rejecting <span class="math inline">\(H_0\)</span> when, in fact, it is true and we, obviously, want to keep it low. But as told before there might be another place for an error, and that is failing to reject the <span class="math inline">\(H_0\)</span> when in fact it is false. This is called <strong>Type II</strong> error and the probability of this is denoted as <span class="math inline">\(\beta\)</span>.</p>
+<p>In the two previous parts<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a><span class="math inline">\(^,\)</span><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> we have reviewed the idea of inference for a population mean and proportion under the null hypothesis significance testing framework. The idea is pretty simple - find the probability of the occurrence of experimental data using the assumption that null hypothesis is true (p-value), if it’s lower than significance level (<span class="math inline">\(\alpha\)</span>), then reject the null hypothesis in favor of an alternative hypothesis. <span class="math inline">\(\alpha\)</span> is the probability of rejecting <span class="math inline">\(H_0\)</span> when, in fact, it is true and we, obviously, want to keep it low. But as told before there might be another place for an error, and that is failing to reject the <span class="math inline">\(H_0\)</span> when in fact it is false. This is called <strong>Type II</strong> error and the probability of this is denoted as <span class="math inline">\(\beta\)</span>.</p>
 <table>
 <thead>
 <tr class="header">
@@ -65,10 +73,10 @@ from statsmodels.stats import power</code></pre>
 </div>
 <div id="power-of-the-test" class="section level2">
 <h2>Power of the Test</h2>
-<p>The value of <span class="math inline">\(1 - \beta\)</span> is called the <strong>power</strong> of a test and we want the power to be high (or the <span class="math inline">\(\beta\)</span> to be small). Commonly used value for the power is 80% (<span class="math inline">\(\beta = 0.2\)</span>).</p>
-<p>Let’s imagine the following example. You are developing a new drug that helps people with insomnia. Study shows that people with mild insomnia sleep on average 4 hours a day. You would like to check whether your drug helps to increase the sleep time.</p>
+<p>The value of <span class="math inline">\(1 - \beta\)</span> is called the <strong>power</strong> of a test and we also want the power to be high (or the <span class="math inline">\(\beta\)</span> to be small). Commonly used value for the power is 80% (<span class="math inline">\(\beta = 0.2\)</span>).</p>
+<p>Let’s imagine the following example. You are developing a new drug that helps people with insomnia. Study shows that on average people with insomnia sleep on average 4 hours a day. You would like to check whether your drug helps to increase the sleep time.</p>
 <ul>
-<li><span class="math inline">\(H_0\)</span>: a new drug has no effect on a sleep time for people with mild insomnia; <span class="math inline">\(\mu = 4\)</span></li>
+<li><span class="math inline">\(H_0\)</span>: a new drug has no effect on a sleep time for people with insomnia; <span class="math inline">\(\mu = 4\)</span></li>
 <li><span class="math inline">\(H_A\)</span>: a new drug increases the sleep duration; <span class="math inline">\(\mu &gt; 4\)</span></li>
 <li><span class="math inline">\(\alpha = 0.05\)</span></li>
 </ul>
@@ -125,27 +133,26 @@ ggplot() +
   theme_classic()</code></pre>
 </p>
 </details>
-<p><img src="/post/null-hypothesis-significance-testing-part-3/index_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/post/null-hypothesis-significance-testing-part-3/index_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Let’s look deeper at this plot:</p>
 <ul>
-<li>Black line is the <strong>null distribution</strong> with the parameters <span class="math inline">\(\mu_0=4\)</span> and <span class="math inline">\(\sigma=1\)</span>.</li>
-<li>Gray line is the distribution of the data we would like to observe (<strong>alternative distribution</strong>) with the parameters <span class="math inline">\(\mu_A=4.5\)</span> and <span class="math inline">\(\sigma=1\)</span>.</li>
+<li>Black line is the <strong>null distribution</strong> with the parameters <span class="math inline">\(\mu_0=4\)</span> and <span class="math inline">\(\sigma=0.5\)</span>.</li>
+<li>Gray line is the distribution of the data we would like to observe (<strong>alternative distribution</strong>) with the parameters <span class="math inline">\(\mu_A=4.5\)</span> and <span class="math inline">\(\sigma=0.5\)</span>.</li>
 <li>Red area is the <strong>rejection area</strong>, which is above the .95 quantile of the null distribution. We would reject the null hypothesis if the calculated <span class="math inline">\(Z\)</span> statistic is greater <span class="math inline">\(Z\)</span> critical.</li>
 <li>Blue area is the <strong>power</strong> of a test. It’s the probability of rejecting the null hypothesis when it is false.</li>
 </ul>
-<p>In such case we could find the power by finding the area under the curve of the alternative distribution:</p>
+<p>In such case we could find the power by finding the area under the curve of the observed data:</p>
 <p><span class="math display">\[\text{Power} = P \left( X \geq Z_{crit} \mid \mu = 4.5, \sigma = \frac{1}{\sqrt{15}} \right)\]</span></p>
 <p>Critical value of <span class="math inline">\(Z\)</span> can be found as:</p>
 <p><span class="math display">\[Z_{crit} = Q_{0.95} \times \frac{\sigma}{\sqrt{n}}  + \mu_0\]</span></p>
-<p>Where <span class="math inline">\(Q_{0.95}\)</span> is the 0.95 quantile of the standard normal distribution.</p>
+<p>Where <span class="math inline">\(Q_{0.95}\)</span> is the 0.85 quantile of the standard normal distribution.</p>
 <p><span class="math display">\[Z_{crit} = 1.645 \times \frac{1}{\sqrt{15}} + 4 = 4.425\]</span></p>
-<p>The power of the test can be find using R:</p>
+<p>Now, the power of the test can be find using R (instead of calculating the integral):</p>
 <pre class="r"><code>Z_crit &lt;- qnorm(0.95) * se + mu_null
 power &lt;- pnorm(Z_crit, mean = mu_alt, sd = se, lower.tail = FALSE)
 print(paste0(&quot;Power of the test is: &quot;, round(power, 3)))</code></pre>
 <pre><code>## [1] &quot;Power of the test is: 0.615&quot;</code></pre>
-<p>It doesn’t necessarily mean you we wouldn’t be able to detect the difference of 0.5 as statistically significant, it just means our chances are 61.5% (which is less than commonly used 80%).</p>
-<p>We could also see that power is dependent on a sample size <span class="math inline">\(n\)</span> and the standard deviation <span class="math inline">\(\sigma\)</span>. We don’t really have control over <span class="math inline">\(\sigma\)</span>, but we have control over the sample size. If we increase the sample size from 15 to 50 observations, the standard error will decrease and hence, the power will increase:</p>
+<p>As we can see, the highest possible power that can be achieved is 61.5%, which is lower than 80%. We could also see that power is dependent on a sample size <span class="math inline">\(n\)</span> and the standard deviation <span class="math inline">\(\sigma\)</span>. We don’t really have control over <span class="math inline">\(\sigma\)</span>, but we have control over the sample size. If we increase the sample size from 15 to 50 observations, the standard error will decrease and hence, the power will increase:</p>
 <details>
 <summary>Code</summary>
 <p>
@@ -171,17 +178,16 @@ ggplot() +
     fill = &quot;blue&quot;, alpha = 0.5) +
   geom_area(mapping = aes(x = x[x &gt;= Z_crit], y = null_dist[x &gt;= Z_crit]),
     fill = &quot;red&quot;, alpha = 0.5) +
-  labs(y = &quot;Density&quot;,
-       title = &quot;Null and Alternative Distribution&quot;) +
+  labs(y = &quot;Density&quot;) +
   theme_classic()</code></pre>
 </p>
 </details>
-<p><img src="/post/null-hypothesis-significance-testing-part-3/index_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/post/null-hypothesis-significance-testing-part-3/index_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>Z_crit &lt;- qnorm(0.95) * se + mu_null
 power &lt;- pnorm(Z_crit, mean = mu_alt, sd = se, lower.tail = FALSE)
 print(paste0(&quot;Power of the test is: &quot;, round(power, 3)))</code></pre>
 <pre><code>## [1] &quot;Power of the test is: 0.971&quot;</code></pre>
-<p>In practice you want to know what sample size do you need to get be able to observe the difference with the desired levels of <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> <strong>before</strong> the experiment.</p>
+<p>In practice you want to know what sample size do you need to get be able to observe the difference with the desired levels of $ and <span class="math inline">\(\beta\)</span> <strong>before</strong> the experiment.</p>
 <p>Since most of the times we don’t know the population standard deviation <span class="math inline">\(\sigma\)</span> we use <span class="math inline">\(t\)</span> distribution. As you could see with the <span class="math inline">\(Z\)</span> test example, calculations usually are a bit complicated to do by hand, that’s why we rely on R/Python.</p>
 <p>For example, what is the minimum sample size we would require in order to observe the increase of a sleep duration of 0.5 hour with <span class="math inline">\(\alpha = 0.05\)</span> and <span class="math inline">\(\beta = 0.2\)</span>?</p>
 <details>
@@ -213,29 +219,18 @@ print(f&#39;Required sample size: {n: .2f}&#39;)</code></pre>
 </details>
 <p><br>
 As we can see, the minimum sample size is 27 observations.</p>
-<p>Let’s find out how sample size increases the power for the previous example:</p>
+<p>Let’s find out how sample size changes the power in the previous example settings:</p>
 <pre class="r"><code>n &lt;- 1:100
 results &lt;- power.t.test(n = n, sd = sd, d = 0.5,
                         type = &quot;one.sample&quot;, alternative = &quot;one.sided&quot;)
 power_arr &lt;- results$power</code></pre>
-<details>
-<summary>Code</summary>
-<p>
-<pre class="r"><code>ggplot() +
-  geom_line(aes(n, power_arr)) +
-  labs(x = &quot;Sample Size&quot;,
-       y = &quot;Power&quot;,
-       title = &quot;Relationship between Sample Size and Power&quot;) +
-  theme_classic()</code></pre>
-</p>
-</details>
 <p><img src="/post/null-hypothesis-significance-testing-part-3/index_files/figure-html/unnamed-chunk-13-1.png" width="480" style="display: block; margin: auto;" /></p>
-<p>As we can see, the power of a test increases as the sample size increases and reaches its maximum after ~60 observations.</p>
+<p>As we can see, the power of a test increases as the sample size increases.</p>
 </div>
 <div id="effect-size" class="section level2">
 <h2>Effect Size</h2>
-<p>Usually for calculating the sample size and power of the two sample test, one uses the <strong>effect size</strong> instead of the absolute difference between null and alternative values. The most frequently used type of an standardized effect size is <strong>Cohen’s <span class="math inline">\(d\)</span></strong>, which can be defined as the difference between two means divided by a standard deviation for the data:</p>
-<p><span class="math display">\[d = \frac{\bar{x_1} - \bar{x_2}}{s_{pooled}}\]</span></p>
+<p>Usually for calculating the sample size and power of the two sample test, one uses <strong>effect size</strong> instead of the absolute difference between null and alternative values. The most frequently used type of an effect size is <strong>Cohen’s <span class="math inline">\(d\)</span></strong>, which can be defined asthe difference between two means divided by a standard deviation for the data:</p>
+<p><span class="math display">\[d = \frac{\bar{x_1} - \bar{x_2}}{s_{pooled}} = \frac{\mu_1 - \mu_2}{s_{pooled}}\]</span></p>
 <p><span class="math inline">\(s_{pooled}\)</span> - pooled standard deviation.</p>
 <p><span class="math display">\[s_{pooled} = \sqrt{\frac{(n_1 -1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 -2}}\]</span></p>
 <p>The magnitude of Cohen’s <span class="math inline">\(d\)</span> are usually referred as:</p>
@@ -291,7 +286,8 @@ power_arr &lt;- results$power</code></pre>
 ##     alternative = two.sided
 ## 
 ## NOTE: n is number in *each* group</code></pre>
-Note, that you cannot pass the effect size inside the function, but you can pass the <code>delta</code> (<span class="math inline">\(\mu_1-\mu_2\)</span>) and <code>sd</code> (standard deviation) that will lead to desired effect size.
+<p>Note, that you cannot pass the effect size inside the function, but you can pass the <code>delta</code> (<span class="math inline">\(\mu_1-\mu_2\)</span>) and <code>sd</code> (standard deviation) that will lead to desired effect size.</p>
+More examples of <code>pwr</code> package can be found at CRAN<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.
 </p>
 </details>
 <details>
@@ -304,14 +300,15 @@ print(f&#39;Required sample size: {n: .2f}&#39;)</code></pre>
 <pre><code>## Required sample size:  25.52</code></pre>
 </p>
 </details>
+<p><br></p>
 </div>
 <div id="why-is-it-important" class="section level2">
 <h2>Why is it Important</h2>
 <p>The question you might ask is why would we care about the effect size if results show significant statistical difference? The problem is than even if the p-value &lt; <span class="math inline">\(\alpha\)</span>, the observed effect size might be small (<span class="math inline">\(d&lt; 0.5\)</span>).</p>
 <blockquote>
-<p><em>With a sufficiently large sample, a statistical test will almost always demonstrate a significant difference, unless there is no effect whatsoever, that is, when the effect size is exactly zero; yet very small differences, even if significant, are often meaningless. Thus, reporting only the significant p-value for an analysis is not adequate for readers to fully understand the results.</em><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
+<p><em>With a sufficiently large sample, a statistical test will almost always demonstrate a significant difference, unless there is no effect whatsoever, that is, when the effect size is exactly zero; yet very small differences, even if significant, are often meaningless. Thus, reporting only the significant p-value for an analysis is not adequate for readers to fully understand the results.</em><a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>
+Consider a following example. You are developing the drug for people with diabetes to reduce blood sugar level. You have a treatment (drug) and control (placebo) groups with 150 subjects in each.</p>
 </blockquote>
-<p>Consider a following example. You are developing the drug for people with diabetes to reduce blood sugar level. You have a treatment (drug) and control (placebo) groups with 150 subjects in each.</p>
 <ul>
 <li><span class="math inline">\(H_0\)</span>: new drug doesn’t reduce the sugar level (<span class="math inline">\(\mu_t=\mu_c\)</span>);</li>
 <li><span class="math inline">\(H_A\)</span>: new drug reduces the sugar level (<span class="math inline">\(\mu_t &lt; \mu_c\)</span>);</li>
@@ -322,7 +319,6 @@ print(f&#39;Required sample size: {n: .2f}&#39;)</code></pre>
 <pre class="r"><code>set.seed(1)
 sample_control &lt;- rnorm(n = 150, mean = 150, sd = 20)
 sample_treatment &lt;- rnorm(n = 150, mean = 145, sd = 20)
-
 ttest_results &lt;- t.test(sample_treatment, sample_control,
                         alternative = &quot;less&quot;)
 ttest_results</code></pre>
@@ -393,7 +389,6 @@ ttest_results</code></pre>
 <pre class="r"><code>set.seed(1)
 sample_control &lt;- rnorm(n = 150, mean = 150, sd = 20)
 sample_treatment &lt;- rnorm(n = 150, mean = 125, sd = 20)
-
 ttest_results &lt;- t.test(sample_treatment, sample_control,
                         alternative = &quot;less&quot;)
 ttest_results</code></pre>
@@ -459,13 +454,13 @@ ttest_results</code></pre>
 ## lower upper 
 ## 1.021 1.520</code></pre>
 <p>{{% alert note %}}
-As we can see, both examples lead to a small p-value <span class="math inline">\(&lt;0.05\)</span> so we reject null hypothesis in both cases. However, the effect size for the first case is small (&lt;.25) meaning that even if we believe that there is a statistical difference between in two groups, this difference is not that big.
+As we can see, both examples lead to a small p-value <span class="math inline">\(&lt;0.05\)</span> so we reject null hypothesis in both cases. However, the effect size for the first case is small (&lt;.25) meaning that even if we believe that there is a statistical difference between two groups, this difference is not that big.
 {{% /alert %}}</p>
 </div>
 </div>
 <div id="summary" class="section level2">
 <h2>Summary</h2>
-<p>I hope that all of these make sense now and ypu have a better picture of statistical hypothesis testing. The key point here is that low p-value is great, but not enough to make a decision (unless you specifically want to observe low effect size). And in order to avoid issues with low power and effect size you need to check what is the minimum sample size you need before the experiment.</p>
+<p>I hope that all of these make sense now and you have a better picture of statistical hypothesis testing. The key point here is that low p-value is great, but not enough to make a decision (unless you specifically want to observe low effect size). And in order to avoid issues with low power and effect size you need to check what is the minimum sample size you need before the experiment.</p>
 <p>In the first part I’ve described steps for the hypothesis testing framework, that could be updated now:</p>
 <ol style="list-style-type: decimal">
 <li>Formulate the null and alternative hypotheses.</li>
@@ -477,8 +472,8 @@ As we can see, both examples lead to a small p-value <span class="math inline">\
 <li>Calculate the effect size.</li>
 <li>Interpret the results in the context of a problem.</li>
 </ol>
-<p>Kristoffer Magnusson has built some amazing visualizations that can help with building an intuition about Cohen <span class="math inline">\(d\)</span> size and connection between power, sample size and effect size: <strong>Interpreting Cohen’s d Effect Size</strong><a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>, <strong>Understanding Statistical Power and Significance Testing</strong><a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>.</p>
-<p>More examples of <code>pwr</code> package can be found at CRAN<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>.</p>
+<p>Kristoffer Magnusson has built some amazing visualizations that can help with building an intuition about Cohen <span class="math inline">\(d\)</span> size and connection between power, sample size and effect size: <strong>Interpreting Cohen’s d Effect Size</strong><a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>, <strong>Understanding Statistical Power and Significance Testing</strong><a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>.</p>
+<p>More examples of <code>pwr</code> package can be found at CRAN<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>.</p>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
@@ -489,8 +484,9 @@ As we can see, both examples lead to a small p-value <span class="math inline">\
 <li id="fn1"><p><a href="https://defme.xyz/post/null-hypothesis-significance-testing-part-1/" class="uri">https://defme.xyz/post/null-hypothesis-significance-testing-part-1/</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 <li id="fn2"><p><a href="https://defme.xyz/post/null-hypothesis-significance-testing-part-2/" class="uri">https://defme.xyz/post/null-hypothesis-significance-testing-part-2/</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
 <li id="fn3"><p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3444174/" class="uri">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3444174/</a><a href="#fnref3" class="footnote-back">↩︎</a></p></li>
-<li id="fn4"><p><a href="https://rpsychologist.com/d3/cohend/" class="uri">https://rpsychologist.com/d3/cohend/</a><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
-<li id="fn5"><p><a href="https://rpsychologist.com/d3/nhst/" class="uri">https://rpsychologist.com/d3/nhst/</a><a href="#fnref5" class="footnote-back">↩︎</a></p></li>
-<li id="fn6"><p><a href="https://cran.r-project.org/web/packages/pwr/vignettes/pwr-vignette.html" class="uri">https://cran.r-project.org/web/packages/pwr/vignettes/pwr-vignette.html</a><a href="#fnref6" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3444174/" class="uri">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3444174/</a><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p><a href="https://rpsychologist.com/d3/cohend/" class="uri">https://rpsychologist.com/d3/cohend/</a><a href="#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p><a href="https://rpsychologist.com/d3/nhst/" class="uri">https://rpsychologist.com/d3/nhst/</a><a href="#fnref6" class="footnote-back">↩︎</a></p></li>
+<li id="fn7"><p><a href="https://cran.r-project.org/web/packages/pwr/vignettes/pwr-vignette.html" class="uri">https://cran.r-project.org/web/packages/pwr/vignettes/pwr-vignette.html</a><a href="#fnref7" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
