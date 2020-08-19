@@ -1,0 +1,143 @@
+---
+title: "Role of Antidepressants in the Treatment of Major Depressive Disorder"
+subtitle: "Literature review for the final project at 2020 International Youth Neuroscience Association Summer Course"
+summary: Literature review for the final project at 2020 International Youth Neuroscience Association Summer Course.
+image:
+  caption: 'Image credit: <a href="https://pixabay.com/users/qimono-1962238/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3673645">Arek Socha</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3673645">Pixabay</a>'
+  focal_point: ""
+  placement: 3
+  preview_only: true
+date: "2020-08-15"
+categories: ["Neuroscience"]
+tags: ["Neuroscience", "Literature Review"]
+---
+
+<p style="font-size:15px"><i> Cover image credit: <b><a href="https://pixabay.com/users/qimono-1962238/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3673645">Arek Socha</a></b> from <b><a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3673645">Pixabay</a></b>
+</i></p>
+
+This summer I took part in 2020 International Youth Neuroscience Association Summer Course. The final project was literature review on any neuroscience related topic. I have never done anything like this before, so this is the resul of my short, but honest work.
+
+## 1. Context of the problem
+
+According to the Global Burden of Disease Study 2017 (GBD 2017)[^1] depression is a common illness worldwide, with the prevalence of 264 million people, from which around 163 millions (61%) are assigned to the major depressive disorder (MDD).
+
+Symptoms of MDD can be defined as:
+
+1. Feeling sad or hopeless
+2. No interest in normal daily activities (sports, sex, etc.)
+3. Sleeping too little or too much
+4. Lack of energy and motivation
+5. Losing appetite or increasing food cravings (hence, losing or gaining weight)
+6. Having trouble making decisions, thinking, concentrating and remembering
+
+The major factor that differentiates MDD from usual mood fluctuations is the long-term effect which can last for several years or even decades. MDD affects not only the mood of a person, but also his ability to function properly at work or school and his socializing skills. The worst outcome of the disease is self-harm and suicide. As stated by World Health Organization[^2], there were an estimated 793000 suicide deaths worldwide in 2016. This indicates an annual global age-standardized suicide rate of 10.5 per 100000 population.
+
+Fortunately, there are treatments to deal with depressive disorders, such as:
+
+* Cognitive behavioural therapy (CBT);
+* Interpersonal psychotherapy (IPT);
+* Antidepressant medication:
+  * Selective serotonin (5-HT) reuptake inhibitors (SSRIs);
+  * Serotonin (5-HT) and norepinephrine (NE) reuptake inhibitors (SNRIs);
+  * Tricyclic antidepressants (TCAs).
+
+SSRI and SNRI antidepressants are considered to be the most successful drug treatments for psychiatric disorders and still remain the first line treatments for MDD. The focus of this review will be on antidepressant medication treatments and their pros and cons.
+
+
+## 2. Brief overview of the neurobiology of a MDD
+
+Possible ways of the MDD neurobiology can be assigned to: 
+
+* High 5-HT autoreceptors;
+* Low GABA (gamma-Aminobutyric acid);
+* High glutamate.
+
+### 2.1. 5-HT autoreceptors
+
+5-HT's primary metabolite 5-hydroxyindoleacetic acid (5-HIAA) in the cerebrospinal fluid (CSF) can play a key role in mood disorders (Jacobsen et al., 2012[^3]) and suicidal behavior prediction (Nordström et al., 1994[^4]; Placidi et al,. 2001[^5]). Low levels of CSF 5-HIAA reflect low serotonin release. 
+
+Brain doesn’t like when there is too much serotonin release and also doesn't like when there is a deficit of it. One way of keeping level in the middle is to control the rate of serotonin firing. Every time the neuron fires a little bit of serotonin is released backwards on so-called 5-HT1A autoreceptor and that shuts down the serotonin firing.
+
+Studies in rodents identify 5-HT1A autoreceptor as the main target of action of SSRIs. Autoreceptor function declined over weeks during the SSRI treatment, leading to increased neuronal firing and serotonin release. Gray et al. study (2014)[^6] showed that 19 MDD patients had an 18% decrease in autoreceptors.
+
+### 2.2. GABA level
+
+Low levels of GABA in CSF related to severity of anxiety in MDD. This low GABA level can be caused by low levels of GABA neurons. Most antiepileptic drugs (AEDs) raise seizure threshold by increasing GABA transmission and some of them can be used as an antidepressant. Ketamine also showed the increase of GABA levels (Weckmanna et al., 2019[^7]).
+
+### 2.3. Glutamate level
+
+Studies have suggested excessive glutamate levels in patients with MDD. Despite that some glutamate levels are good and cause long term potentiation which is fundamental for memory formation, the excess levels of it are potential toxics. Ketamine also helps to reduce glutamate levels (Weckmanna et al.).
+
+Glutamate is being removed by glial cells from synapses. However, loss of glial cells correlates with MDD (Rajkowska et al., 2010[^8]) meaning that impaired glutamate uptake by glia increases toxicity and neuron loss. Ketamine blocks the NMDA receptors and activates the AMPA receptors. 
+
+## 3. Medications overview
+
+Cipriani et al. (2018)[^9] performed a systematic review and network meta-analysis and showed that all 21 antidepressant drug groups were more effective than placebo, with odds ratio (OR) ranging between 2.13 for amitriptyline and 1.37 for reboxetine. However, despite the effectiveness for treating the MDD, most of the patients tend to drop out the medications. Only agomelatine and fluoxetine had superior acceptability to placebo. All other antidepressants in the study were no different from placebo in terms of drop out rate.
+
+### 3.1. REM sleep
+
+Rapid eye movement (REM) sleep is a unique phase of sleep in mammals and birds, distinguishable by random/rapid movement of the eyes, accompanied with low muscle tone throughout the body, and the propensity of the sleeper to dream vividly. The most common sleep-electroencephalography (EEG) markers of MDD include shorter latency to the onset of REM sleep, increased REM sleep time and increased density of rapid eye movements during REM sleep; reduced sleep efficiency and reduced total sleep time. According to Vogel (1983)[^10] suppression of REM sleep alone may contribute to an antidepressant action and is sufficient to improve depression and normalize the sleep architecture of patients.
+
+Most antidepressants inhibit REM sleep in animals and humans. McCarthy et al. study (2016)[^11] showed that the SSRI treatments did not reduce the recovery REM sleep induced by prior physiological REM sleep deprivation. In contrast, the TCA imipramine the REM sleep homeostatic regulation, which may suggest mechanism of action-based differences in which antidepressants impact sleep and potentially produce their antidepressant efficacy.
+
+### 3.2. The salience network
+
+The salience network (SN) is a large scale brain network of the human brain that is primarily composed of the anterior insula (AI) and dorsal anterior cingulate cortex (dACC). It is involved in detecting and filtering salient stimuli, as well as in recruiting relevant functional networks. Together with its interconnected brain networks, the SN contributes to a variety of complex functions, including communication, social behavior, and self-awareness through the integration of sensory, emotional, and cognitive information. Dysfunction in the salience network have been observed in various psychiatric disorders, including anxiety disorders, post-traumatic stress disorder, schizophrenia, frontotemporal dementia, and Alzheimer's disease.
+
+Abnormal functional connectivity in MDD has been found within the default mode network (DMN), the SN and the task positive network (TPN). DMN can be defined as the baseline neural activity when one is disengaged from externally cued cognitive demands. TPN can be defined as a network of areas in the human brain that typically responds with activation increases to attention-demanding tasks.
+
+Altered insula function may be a potential neuroimaging biomarker for the prediction of prospective antidepressant non-response (Geugies et al.[^12]). Three groups of people were selected for this study: patients, who received ≥ 2 antidepressants (2AD indicative for insufficient response), patients who received only one antidepressant (1AD) and a healthy control (HC) group.
+
+For the ≥2 AD group the insula was less active relative to the 1 AD group especially when switching from the task-positive network (TPN) to the default mode network (DMN) compared to switching from DMN to TPN activity. This might suggest that TPN-activity could not be maintained, resulting in more frequent deactivation of the TPN, which is indicative of TPN-deficiency.
+
+### 3.3. Side effects 
+
+The work by Ashton et al. (2005)[^13] showed that among the most common reason for noncompliance was “Have trouble remembering to take it” (about 45%) followed by “Gained a lot of weigh” (about 30%) and “Couldn't have an orgasm” and “Lost interest in sex” (about 20% each). Also weight gain and sexual dysfunction (SD) were the most common adverse effects (AEs) reported by patients as “extremely difficult to live with”.
+
+Chokka et al. (2018)[^14] study stated the following:
+> Sexual dysfunction is pervasive and underreported, and its effects on quality of life are underestimated. Due in part to its bidirectional relationship with depression, SD can be difficult to diagnose; it is also a common side effect of many antidepressants, leading to treatment noncompliance.
+
+In the Jacobsen et al. study (2020)[^15] 405 out of 483 MDD patients indicated that they were currently taking antidepressants. Half of them self-attributed SD to current use of at least one antidepressant. Patient-attributed SD was most frequently reported for sertraline and fluoxetine, both SSRIs, and for duloxetine and venlafaxine, both SNRIs, and least frequently for bupropion. Still, fewer than a half spoke with their physician about the SD issue. Nevertheless, the majority of respondents indicated that they would continue taking their medication if it helped their depression. However, this study has some limitations due to its self-reporting design and cannot be generalized to the broader MDD patient population.
+
+The same results were found in Wagner et al. study (2020)[^16], showing that older sample of participants suffered from lower interest in sex, whereas younger sample had symptoms such as interpersonal sensitivity. Also younger patients had higher likelihood for suicide attempts during antidepressant treatment than older patients.
+
+## 4. Summary
+
+The mechanism of MDD and antidepressant treatment still remains as an ongoing research topic and their mechanisms are not absolutely clear. However, antidepressants play a key role in MDD treatment and most of them have shown their efficacy compared to placebo. But at the same time some problems can arise in front of the therapists. They should be prepared for the almost inevitable likelihood that the patient will stop treatment prematurely. This can be caused by different reasons. Patients tend to simply forget to take medications. Other reasons can be assigned to side effects, such as weight gain or sexual dysfunction. It is important that healthcare professionals provide follow-ups with patients to keep information of possible side effects up to date. Functional imaging studies have opened new possibilities of predicting the efficacy of medication treatment beforehand. 
+
+As reviewed studies have shown, the neurobiology of depression can be assigned to different pathways. And since different groups of drugs have specific effects it is important to keep an eye on a patient's recovery progress and prescribe different drugs if needed. New research treatments could be designed to act on specific neurobiological pathways of MDD which would lead to a better personalized antidepressant therapy.
+
+
+## References
+
+[^1]: Global, regional, and national incidence, prevalence, and years lived with disability for 354 diseases and injuries for 195 countries and territories, 1990–2017: a systematic analysis for the Global Burden of Disease Study 2017, *The Lancet*, Volume 392, Issue 10159, 2018, Pages 1789-1858, ISSN 0140-6736, https://doi.org/10.1016/S0140-6736(18)32279-7.
+
+[^2]: Suicide rates (per 100 000 population), Global Health Observatory (GHO) data, https://www.who.int/gho/mental_health/suicide_rates/en/
+
+[^3]: Jacobsen, J. P., Medvedev, I. O., & Caron, M. G. (2012). The 5-HT deficiency theory of depression: perspectives from a naturalistic 5-HT deficiency model, the tryptophan hydroxylase 2Arg439His knockin mouse. *Philosophical transactions of the Royal Society of London*. Series B, Biological sciences, 367(1601), 2444–2459. https://doi.org/10.1098/rstb.2012.0109
+
+[^4]: Nordström, P., Samuelsson, M., Asberg, M., Träskman-Bendz, L., Aberg-Wistedt, A., Nordin, C., & Bertilsson, L. (1994). CSF 5-HIAA predicts suicide risk after attempted suicide. *Suicide & life-threatening behavior*, 24(1), 1–9.
+
+[^5]: Giovanni P.A Placidi, Maria A Oquendo, Kevin M Malone, Yung-Yu Huang, Steven P Ellis, J.John Mann, Aggressivity, suicide attempts, and depression: relationship to cerebrospinal fluid monoamine metabolite levels, *Biological Psychiatry*, Volume 50, Issue 10, 2001, Pages 783-791, ISSN 0006-3223, https://doi.org/10.1016/S0006-3223(01)01170-2.
+
+[^6]: Gray, N. A., Milak, M. S., DeLorenzo, C., Ogden, R. T., Huang, Y. Y., Mann, J. J., & Parsey, R. V. (2013). Antidepressant treatment reduces serotonin-1A autoreceptor binding in major depressive disorder. *Biological psychiatry*, 74(1), 26–31. https://doi.org/10.1016/j.biopsych.2012.11.012
+
+[^7]: Weckmann, K., Deery, M. J., Howard, J. A., Feret, R., Asara, J. M., Dethloff, F., Filiou, M. D., Labermaier, C., Maccarrone, G., Lilley, K. S., Mueller, M., & Turck, C. W. (2019). Ketamine's Effects on the Glutamatergic and GABAergic Systems: A Proteomics and Metabolomics Study in Mice. *Molecular neuropsychiatry*, 5(1), 42–51. https://doi.org/10.1159/000493425
+
+[^8]: Rajkowska, G., & Miguel-Hidalgo, J. J. (2007). Gliogenesis and glial pathology in depression. *CNS & neurological disorders drug targets*, 6(3), 219–233. https://doi.org/10.2174/187152707780619326
+
+[^9]: Andrea Cipriani, Toshi A Furukawa, Georgia Salanti, Anna Chaimani, Lauren Z Atkinson, Yusuke Ogawa, Stefan Leucht, Henricus G Ruhe, Erick H Turner, Julian P T Higgins, Matthias Egger, Nozomi Takeshima, Yu Hayasaka, Hissei Imai, Kiyomi Shinohara, Aran Tajika, John P A Ioannidis, John R Geddes, Comparative efficacy and acceptability of 21 antidepressant drugs for the acute treatment of adults with major depressive disorder: a systematic review and network meta-analysis, *The Lancet*, Volume 391, Issue 10128, 2018, Pages 1357-1366, ISSN 0140-6736, https://doi.org/10.1016/S0140-6736(17)32802-7.
+
+[^10]: Gerald W. Vogel, Evidence for rem sleep deprivation as the mechanism of action of antidepressant drugs, *Progress in Neuro-Psychopharmacology and Biological Psychiatry*, Volume 7, Issues 2–3, 1983, Pages 343-349, ISSN 0278-5846, https://doi.org/10.1016/0278-5846(83)90122-7.
+
+[^11]: Andrew McCarthy, Keith Wafford, Elaine Shanks, Marcin Ligocki, Dale M. Edgar, Derk-Jan Dijk, REM sleep homeostasis in the absence of REM sleep: Effects of antidepressants, *Neuropharmacology*, Volume 108, 2016, Pages 415-425, ISSN 0028-3908, https://doi.org/10.1016/j.neuropharm.2016.04.047.
+
+[^12]: H. Geugies, E.M. Opmeer, J.B.C. Marsman, C.A. Figueroa, M.J. van Tol, L. Schmaal, N.J.A. van der Wee, A. Aleman, B.W.J.H. Penninx, D.J. Veltman, R.A. Schoevers, H.G. Ruhé, Decreased functional connectivity of the insula within the salience network as an indicator for prospective insufficient response to antidepressants, *NeuroImage: Clinical*, Volume 24, 2019, 102064, ISSN 2213-1582, https://doi.org/10.1016/j.nicl.2019.102064.
+
+[^13]: Adam Keller Ashton, Brenda D. Jamerson, Wendy L.Weinstein, Christine Wagoner, Antidepressant-related adverse effects impacting treatment compliance: Results of a patient survey, *Current Therapeutic Research*, Volume 66, Issue 2, 2005, Pages 96-106, ISSN 0011-393X, https://doi.org/10.1016/j.curtheres.2005.04.006.
+
+[^14]: Chokka, P. R., & Hankey, J. R. (2018). Assessment and management of sexual dysfunction in the context of depression. *Therapeutic advances in psychopharmacology*, 8(1), 13–23. https://doi.org/10.1177/2045125317720642.
+
+[^15]: Paula L. Jacobsen, Eileen M. Thorley, Christopher Curran, Real-world patient experience with sexual dysfunction and antidepressant use in patients with self-reported depression: A cross-sectional survey study, *Neurology, Psychiatry and Brain Research*, Volume 36, 2020, Pages 57-64, ISSN 0941-9500, https://doi.org/10.1016/j.npbr.2020.03.002.
+
+[^16]: Stefanie Wagner, Daniel Wollschläger, Nadine Dreimüller, Jan Engelmann, David P. Herzog, Sibylle C. Roll, André Tadić, Klaus Lieb, Effects of age on depressive symptomatology and response to antidepressant treatment in patients with major depressive disorder aged 18 to 65 years, *Comprehensive Psychiatry*, Volume 99, 2020, 152170, ISSN 0010-440X, https://doi.org/10.1016/j.comppsych.2020.152170.
