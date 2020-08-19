@@ -15,7 +15,7 @@ tags: ["Neuroscience", "Literature Review"]
 <p style="font-size:15px"><i> Cover image credit: <b><a href="https://pixabay.com/users/qimono-1962238/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3673645">Arek Socha</a></b> from <b><a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3673645">Pixabay</a></b>
 </i></p>
 
-This summer I took part in 2020 International Youth Neuroscience Association Summer Course. The final project was literature review on any neuroscience related topic. I have never done anything like this before, so this is the resul of my short, but honest work.
+This summer I took part in 2020 International Youth Neuroscience Association Summer Course. The final project was literature review on any neuroscience related topic. I have never done anything like this before, so this is the result of my short, but honest work.
 
 ## 1. Context of the problem
 
