@@ -193,7 +193,7 @@ kable(patients_df, format = &quot;markdown&quot;, caption = &quot;&lt;b&gt;Patie
 </tbody>
 </table>
 <p>Our decision tree is going to look something like this:</p>
-<p><img src="/post/cart/index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="/post/how-do-cart-models-work/index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>It doesn’t look exactly like a “normal tree” we are used to see in real life. The trick is that this tree is growing from top to down.</p>
 <center>
 <img src="trees.jpg"></img>
@@ -274,9 +274,9 @@ test_df &lt;- patients_df[16, ]</code></pre>
 <pre class="r"><code>temp_df &lt;- train_df %&gt;% 
   group_by(Drug) %&gt;% 
   summarise(n = n(),
-            p = round(n() / dim(train_df)[1], 2))
-
-kable(temp_df, format = &quot;markdown&quot;)</code></pre>
+            p = round(n() / dim(train_df)[1], 2))</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>kable(temp_df, format = &quot;markdown&quot;)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -491,7 +491,7 @@ kable(temp_df, format = &quot;markdown&quot;)</code></pre>
 <div id="node-summary" class="section level4">
 <h4>Node Summary</h4>
 <p>As we can see <code>BP</code> gives the <strong>highest</strong> information gain, or in other words, if we split the data by this column we will be <strong>more</strong> certain about the target variable distribution. So our first split will look like this:</p>
-<p><img src="/post/cart/index_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="/post/how-do-cart-models-work/index_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 </div>
 <div id="bpnormal-node" class="section level3">
@@ -550,7 +550,7 @@ kable(temp_df, format = &quot;markdown&quot;)</code></pre>
 </tbody>
 </table>
 <p>As we can see, there is no Drug A for this node and entropy is already 0. This node is going to be last for this branch with the drug B as an output with probability = 1.</p>
-<p><img src="/post/cart/index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="/post/how-do-cart-models-work/index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 <div id="bpnot-normal-node" class="section level3">
 <h3><code>BP:not normal</code> Node</h3>
@@ -709,7 +709,7 @@ kable(temp_df, format = &quot;markdown&quot;)</code></pre>
 <div id="node-summary-1" class="section level4">
 <h4>Node Summary</h4>
 <p>Gender gives the most information gain after splitting the data. Now the tree will look like this:</p>
-<p><img src="/post/cart/index_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="/post/how-do-cart-models-work/index_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 </div>
 <div id="genderm-node" class="section level3">
@@ -794,7 +794,7 @@ kable(temp_df, format = &quot;markdown&quot;)</code></pre>
 </tbody>
 </table>
 <p>For the <code>BMI:normal</code> node the predicted class is going to be Drug A, since its probability is higher. The same applies to <code>BMI:not normal</code> node.</p>
-<p><img src="/post/cart/index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="/post/how-do-cart-models-work/index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 </div>
 <div id="genderf-node" class="section level3">
 <h3><code>Gender:F</code> Node</h3>
@@ -866,7 +866,7 @@ text(290, 80, &quot;normal&quot;, col=&quot;black&quot;)
 text(420, 80, &quot;not normal&quot;, col=&quot;black&quot;)</code></pre>
 </p>
 </details>
-<p><img src="/post/cart/index_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="/post/how-do-cart-models-work/index_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 </div>
 <div id="prediction" class="section level3">
 <h3><a name="prediction">Prediction</a></h3>
@@ -917,7 +917,7 @@ text(420, 80, &quot;not normal&quot;, col=&quot;black&quot;)</code></pre>
 
 #plot decision tree model
 fancyRpartPlot(model_dt, caption = NULL, type=4)</code></pre>
-<p><img src="/post/cart/index_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="/post/how-do-cart-models-work/index_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <p>Get a prediction for 16-th patient:</p>
 <pre class="r"><code># return the class
 predict(object = model_dt, newdata = test_df, type = &quot;class&quot;)
