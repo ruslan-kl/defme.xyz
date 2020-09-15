@@ -1,23 +1,20 @@
 ---
-title: How to start career in Data (in Russian)
-event: Podcast
-event_url: https://youtu.be/ech8RharVrg
+title: Statistical Hypothesis Testing (in Russian)
+event: Webinar
+event_url: 
 
 location: online
-summary: In this episode of DEVrepublik podcast I talked about my story how I got into Data Science field (spoiler, electronic engineering-fitness-marketing-data) and discussed what main skills are needed for a fresh data enthusiast.
-abstract: "In this episode of DEVrepublik podcast I talked about my story how I got into Data Science field (spoiler, electronic engineering-fitness-marketing-data) and discussed what main skills are needed for a fresh data enthusiast."
+
+summary: Main idea of the Null Hypothesis Significance Testing. Intuition behind the p-value. How to perform t-tests, ANOVA, Binomial Test and Chi-squared Test.
+abstract: "Main idea of the Null Hypothesis Significance Testing. Intuition of the p-value. How to perform t-tests, ANOVA, Binomial Test and Chi-squared Test."
 
 # Talk start and end times.
 #   End time can optionally be hidden by prefixing the line with `#`.
-date: "2020-07-23T10:00:00Z"
-date_end: "2020-07-23T10:30:00Z"
-# all_day: true
-
-# Schedule page publish date (NOT talk date).
-publishDate: "2020-07-27"
+date: "2020-06-04T10:00:00Z"
+# all_day: false
 
 authors: []
-tags: []
+tags: ["Statistics"]
 
 # Is this a featured talk? (true/false)
 featured: false
@@ -29,8 +26,8 @@ image:
 links:
 url_code: ""
 url_pdf: ""
-url_slides: ""
-url_video: "https://youtu.be/ech8RharVrg"
+url_slides: "https://docs.google.com/presentation/d/1HKxGOaR_kPEVs4RriKFiDsme3nmyRD4EaggYeM9PnLg/edit?usp=sharing"
+url_video: "https://youtu.be/uRbddvDVRWA"
 
 # Markdown Slides (optional).
 #   Associate this talk with Markdown slides.
@@ -51,4 +48,8 @@ math: true
 ---
 
 ## Video
-{{< youtube ech8RharVrg >}}
+{{< youtube uRbddvDVRWA >}}
+
+## Slides
+
+{{< gdocs src="https://docs.google.com/presentation/d/e/2PACX-1vTFq1VxTIzlgv47TSMW7-7uIX_p3kgvwmLmJMF-rAEG4GpLz6EgRI0piWi2FXbTvdW6vAPebq8nD_y5/embed?start=false&loop=false&delayms=3000" >}}
