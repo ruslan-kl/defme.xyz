@@ -5,7 +5,7 @@ headless = true  # This file represents a page section.
 active = true  # Activate this widget? true/false
 weight = 20  # Order that this section will appear.
 
-title = "Things I feel passionate about"
+title = "Other things I feel passionate about"
 subtitle = ""
 
 # Showcase personal skills or business features.
@@ -15,15 +15,9 @@ subtitle = ""
 # For available icons, see: https://sourcethemes.com/academic/docs/page-builder/#icons
 
 [[feature]]
-  icon = "r-project"
-  icon_pack = "fab"
-  name = "Coding"
-  description = ""
-  
-[[feature]]
-  icon = "brain"
+  icon = "seedling"
   icon_pack = "fas"
-  name = "Neuroscience & AI Intersection"
+  name = "Veganism"
   description = ""
   
 
@@ -32,4 +26,12 @@ subtitle = ""
   icon_pack = "fas"
   name = "Hiking & Climbing"
   description = ""
+  
+  
+[[feature]]
+  icon = "music"
+  icon_pack = "fas"
+  name = "Post-Rock Music"
+  description = ""
+
 +++
