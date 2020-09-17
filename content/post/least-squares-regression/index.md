@@ -36,11 +36,11 @@ RANDOM_SEED = 1
 
 ## Intro
 
-As you probably know, the main task of Machine Learning algorithms is to make a predictions based on a past data. The basic scenario sounds like this:
+As you probably know, the main task of Machine Learning algorithms is to make predictions based on past data. The basic scenario sounds like this:
 
-> Imagine you have two variables: X (let it be years of experience of an ML engineer) and Y (salary of ML specialist). You want to build a model to predict the salary of an engineer based on his years of experience as the new data comes in.
+> Imagine you have two variables: X (let it be *years of experience* of an ML engineer) and Y (*salary* of ML specialist). You want to build a model to predict the salary of an engineer based on his years of experience as the new data comes in.
 
-This is what called a **regression** task (we are predicting **continuous** variable). Most of the times the good place to start is Linear Regression, since it's considered to be a simple and intuitive model. But how simple is that? I. Despite its simplicity, linear regression can be the worst model for prediction when it was modeled in an incorrect way. In this tutorial we are going to look at the math behind **Ordinary least squares** method, its assumptions and properties and when things can go wrong. 
+This is called a **regression** task (we are predicting **continuous** variable). Most of the time the good model to start with is a Linear Regression since it's considered to be a simple and intuitive model. But despite its simplicity, linear regression can be the worst model for prediction if it was modeled incorrectly. In this tutorial, we are going to look at the math behind the **Ordinary Least Squares (OLS)** method, its assumptions and properties, and when things can go wrong. 
 
 
 ```python
@@ -54,7 +54,7 @@ years = years.reshape(n,) + 2.5
 salary = salary + 1000
 ```
 
-We have simulated two sample with years of experience and salary of size 50. Looking at the data, what would be the salary for someone with 1 year of experience? Looking at this graph or from your prior knowledge you might assume that there is a **linear** relationship between years of experience and the salary. And according to the data the most relevant guess would be in a $[800,950]$ range.
+We have simulated two samples with years of experience and a salary of size 50. What would be the salary for someone with 1 year of experience? Looking at this graph or from your prior knowledge you might assume that there is a **linear** relationship between years of experience and the salary. And according to the data the most relevant guess would be in a $[800,950]$ range.
 
 
 <details><summary>Code</summary>
@@ -89,14 +89,16 @@ plt.show()
 ![png](./index_5_0.png)
 
 
-You also might remember that the line equation can we written as $y = kx + b$. In context of our problem:
+According to the idea of a Linear Regression, we want to fit a line that represents the relationship between the salary and experience. You might remember that the line equation can be written as $y = kx + b$. For our problem:
 
 $$y = \beta_0 + \beta_1 x \tag{1}$$
 
 * $y$ - salary
 * $x$ - years of experience
-* $\beta_0$ - intercept (value of interception with $y$ axis) 
+* $\beta_0$ - intercept (value of intersection with $y$ axis) 
 * $\beta_1$ - slope (the rate of change)
+
+The equation $(1)$ can be also referred as a **population regression line**. In other words, we assume that salary of **all** engineers can be perfectly predicted by this equation.
 
 You can check how different values of intercept and slope affect the line in this interactive demo:
 
@@ -106,10 +108,10 @@ You can check how different values of intercept and slope affect the line in thi
 
 ## General Form
 
-But as we can see, even the relationship seems to be positive (as salary increases as experience goes up), the relationship is not exactly linear and there is some noise (error $\epsilon$). Let's consider a more general case when we have $k$ independent variables of $n$ observations in a matrix form. In such case:
+But as we can see, even though the relationship seems to be positive (salary increases as experience go up), the relationship is not exactly linear and there is some noise (error $\epsilon$) in our sample. Let's consider a more general case when we have $k$ independent variables of $n$ observations in a matrix form. In such case:
 
 * $y$ - is a vector of dependent (predicted) variable of size $(n \times 1)$
-* $x$ - is a matrix of independent variable of size $(n \times k)$
+* $x$ - is a matrix of independent variables of size $(n \times k)$
 * $\beta$ - is a vector of parameters of size $(k \times 1)$
 * $\epsilon$ - is a vector of errors of size $(n \times 1)$
 
@@ -121,11 +123,11 @@ $$y = X \beta + \epsilon \tag{3}$$
 
 *Note, that the intercept is added into $\beta$ vector that's why we have a row of ones in $X$ matrix.*
 
-The goal is to find the estimated values ($b$) of population parameters ($\beta$).
+The goal is to find the estimated values of coefficients $b$ of population parameters $\beta$.
 
 ## Ordinary Least Squares
 
-We can achieve that with the help of **Ordinary Least Squares** method. This method fits a line through the data points that minimizes the sum of the squared differences between observed values and corresponding fitted values. So we need the minimum value of mean squared error:
+We can achieve that with the help of the **Ordinary Least Squares** method. This method fits a line through the data points that minimizes the sum of the squared differences between observed values and corresponding fitted values.
 
 $$\hat{y} = X b \tag{4}$$
 
@@ -160,13 +162,15 @@ To find $b$ we can multiply each side of the equation by $(X^T X)^{-1}$:
 
 $$ (X^T X)^{-1} (X^T X) b = (X^T X)^{-1} X^T y \tag{11}$$
 
-Since by definition $(X^T X)^{-1} (X^T X) = I$, where $I$ is identity matrix with ones on a main diagonal and zeros elsewhere.
+Since by definition $(X^T X)^{-1} (X^T X) = I$, where $I$ is an identity matrix with ones on a main diagonal and zeros elsewhere.
 
 $$ I b = (X^T X)^{-1} X^T y$$
 
 $$ b = (X^T X)^{-1} X^T y \tag{12}$$
 
 Let's check a simple case:
+
+<img src="https://latex.codecogs.com/gif.latex?x&space;=&space;\begin{bmatrix}&space;1&space;\\&space;2&space;\end{bmatrix},&space;y&space;=&space;\begin{bmatrix}&space;3&space;\\&space;5&space;\end{bmatrix}" title="x = \begin{bmatrix} 1 \\ 2 \end{bmatrix}, y = \begin{bmatrix} 3 \\ 5 \end{bmatrix}" />
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=X&space;=&space;\begin{bmatrix}&space;1&space;&&space;1&space;\\&space;1&space;&&space;2&space;\end{bmatrix},&space;y&space;=&space;\begin{bmatrix}&space;3&space;\\&space;5&space;\end{bmatrix}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?X&space;=&space;\begin{bmatrix}&space;1&space;&&space;1&space;\\&space;1&space;&&space;2&space;\end{bmatrix},&space;y&space;=&space;\begin{bmatrix}&space;3&space;\\&space;5&space;\end{bmatrix}" title="X = \begin{bmatrix} 1 & 1 \\ 1 & 2 \end{bmatrix}, y = \begin{bmatrix} 3 \\ 5 \end{bmatrix}" /></a>
 
@@ -207,29 +211,29 @@ $$ X^T X b = X^T (Xb + \epsilon) = X^T Xb + X^T \epsilon$$
 
 $$ X^T \epsilon = 0 \tag{13}$$
 
-Now let's take a look at the first element in $X^T \epsilon$ vector. We can see that it equals to:
+Now let's take a look at the first element in $X^T \epsilon$ vector. We can see that it equals to zero:
 
 $$1 \times \epsilon_1 + 1 \times \epsilon_2 + ... 1 \times \epsilon_n = 0 \tag{14}$$
 
-Which means that **the sum of residuals $\sum_{i=1}^n \epsilon_i$ equals to 0**. The same applies for the mean $\bar{\epsilon} = 0$.
+Which means that **the sum of residuals $\sum_{i=1}^n \epsilon_i$ equals to 0**. The same applies to the mean $\bar{\epsilon} = 0$.
 
-If we divide regression equation $(3)$ by number of observations $n$ we get:
+If we divide regression equation $(3)$ by the number of observations $n$ we get:
 
 $$\frac{y}{n} = \frac{X}{n}b + \frac{\epsilon}{n}$$
 
 $$\bar{y} = \bar{x}b \tag{15}$$
 
-Which means that **the least squares line always goes through $(\bar{x}, \bar{y})$ point**.
+This means that **the least squares line always goes through $(\bar{x}, \bar{y})$ point**.
 
 ## Multicollinearity
 
 Looks pretty simple so far, right? But let's take a look when things can go wrong.
 
-Recall the equation $(12)$. There might be cases when the inverse matrix $(X^T X)^{-1}$ doesn't exist. 
+Recall the equation $(12)$. There might be cases when the inverse matrix $(X^T X)^{-1}$ doesn't exist: 
 
-* if rank\* of a matrix $X^T X$ is less then $n$, meaning that one or more of the independent variables are a linear combination of the other variables (**multicollinearity**).
-* if $n<k$ (number of variables is larger than the number of observations).
-* the determinant of $X^T X$ is zero.
+* if the rank\* of a matrix $X^T X$ is less then $n$, meaning that one or more of the independent variables are a linear combination of the other variables (**multicollinearity**).
+* if $n<k$ (the number of variables is larger than the number of observations).
+* if the determinant of $X^T X$ is zero.
 
 \* The rank of a matrix is defined as the maximum number of linearly independent column vectors in the matrix or the maximum number of linearly independent row vectors in the matrix.
 
@@ -410,10 +414,10 @@ print(ols_model.predict(np.array(x_new).reshape(1,1)))
 
 Some possible ways for assumptions check:
 
-1. Linear relationship between 2 variables can be easily inspected on a scatter plot.
+1. The linear relationship between 2 variables can be easily inspected on a scatter plot.
 2. Highly correlated variables can be found in the correlation matrix $R_{xx}$.
-3. Simplest way is to plot a histogram of residuals after model was fitted. 
-4. Scatter plot the residuals against the predicted values. There should be no "fan" shape or some other funny shapes.
+3. THe simplest way is to plot a histogram of residuals after model was fitted. 
+4. Scatter plot the residuals against the predicted values. There should be no "fan" shape or some other fun shapes.
 
 
 <details><summary>Code</summary>
@@ -446,7 +450,7 @@ plt.show()
 ![png](./index_32_0.png)
 
 
-Another important piece of information to keep in mind that fitted line can be affected by **outliers**. Assume that you got the information about three new engineers. Despite the fact that they have worked for 4 years already, their salary is still low. See what happens to regression line when we include this observations into model:
+Another important piece of information to keep in mind is that the fitted line can be affected by **outliers**. Assume that you got the information about three new engineers. Even though they have worked for 4 years already, their salary is still low. See what happens to the regression line when we include these observations into a model:
 
 
 ```python
@@ -501,7 +505,7 @@ There are two possible types of outliers:
 
 ## Goodness of Fit
 
-After you have fitted the model you might want to check how good your model is. One of the most common metrics is **R square** (coefficient of determination), which shows the percentage of dependent variable variation explained by the model. It can be find as:
+After you have fitted the model you might want to check how good your model is. One of the most common metrics is **R square** (coefficient of determination), which shows the percentage of dependent variable variation explained by the model. It can be found as:
 
 $$R^2 = r_{xy}^T R_{xx}^{-1} r_{xy} \tag{16}$$
 
@@ -512,7 +516,7 @@ $$R^2 = r_{xy}^T R_{xx}^{-1} r_{xy} \tag{16}$$
 
 If there is only one independent variable $x$, then $R^2$ equals to squared correlation value between $x$ and $y$.
 
-However, there are some limitations of $R^2$ - it always increases whenever a new variable is added to the model. So even if you add some irrelevant feature to $X$ (for example height of the person for salary prediction) $R^2$ will stay the same of van even increase a bit.
+However, there are some limitations of $R^2$ - it always increases whenever a new variable is added to the model. So even if you add some irrelevant feature to $X$ (for example height of the person for salary prediction) $R^2$ will stay the same or can even increase a bit.
 
 
 ```python
