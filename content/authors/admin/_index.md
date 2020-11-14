@@ -7,7 +7,7 @@ name: Ruslan Klymentiev
 organizations:
 - name: ""
   url: ""
-role: Data Scientist
+role: 80% Data Scientist, 20% Neuroscientist
 social:
 - icon: envelope
   icon_pack: fas
