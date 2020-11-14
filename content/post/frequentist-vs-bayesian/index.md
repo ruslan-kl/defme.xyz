@@ -107,21 +107,21 @@ def binom_beta(a, b, n, k):
 </details>
 <br>
 
-Frequentist vs Bayesian battle is one of the "hot" topics in the statistics world. On the one hand, Bayesian says that p-value can be uninformative and can find statistically significant differences when in fact there are none. On the other hand, Frequentist says that choosing prior probabilities for your hypotheses might be cheating. In this overview I will try to show a simple example for hypothesis testing for a population proportion using both approaches. However, I will not make any statements like "X approach is awesome, do not use Y approach" and leave the conclusion making for the reader. Most of the calculations will be done "by hand" along with Python implementations, but I will try to keep a balance between going too much into details and skipping some parts.
+Frequentist vs Bayesian battle is one of the "hot" topics in the statistics world. On the one hand, Bayesian says that p-value can be uninformative and can find statistically significant differences when in fact there are none. On the other hand, Frequentist says that choosing prior probabilities for your hypotheses might be cheating. In this overview I will try to show a simple example of the hypothesis testing for a population proportion using both approaches. However, I will not make any statements like "X approach is awesome, do not use Y approach" and leave the conclusion making to the reader. Most of the calculations will be done "by hand" along with Python implementations, but I will try to keep a balance between going too much into details and skipping some parts.
 
 Alright, let's begin! 
 
-Consider the mother-to-child transmission (MTCT) of HIV (human immunodeficiency virus) ratio[^1]. You want to check whether the probability that an HIV-positive mother can transmit HIV to her baby during pregnancy, childbirth, or breastfeeding is 0.5 or less (say, 0.4). You have collected data from 50 HIV-positive women and their new-born children. 21 children were tested positive for HIV (0.42 ratio). Is there enough evidence to say that the probability of MTCT of HIV is less than a random chance given the observed data? (*Disclaimer: numbers are made up*).
+Consider the mother-to-child transmission (MTCT) of HIV (human immunodeficiency virus) ratio[^1]. You want to check whether the probability that an HIV-positive mother can transmit HIV to her baby during pregnancy, childbirth, or breastfeeding is 0.5 or less (say, 0.4). You have collected data from 50 HIV-positive women and their new-born children. 21 children were tested positive for HIV (0.42 ratio). Is there enough evidence to say that the probability of MTCT is less than a random chance given the observed data? (*Disclaimer: numbers are made up*).
 
 ## Frequentist Approach 
 
-Let’s start with the Frequentist approach and null hypothesis significance testing (NHST) framework. Under this framework we usually (if not always) set our null hypothesis ($H_0$) value to some constant value, building the desired probability distribution assuming that $H_0$ is true and then finding the probability of observed data in the direction of the alternative hypothesis ($H_A$). Direction could be one-sided (less/greater, $<$ / $>$, one-tail test) or two-sided (less or greater, $\neq$, two-tail test). For our example we have:
+Let’s start with the Frequentist approach and null hypothesis significance testing (NHST). Under this framework we usually (if not always) set our null hypothesis ($H_0$) value to some constant value, build the desired probability distribution assuming that $H_0$ is true and then find the probability of observed data in the direction of the alternative hypothesis ($H_A$). Direction could be one-sided (less/greater, $<$ / $>$, one-tail test) or two-sided (less or greater, $\neq$, two-tail test). For our example we have:
 
 * $H_0$: the probability of MTCT of HIV is 50%, $P(\text{MTCT})=0.5$;
 * $H_A$: the probability of MTCT of HIV is less than 50%, $P(\text{MTCT})<0.5$;
 * Significance level $\alpha=5\%$
 
-In other words, we build a distribution under the assumption that the probability of MTCT is 0.5 and we want to check if the data we collected provides enough evidence that it comes from the distribution with another probability (which is less than 0.5). THe significance level is our threshold value, which is kind of arbitrary, but in most cases is set to 5%. We will reject the null hypothesis if the **p-value**[^2] is less than $\alpha$.
+In other words, we build a distribution under the assumption that the probability of MTCT is 0.5 and we want to check if the data we collected provides enough evidence that it comes from the distribution with another probability (which is less than 0.5). The significance level is our threshold value, which is kind of arbitrary, but in most cases is set to 5%. We will reject the null hypothesis if the **p-value**[^2] is less than $\alpha$.
 
 {{% alert note %}}
 In statistical testing, the **p-value** is the probability of obtaining test results at least as extreme as the results actually observed, under the assumption that the null hypothesis is correct. A very small p-value means that such an extreme observed outcome would be very unlikely under the null hypothesis.
@@ -185,7 +185,7 @@ p-value equals 0.161 so we **failed to reject the null hypothesis**, meaning tha
 
 ### Changing Hypotheses
 
-Here is an interesting phenomenon. We have seen that there is not enough evidence to reject that 21 out of 50 infected children come from a distribution with the probability 0.5. What will happen if we change the hypothesis but keep the idea somewhat similar. Is there enough evidence to claim that the population proportion is greater than 0.4?
+Here is an interesting phenomenon. We have seen that there is not enough evidence to reject the hypothesis that 21 out of 50 infected children come from a distribution with the probability of success 0.5. What will happen if we change the hypothesis but keep the idea somewhat similar. Is there enough evidence to claim that the population proportion is greater than 0.4?
 
 * $H_0$: the probability of MTCT of HIV is 40%, $P(\text{MTCT})=0.4$;
 * $H_A$: the probability of MTCT of HIV is greater than 40%, $P(\text{MTCT})>0.4$;
@@ -239,7 +239,7 @@ We were unable to reject the hypothesis that MTCT ratio is 50%, but at the same 
 
 ### Confidence Intervals
 
-We could also build a Frequentist confidence interval to show our uncertainty about the ratio of MTCT. For the large amount of $n$ in binomial trials, we can say that random variable $X$ follows a normal distribution with the mean $\hat{p}$ and standard error $\frac{\hat{p}(1-\hat{p})}{n}$
+We could also build a Frequentist confidence interval to show our uncertainty about the ratio of MTCT. For the large amount of $n$ in binomial trials, we can say that random variable $X$ follows a normal distribution with the mean $\hat{p}$ and standard error $\frac{\hat{p}(1-\hat{p})}{n}$.
 
 $$X \sim \mathcal{N} \big( \mu = \hat{p}, SE = \frac{\hat{p}(1-\hat{p})}{n} \big)$$
 
@@ -273,7 +273,7 @@ In other words, we are 95% confident that the true proportion of MTCT lies in th
 
 ### Bayesian Approach
 
-Now it’s Bayesian approach turn. Under this framework, you could specify two distinct hypotheses and check which one is more likely to be true.
+Now it’s Bayesian approach turn. Under this framework, we can specify two distinct hypotheses and check which one is more likely to be true.
 
 * $H_1$: the probability of MTCT of HIV is 50%, $P(\text{MTCT})=0.5$;
 * $H_2$: the probability of MTCT of HIV is 40%, $P(\text{MTCT})=0.4$.
@@ -318,9 +318,9 @@ $$=0.0598 \cdot 0.5 + 0.109 \cdot 0.5 = 0.084$$
 * $P(H_1 \text{ is true|}k = 21) = 0.354$
 * $P(H_2 \text{ is true|}k = 21) = 1 - P(H_1 \text{ is true|}k = 21) = 0.646$
 
-As we can see, the probability of the second hypothesis ($P(MTCT) = 40\%$) equals 64.6%, whereas the probability of the first hypothesis ($P(MTCT) = 50\%$) equals 35.4%.
+As we can see, the probability of the second hypothesis $P(MTCT) = 40\%$ equals 64.6%, whereas the probability of the first hypothesis $P(MTCT) = 50\%$ equals 35.4%.
 
-If we want to check if there is enough evidence against one of the hypotheses, we can use the **Bayes factor**[^3] (which is kind of an analog of Frequentist's p-value).
+If we want to check if there is enough evidence against one of the hypotheses, we can use the **Bayes factor**[^3] (which is kind of an analog of the Frequentist's p-value).
 
 {{% alert note %}}
 The **Bayes factor** is a likelihood ratio of the marginal likelihood of two competing hypotheses, usually a null and an alternative. The aim of the Bayes factor is to quantify the support for a model over another, regardless of whether these models are correct.
@@ -389,7 +389,7 @@ plt.show()
 
 We have specified two distinct hypotheses $H_1$ and $H_2$. But also we could define the whole posterior probability distribution function of an unknown parameter $P(\text{MTCT})$. 
 
-Let's assume that we have no prior information about the probability of HIV transmission and $P(\text{MTCT})$ can take any value on the $[0,1]$ range. Or in other words $P(\text{MTCT})$ follows a uniform distribution $P(\text{MTCT}) \sim \text{unif}(0,1)$. For the reasons, that will not be discussed here, we are going to replace the Uniform distribution with Beta distribution $\text{Beta}(\alpha,\beta)$ with parameters $\alpha=1$, $\beta=1$, $P(\text{MTCT}) \sim \text{Beta}(1,1)$, which is exactly like the uniform. It just makes calculations (and life) easier since Beta and Binomial distribution form a **conjugate family**[^4]. The likelihood still follows Binomial distribution.
+Let's assume that we have no prior information about the probability of HIV transmission and $P(\text{MTCT})$ can take any value on the $[0,1]$ range. Or in other words $P(\text{MTCT})$ follows a uniform distribution $P(\text{MTCT}) \sim \text{unif}(0,1)$. For the reasons, that will not be discussed here, we are going to replace the Uniform distribution with Beta distribution $\text{Beta}(\alpha,\beta)$ with parameters $\alpha=1$, $\beta=1$, $P(\text{MTCT}) \sim \text{Beta}(1,1)$, which is exactly like the uniform. It just makes calculations (and life) easier since Beta and Binomial distribution form a **conjugate family**[^4]. The likelihood still follows a Binomial distribution.
 
 Now, in order to find the posterior distribution we can just update the values of the Beta distribution:
 
@@ -479,7 +479,7 @@ The shape of the posterior distribution looks more like the shape of likelihood 
 
 ## Summary
 
-As I told at the beginning, the purpose of this overview was not to distinguish "the best" approach, but rather look at their differences and pros/cons. Summary table:
+As I told at the beginning, the purpose of this overview was not to distinguish "the best" approach, but rather look at their differences and pros/cons. The key points of each approach are represented in a table:
 
 | Frequentist Approach | Bayesian Approach |
 |:--|:--|
