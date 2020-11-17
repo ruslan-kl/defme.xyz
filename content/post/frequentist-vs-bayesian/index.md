@@ -12,6 +12,7 @@ categories: ["Statistics"]
 tags: ["A/B Testing", "Bayesian Inference"]
 ---
 
+
 ## Table of contents
 
 - [Introduction](#introduction)
@@ -165,10 +166,10 @@ plt.show()
 
 We want to know the probability of obtaining the results as extreme as the results actually observed. Since we had a one-tail test ($<$), the "extreme" results would be obtaining 21 or less HIV infected children (red bars).
 
-$$\text{p-value} = \sum_{i=0}^k P(X_i) = P(0) + P(1) + ... + P(21)$$
-$$=\binom{50}{0} \left( \frac{1}{2} \right) ^0 \left( 1 - \frac{1}{2} \right) ^{50-0} + \binom{50}{1}\left( \frac{1}{2} \right) ^1 \left( 1 - \frac{1}{2} \right) ^{50-1}$$
-$$+ ... + \binom{50}{21} \left( \frac{1}{2} \right) ^{21} \left( 1 - \frac{1}{2} \right) ^{50-21}$$
-$$\approx 0.161$$
+$$\scriptsize \text{p-value} = \sum_{i=0}^k P(X_i) = P(0) + P(1) + ... + P(21)$$
+$$\scriptsize =\binom{50}{0} \left( \frac{1}{2} \right) ^0 \left( 1 - \frac{1}{2} \right) ^{50-0} + \binom{50}{1}\left( \frac{1}{2} \right) ^1 \left( 1 - \frac{1}{2} \right) ^{50-1}$$
+$$\scriptsize + ... + \binom{50}{21} \left( \frac{1}{2} \right) ^{21} \left( 1 - \frac{1}{2} \right) ^{50-21}$$
+$$\scriptsize \approx 0.161$$
 
 
 ```python
@@ -219,10 +220,10 @@ plt.show()
 ![png](./index_10_0.png)
 
 
-$$\text{p-value} = \sum_{i=21}^n P(X_i) = P(21) + P(22) + ... + P(50)$$
-$$=\binom{50}{21} \left( \frac{4}{10} \right) ^{21} \left( 1 - \frac{4}{10} \right) ^{50-21} + \binom{50}{2} \left( \frac{4}{10} \right) ^{22} \left( 1 - \frac{4}{10} \right) ^{50-22}$$
-$$+ ... + \binom{50}{50} \left( \frac{4}{10} \right) ^{50} \left( 1 - \frac{4}{10} \right) ^{50-50}$$
-$$\approx 0.439$$
+$$\scriptsize \text{p-value} = \sum_{i=21}^n P(X_i) = P(21) + P(22) + ... + P(50)$$
+$$\scriptsize =\binom{50}{21} \left( \frac{4}{10} \right) ^{21} \left( 1 - \frac{4}{10} \right) ^{50-21} + \binom{50}{2} \left( \frac{4}{10} \right) ^{22} \left( 1 - \frac{4}{10} \right) ^{50-22}$$
+$$\scriptsize + ... + \binom{50}{50} \left( \frac{4}{10} \right) ^{50} \left( 1 - \frac{4}{10} \right) ^{50-50}$$
+$$\scriptsize \approx 0.439$$
 
 ```python
 p_val = 1 - stats.binom.cdf(k=k-1, n=n, p=h_0)
@@ -280,7 +281,7 @@ Now it’s Bayesian approach turn. Under this framework, we can specify two dist
 
 We are going to apply Bayes rule to calculate the posterior probability after we observed the data.
 
-$$P(\text{Model}|\text{Data}) = \frac{P(\text{Data|Model}) \cdot P(\text{Model})}{P(\text{Data})}$$
+$$\scriptsize P(\text{Model}|\text{Data}) = \frac{P(\text{Data|Model}) \cdot P(\text{Model})}{P(\text{Data})}$$
 
 * $P(\text{Data|Model})$ is the **likelihood**, or probability that the observed data would happen given that model (hypothesis) is true. 
 * $P(\text{Model})$ is the **prior probability** of a model (hypothesis).
@@ -291,32 +292,32 @@ Assume that we have no prior information about the MTCT, so we believe that both
 
 **Prior**: 
 
-$P(H_1)=P(H_2)=\frac{1}{2}$
+$\scriptsize P(H_1)=P(H_2)=\frac{1}{2}$
 
 *Note that the prior probability mass function has to sum up to 1*.
 
 **Likelihood**:
 
-* $P(k = 21 | H_1 \text{ is true}) = \binom{n}{k} \cdot P(H_1)^k \cdot (1-P(H_1))^{n-k}$
+* $\scriptsize P(k = 21 | H_1 \text{ is true}) = \binom{n}{k} \cdot P(H_1)^k \cdot (1-P(H_1))^{n-k}$
 
-    $= \binom{50}{21} \cdot 0.5^{21} \cdot (1-0.5)^{50-21}=0.0598$
+    $\scriptsize = \binom{50}{21} \cdot 0.5^{21} \cdot (1-0.5)^{50-21}=0.0598$
 
-* $P(k = 21 | H_2 \text{ is true}) = \binom{n}{k} \cdot P(H_2)^k \cdot \left( 1-P(H_2) \right) ^{n-k}$
+* $\scriptsize P(k = 21 | H_2 \text{ is true}) = \binom{n}{k} \cdot P(H_2)^k \cdot \left( 1-P(H_2) \right) ^{n-k}$
 
-    $= \binom{50}{21} \cdot 0.4^{21} \cdot (1-0.4)^{50-21}=0.109$
+    $\scriptsize = \binom{50}{21} \cdot 0.4^{21} \cdot (1-0.4)^{50-21}=0.109$
 
 **Posterior probabilities**:
 
-* $P(H_1 \text{ is true|}k = 21) = \frac{P(k = 21 | H_1 \text{ is true}) \cdot P(H_1)}{P(\text{k = 21})}$
+* $\scriptsize P(H_1 \text{ is true|}k = 21) = \frac{P(k = 21 | H_1 \text{ is true}) \cdot P(H_1)}{P(\text{k = 21})}$
 
-* $P(H_2 \text{ is true|}k = 21) = \frac{P(k = 21 | H_2 \text{ is true}) \cdot P(H_2)}{P(\text{k = 21})}$
+* $\scriptsize P(H_2 \text{ is true|}k = 21) = \frac{P(k = 21 | H_2 \text{ is true}) \cdot P(H_2)}{P(\text{k = 21})}$
 
-$$P(k=21)=P(k = 21 | H_1 \text{ is true}) \cdot P(H_1) + P(k = 21 | H_2 \text{ is true}) \cdot P(H_2)$$
+$$\scriptsize P(k=21)=P(k = 21 | H_1 \text{ is true}) \cdot P(H_1) + P(k = 21 | H_2 \text{ is true}) \cdot P(H_2)$$
 
-$$=0.0598 \cdot 0.5 + 0.109 \cdot 0.5 = 0.084$$
+$$\scriptsize =0.0598 \cdot 0.5 + 0.109 \cdot 0.5 = 0.084$$
 
-* $P(H_1 \text{ is true|}k = 21) = 0.354$
-* $P(H_2 \text{ is true|}k = 21) = 1 - P(H_1 \text{ is true|}k = 21) = 0.646$
+* $\scriptsize P(H_1 \text{ is true|}k = 21) = 0.354$
+* $\scriptsize P(H_2 \text{ is true|}k = 21) = 1 - P(H_1 \text{ is true|}k = 21) = 0.646$
 
 As we can see, the probability of the second hypothesis $P(MTCT) = 40\%$ equals 64.6%, whereas the probability of the first hypothesis $P(MTCT) = 50\%$ equals 35.4%.
 
@@ -326,11 +327,11 @@ If we want to check if there is enough evidence against one of the hypotheses, w
 The **Bayes factor** is a likelihood ratio of the marginal likelihood of two competing hypotheses, usually a null and an alternative. The aim of the Bayes factor is to quantify the support for a model over another, regardless of whether these models are correct.
 {{% /alert %}}
 
-$$\text{BF}(H_2:H_1)= \frac{\text{Likelihood}_2}{\text{Likelihood}_1}$$
-$$ = \frac{P(k = 21 | H_2 \text{ is true})}{P(k = 21 | H_1 \text{ is true})} =  \frac{\frac{P(H_2 \text{ is true}|k=21) P(k=21)}{P(H_2\text{ is true)}}}{\frac{P(H_1 \text{ is true}|k=21) P(k=21)}{P(H_1\text{ is true)}}}$$
-$$ = \frac{\frac{P(H_2 \text{ is true}|k=21)}{P(H_1\text{ is true}|k=21)}}{\frac{P(H_2)}{P(H_1)}} = \frac{\text{Posterior Odds}}{\text{Prior Odds}}$$
+$$\scriptsize \text{BF}(H_2:H_1)= \frac{\text{Likelihood}_2}{\text{Likelihood}_1}$$
+$$\scriptsize = \frac{P(k = 21 | H_2 \text{ is true})}{P(k = 21 | H_1 \text{ is true})} =  \frac{\frac{P(H_2 \text{ is true}|k=21) P(k=21)}{P(H_2\text{ is true)}}}{\frac{P(H_1 \text{ is true}|k=21) P(k=21)}{P(H_1\text{ is true)}}}$$
+$$\scriptsize = \frac{\frac{P(H_2 \text{ is true}|k=21)}{P(H_1\text{ is true}|k=21)}}{\frac{P(H_2)}{P(H_1)}} = \frac{\text{Posterior Odds}}{\text{Prior Odds}}$$
 
-$$\text{BF}(H_2:H_1)= \frac{\frac{0.646}{0.354}}{\frac{0.5}{0.5}} \approx 1.82$$
+$$\scriptsize \text{BF}(H_2:H_1)= \frac{\frac{0.646}{0.354}}{\frac{0.5}{0.5}} \approx 1.82$$
 
 To interpret the value we can refer to Harold Jeffreys interpretation table:
 
@@ -404,12 +405,12 @@ $$E(x) = \frac{\alpha}{\alpha+\beta}$$
 
 To summarize:
 
-* **Prior**: $P(\text{MTCT}) \sim \text{Beta}(\alpha=1,\beta=1)$
-* **Likelihood**: $P \big( k = 21 | P(\text{MTCT}) \big) \sim B(n, P(\text{MTCT}))$
+* **Prior**: $\scriptsize P(\text{MTCT}) \sim \text{Beta}(\alpha=1,\beta=1)$
+* **Likelihood**: $\scriptsize P \big( k = 21 | P(\text{MTCT}) \big) \sim B(n, P(\text{MTCT}))$
 
-    $= \binom{n}{k} \cdot P(\text{MTCT})^k \cdot \big( 1-P(\text{MTCT}) \big) ^{n-k}$
+    $ \scriptsize= \binom{n}{k} \cdot P(\text{MTCT})^k \cdot \big( 1-P(\text{MTCT}) \big) ^{n-k}$
 
-* **Posterior**: $P(\text{MTCT}) \sim \text{Beta}(\alpha^\*=\alpha + k,\beta^\* = \beta + n - k)$
+* **Posterior**: $\scriptsize P(\text{MTCT}) \sim \text{Beta}(\alpha^\*=\alpha + k,\beta^\* = \beta + n - k)$
 
 After we find the posterior distribution we can derive the Bayesian **credible interval** (CrI) which will tell us the probability of our unknown parameter $P$. Usually it is found as the narrowest interval with the desired area (like 0.95).
 
