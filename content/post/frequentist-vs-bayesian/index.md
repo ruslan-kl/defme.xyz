@@ -167,8 +167,8 @@ plt.show()
 We want to know the probability of obtaining the results as extreme as the results actually observed. Since we had a one-tail test ($<$), the "extreme" results would be obtaining 21 or less HIV infected children (red bars).
 
 $$\scriptsize \text{p-value} = \sum_{i=0}^k P(X_i) = P(0) + P(1) + ... + P(21)$$
-$$\scriptsize =\binom{50}{0} \left( \frac{1}{2} \right) ^0 \left( 1 - \frac{1}{2} \right) ^{50-0} + \binom{50}{1}\left( \frac{1}{2} \right) ^1 \left( 1 - \frac{1}{2} \right) ^{50-1}$$
-$$\scriptsize + ... + \binom{50}{21} \left( \frac{1}{2} \right) ^{21} \left( 1 - \frac{1}{2} \right) ^{50-21}$$
+$$\tiny =\binom{50}{0} \left( \frac{1}{2} \right) ^0 \left( 1 - \frac{1}{2} \right) ^{50-0} + \binom{50}{1}\left( \frac{1}{2} \right) ^1 \left( 1 - \frac{1}{2} \right) ^{50-1}$$
+$$\tiny + ... + \binom{50}{21} \left( \frac{1}{2} \right) ^{21} \left( 1 - \frac{1}{2} \right) ^{50-21}$$
 $$\scriptsize \approx 0.161$$
 
 
@@ -221,8 +221,8 @@ plt.show()
 
 
 $$\scriptsize \text{p-value} = \sum_{i=21}^n P(X_i) = P(21) + P(22) + ... + P(50)$$
-$$\scriptsize =\binom{50}{21} \left( \frac{4}{10} \right) ^{21} \left( 1 - \frac{4}{10} \right) ^{50-21} + \binom{50}{2} \left( \frac{4}{10} \right) ^{22} \left( 1 - \frac{4}{10} \right) ^{50-22}$$
-$$\scriptsize + ... + \binom{50}{50} \left( \frac{4}{10} \right) ^{50} \left( 1 - \frac{4}{10} \right) ^{50-50}$$
+$$\tiny =\binom{50}{21} \left( \frac{4}{10} \right) ^{21} \left( 1 - \frac{4}{10} \right) ^{50-21} + \binom{50}{2} \left( \frac{4}{10} \right) ^{22} \left( 1 - \frac{4}{10} \right) ^{50-22}$$
+$$\tiny + ... + \binom{50}{50} \left( \frac{4}{10} \right) ^{50} \left( 1 - \frac{4}{10} \right) ^{50-50}$$
 $$\scriptsize \approx 0.439$$
 
 ```python
@@ -298,11 +298,11 @@ $\scriptsize P(H_1)=P(H_2)=\frac{1}{2}$
 
 **Likelihood**:
 
-* $\scriptsize P(k = 21 | H_1 \text{ is true}) = \binom{n}{k} \cdot P(H_1)^k \cdot (1-P(H_1))^{n-k}$
+* $\tiny P(k = 21 | H_1 \text{ is true}) = \binom{n}{k} \cdot P(H_1)^k \cdot (1-P(H_1))^{n-k}$
 
     $\scriptsize = \binom{50}{21} \cdot 0.5^{21} \cdot (1-0.5)^{50-21}=0.0598$
 
-* $\scriptsize P(k = 21 | H_2 \text{ is true}) = \binom{n}{k} \cdot P(H_2)^k \cdot \left( 1-P(H_2) \right) ^{n-k}$
+* $\tiny P(k = 21 | H_2 \text{ is true}) = \binom{n}{k} \cdot P(H_2)^k \cdot \left( 1-P(H_2) \right) ^{n-k}$
 
     $\scriptsize = \binom{50}{21} \cdot 0.4^{21} \cdot (1-0.4)^{50-21}=0.109$
 
@@ -312,12 +312,12 @@ $\scriptsize P(H_1)=P(H_2)=\frac{1}{2}$
 
 * $\scriptsize P(H_2 \text{ is true|}k = 21) = \frac{P(k = 21 | H_2 \text{ is true}) \cdot P(H_2)}{P(\text{k = 21})}$
 
-$$\scriptsize P(k=21)=P(k = 21 | H_1 \text{ is true}) \cdot P(H_1) + P(k = 21 | H_2 \text{ is true}) \cdot P(H_2)$$
+$$\tiny P(k=21)=P(k = 21 | H_1 \text{ is true}) \cdot P(H_1) + P(k = 21 | H_2 \text{ is true}) \cdot P(H_2)$$
 
 $$\scriptsize =0.0598 \cdot 0.5 + 0.109 \cdot 0.5 = 0.084$$
 
 * $\scriptsize P(H_1 \text{ is true|}k = 21) = 0.354$
-* $\scriptsize P(H_2 \text{ is true|}k = 21) = 1 - P(H_1 \text{ is true|}k = 21) = 0.646$
+* $\tiny P(H_2 \text{ is true|}k = 21) = 1 - P(H_1 \text{ is true|}k = 21) = 0.646$
 
 As we can see, the probability of the second hypothesis $P(MTCT) = 40\%$ equals 64.6%, whereas the probability of the first hypothesis $P(MTCT) = 50\%$ equals 35.4%.
 
