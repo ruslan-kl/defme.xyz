@@ -176,15 +176,15 @@ ggplot() +
 
 We would expect 237 students of 395 to pass the math exam under the assumption that the null hypothesis is true ($n \times \pi = 395 \times 0.6 = 237$). That is the expected value of a null distribution. We have observed 265 students who have passed the test. So now the p-value is the sum of probabilities for $x$ greater or equal to 265:
 
-$$\text{p-value} = P(X=237) + P(X=238) + ... + P(X=395)$$
+$$\scriptsize \text{p-value} = P(X=237) + P(X=238) + ... + P(X=395)$$
 
-$$P(X=237) = C_{395}^{237} \times 0.6^{237} \times (1-0.6)^{395-237}$$
+$$\scriptsize P(X=237) = C_{395}^{237} \times 0.6^{237} \times (1-0.6)^{395-237}$$
 
-$$P(X=238) = C_{395}^{238} \times 0.6^{238} \times (1-0.6)^{395-238}$$
+$$\scriptsize P(X=238) = C_{395}^{238} \times 0.6^{238} \times (1-0.6)^{395-238}$$
 
 $$...$$
 
-$$P(X=395) = C_{395}^{395} \times 0.6^{395} \times (1-0.6)^{395-395}$$
+$$\scriptsize P(X=395) = C_{395}^{395} \times 0.6^{395} \times (1-0.6)^{395-395}$$
 
 As we can see, that is a lot of calculations to do by hand. There is a way to use **Normal approximation**[^7] which would allow to calculate the p-value with less effort, but we are going to rely on R:
 
@@ -276,11 +276,11 @@ We are going to rewrite the previous cross table in the following way:
 | **Passed** | 101 (**101**) | 60 (**57**) | 55 (**54**) | 31 (**34**) | 18 (**19**) | 265 |
 | **Total** | 151 | 85 | 80 | 51 | 28 | 395 |
 
-Numbers in parentheses is the **expected** number of observations for each cell. Assuming that there is no association between the groups we expect 67.09% of students to pass the exam ($p =\frac{\text{total passed}}{\text{total}} = \frac{265}{395}=0.6709$) in each group. Let's take a look at a `1` level of alcohol consumption. Given that assumption we expect to observe 101 students who passed the exam ($\text{total for 1 level} \times p = 151 \times 0.6709 = 101$). Hence we expect 50 students to fail the exam ($151-101 = 50$).
+Numbers in parentheses is the **expected** number of observations for each cell. Assuming that there is no association between the groups we expect 67.09% of students to pass the exam ($p =\frac{\text{total passed}}{\text{total}} = \frac{265}{395}=0.6709$) in each group. Let's take a look at a `1` level of alcohol consumption. Given that assumption we expect to observe 101 students who passed the exam ($\text{total for 1 level} \times p$ $= 151 \times 0.6709 = 101$). Hence we expect 50 students to fail the exam ($151-101 = 50$).
 
 For the second (2) level of alcohol consumption we expect to observe 57 students who passed the exam ($\text{total for 2 level} \times p = 85 \times 0.6709 = 57$) and 28 who failed ($85-57 = 28$). And so on for each group. After we found the expected values for each cell we can calculate the $\chi^2$ value:
 
-$$\chi^2 = \frac{(50-50)^2}{50} + \frac{(25-28)^2}{28} + ... + \frac{(18-19)^2}{19}$$
+$$\scriptsize \chi^2 = \frac{(50-50)^2}{50} + \frac{(25-28)^2}{28} + ... + \frac{(18-19)^2}{19}$$
 
 This also may be a tough task to calculate by hand that's why we usually rely on software.
 
@@ -403,12 +403,12 @@ This was a brief overview of how we can perform hypothesis testing when we deal 
 
 ## References
 
-[^1]: https://defme.xyz/post/null-hypothesis-significance-testing-part-1/
-[^2]: https://www.kaggle.com/uciml/student-alcohol-consumption
-[^3]: http://www3.dsi.uminho.pt/pcortez/student.pdf
-[^4]: https://en.wikipedia.org/wiki/Binomial_distribution
-[^5]: https://defme.xyz/post/null-hypothesis-significance-testing-part-1/#intuitive-example
-[^6]: https://en.wikipedia.org/wiki/Binomial_test
-[^7]: https://defme.xyz/project/normal-approximation-to-binomial/
-[^8]: https://en.wikipedia.org/wiki/Chi-squared_distribution
-[^9]: https://en.wikipedia.org/wiki/Yates%27s_correction_for_continuity
+[^1]: [Null Hypothesis Significance Testing, part 1 | RK](https://defme.xyz/post/null-hypothesis-significance-testing-part-1/)
+[^2]: [Student Alcohol Consumption | Kaggle](https://www.kaggle.com/uciml/student-alcohol-consumption)
+[^3]: Cortez, Paulo & Silva, Alice. (2008). Using data mining to predict secondary school student performance. *EUROSIS*. 
+[^4]: [Binomial distribution - Wikipedia](https://en.wikipedia.org/wiki/Binomial_distribution)
+[^5]: [Null Hypothesis Significance Testing, part 1 | RK](https://defme.xyz/post/null-hypothesis-significance-testing-part-1/#intuitive-example)
+[^6]: [Binomial test - Wikipedia](https://en.wikipedia.org/wiki/Binomial_test)
+[^7]: [Normal Approximation to Binomial Distribution | RK](https://defme.xyz/project/normal-approximation-to-binomial/)
+[^8]: [Chi-square distribution - Wikipedia](https://en.wikipedia.org/wiki/Chi-squared_distribution)
+[^9]: [Yates's correction for continuity - Wikipedia](https://en.wikipedia.org/wiki/Yates%27s_correction_for_continuity)

@@ -39,13 +39,13 @@ unsplash-logo
 <div id="terminology" class="section level2">
 <h2><a name="termoinology">Terminology</a></h2>
 <ul>
-<li><strong>Prevalence</strong> in epidemiology is the proportion of a particular population found to be affected by a medical condition <a href="#1">[1]</a>. For example, according to the Public Health Center of Ukraine <a href="#2">[2]</a> HIV/AIDS review (01.04.2019) <a href="#3">[3]</a> 42,8 of 100000 people in Ukraine have HIV <a href="#4">[4]</a>. Prevalence of HIV if that case is going to equal:</li>
+<li><strong>Prevalence</strong> in epidemiology is the proportion of a particular population found to be affected by a medical condition<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. For example, according to the Public Health Center of Ukraine<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> HIV/AIDS review (01.04.2019)<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> 42,8 of 100000 people in Ukraine have HIV<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>. Prevalence of HIV if that case is going to equal:</li>
 </ul>
 <p><span class="math display">\[\text{Prevalence} = \frac{42.8}{100000} = 0.000428\]</span></p>
 <ul>
 <li><p><strong>Sensitivity</strong> and <strong>specificity</strong> are statistical measures of the performance of a binary classification test, also known in statistics as a classification function, that are widely used in medicine:</p></li>
 <li><p><strong>Sensitivity</strong> (also called <em>the true positive rate</em>, <em>the recall</em>, or <em>probability of detection</em> in some fields) measures the proportion of actual positives that are correctly identified as such (e.g., the percentage of sick people who are correctly identified as having the condition).</p></li>
-<li><p><strong>Specificity</strong> (also called <em>the true negative rate</em>) measures the proportion of actual negatives that are correctly identified as such (e.g., the percentage of healthy people who are correctly identified as not having the condition). <a href="#5">[5]</a></p></li>
+<li><p><strong>Specificity</strong> (also called <em>the true negative rate</em>) measures the proportion of actual negatives that are correctly identified as such (e.g., the percentage of healthy people who are correctly identified as not having the condition).<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></p></li>
 </ul>
 <p>For example, we tested 1000 people who have HIV and 1000 people who don’t have HIV with a Test “X”. The rest showed the following results:</p>
 <table>
@@ -88,8 +88,8 @@ unsplash-logo
 </ul>
 <p><span class="math display">\[\text{Specificity} = \frac{990}{1000} = 0.99\]</span></p>
 <p>We will denote it as <span class="math inline">\(P(\text{&quot;-&quot;|no HIV})\)</span> - the probability of negative test result given that person doesn’t have HIV.</p>
-<p>This is co-called <strong>conditional probability</strong> <a href="#6">[6]</a>. We assume that event after the <span class="math inline">\(|\)</span> sign has occurred and measure the probability of a new event (before the <span class="math inline">\(|\)</span> sign).</p>
-<p>Usually, tests provide sensitivity and specificity scores from the manufacturer. For example, express HIV test CITO TEST claims to have <span class="math inline">\(99.99\%\)</span> sensitivity and <span class="math inline">\(99.99\%\)</span> specificity <a href="#7">[7]</a>.</p>
+<p>This is co-called <strong>conditional probability</strong><a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>. We assume that event after the <span class="math inline">\(|\)</span> sign has occurred and measure the probability of a new event (before the <span class="math inline">\(|\)</span> sign).</p>
+<p>Usually, tests provide sensitivity and specificity scores from the manufacturer. For example, express HIV test CITO TEST claims to have <span class="math inline">\(99.99\%\)</span> sensitivity and <span class="math inline">\(99.99\%\)</span> specificity<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>.</p>
 </div>
 <div id="measuring-the-probability-of-having-a-disease" class="section level2">
 <h2><a name="measure">Measuring the probability of having a disease</a></h2>
@@ -103,7 +103,7 @@ unsplash-logo
 <div id="updating-probability-using-bayess-rule" class="section level3">
 <h3><a name="bayes-update">Updating probability using Bayes’s Rule</a></h3>
 <blockquote>
-<p>In probability theory and statistics, <strong>Bayes’s theorem</strong> (alternatively Bayes’s law or Bayes’s rule) describes the probability of an event, based on prior knowledge of conditions that might be related to the event. <a href="#8">[8]</a></p>
+<p>In probability theory and statistics, <strong>Bayes’s theorem</strong> (alternatively Bayes’s law or Bayes’s rule) describes the probability of an event, based on prior knowledge of conditions that might be related to the event.<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a></p>
 </blockquote>
 <p>Imagine, we have to dependent events <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>. We want to measure the probability that event <span class="math inline">\(B\)</span> will occur <strong>given</strong> that event <span class="math inline">\(A\)</span> has occurred. According to the Bayes’s Rule:</p>
 <p><span class="math display">\[P(\text{B|A}) = \frac{P(\text{A|B}) \times P(\text{B})}{P(\text{A})}\]</span></p>
@@ -114,8 +114,8 @@ unsplash-logo
 <li><span class="math inline">\(P(\text{A|B})\)</span> - the likelihood</li>
 </ul>
 <p>In our HIV test example we want to know what is the probability that a person actually has HIV, given that he was tested positive. Using Bayes’s rule:</p>
-<p><span class="math display">\[P(\text{HIV|&quot;+&quot;}) = \frac{P(\text{&quot;+&quot;|HIV}) \times P(\text{HIV})}{P(\text{&quot;+&quot;})}\]</span>
-We have the values of the numerator, however, we don’t have the value in the denumerator (probability of being tested positive). We can easily calculate it using <strong>probability trees</strong> <a href="#9">[9]</a>.</p>
+<p><span class="math display">\[\scriptsize P(\text{HIV|&quot;+&quot;}) = \frac{P(\text{&quot;+&quot;|HIV}) \times P(\text{HIV})}{P(\text{&quot;+&quot;})}\]</span>
+We have the values of the numerator, however, we don’t have the value in the denumerator (probability of being tested positive). We can easily calculate it using <strong>probability trees</strong><a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a>.</p>
 </div>
 <div id="probability-trees" class="section level3">
 <h3><a name="prob-trees">Probability trees</a></h3>
@@ -131,24 +131,26 @@ We have the values of the numerator, however, we don’t have the value in the d
 <li>a person will be tested <strong>positive</strong> (<span class="math inline">\(P(\text{&quot;+&quot;|HIV})\)</span>, the sensitivity of a test)</li>
 <li>a person will be tested <strong>negative</strong> (<span class="math inline">\(P(\text{&quot;-&quot;|HIV})\)</span>, unknown).</li>
 </ol>
-<p>We don’t have <span class="math inline">\(P(\text{&quot;-&quot;|HIV})\)</span>, however, we can easily calculate it since these two events are <strong>complementary</strong> <a href="#10">[10]</a>. Hence:</p>
+<p>We don’t have <span class="math inline">\(P(\text{&quot;-&quot;|HIV})\)</span>, however, we can easily calculate it since these two events are <strong>complementary</strong><a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a>. Hence:</p>
 <p><span class="math display">\[P(\text{&quot;-&quot;|HIV}) = 1 - P(\text{&quot;+&quot;|HIV})\]</span>
 <span class="math display">\[P(\text{&quot;-&quot;|HIV}) = 1 - 0.9999 = 0.0001\]</span></p>
 <p>We can do the following for the <code>no Disease</code> node.</p>
-<p>The last step would be calculating the <strong>joint probabilities</strong> <a href="#11">[11]</a>.</p>
-<p>For the <code>&quot;+&quot; given Disease</code> node we multiply <span class="math inline">\(P(\text{HIV}) \times P(\text{&quot;+&quot;|HIV})\)</span> and get:</p>
-<p><span class="math display">\[P(\text{&quot;+&quot; &amp;  HIV)} = P(\text{HIV}) \times P(\text{&quot;+&quot;|HIV}) = 0.000428 \times 0.0.9999 = 0.0004279572\]</span></p>
+<p>The last step would be calculating the <strong>joint probabilities</strong><a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a>.</p>
+<p>For the <code>"+" given Disease</code> node we multiply <span class="math inline">\(P(\text{HIV}) \times P(\text{&quot;+&quot;|HIV})\)</span> and get:</p>
+<p><span class="math display">\[\scriptsize P(\text{&quot;+&quot; &amp;  HIV)} = P(\text{HIV}) \times P(\text{&quot;+&quot;|HIV})\]</span>
+<span class="math display">\[\scriptsize = 0.000428 \times 0.0.9999 = 0.0004279572\]</span></p>
 <p>This is the probability of having HIV <strong>and</strong> (<span class="math inline">\(\cap\)</span>, <span class="math inline">\(\&amp;\)</span>) being tested positive.</p>
 <p>We can do the same for the rest three nodes.</p>
 <p>Since we need the probability of being tested positive (<span class="math inline">\(P(\text{&quot;+&quot;})\)</span>) we add two probabilities together which contain “+”:</p>
-<p><span class="math display">\[P(\text{&quot;+&quot;}) = P(\text{&quot;+&quot; &amp;  HIV)} + P(\text{&quot;+&quot; &amp;  no HIV)}\]</span>
-<span class="math display">\[P(\text{&quot;+&quot;}) = 0.0004279572 + 0.0000999572 = 0.0005279144\]</span>
+<p><span class="math display">\[\scriptsize P(\text{&quot;+&quot;}) = P(\text{&quot;+&quot; &amp;  HIV)} + P(\text{&quot;+&quot; &amp;  no HIV)}\]</span>
+<span class="math display">\[\scriptsize P(\text{&quot;+&quot;}) = 0.0004279572 + 0.0000999572 \]</span>
+<span class="math display">\[= 0.0005279144\]</span>
 In other words, the probability of being tested <strong>positive</strong> is <span class="math inline">\(\approx 0.0005 \approx 0.05\%\)</span>, regardless of the HIV status.</p>
 <p>Now we can calculate the desired probability:</p>
-<p><span class="math display">\[P(\text{HIV|&quot;+&quot;}) = \frac{P(\text{&quot;+&quot;|HIV}) \times P(\text{HIV})}{P(\text{&quot;+&quot;})}\]</span>
+<p><span class="math display">\[\scriptsize P(\text{HIV|&quot;+&quot;}) = \frac{P(\text{&quot;+&quot;|HIV}) \times P(\text{HIV})}{P(\text{&quot;+&quot;})}\]</span>
 We could also rewrite this equation for the general case:</p>
-<p><span class="math display">\[P(\text{HIV|&quot;+&quot;}) = \frac{P(\text{&quot;+&quot;|HIV}) \times P(\text{HIV})}{P(\text{&quot;+&quot;|HIV}) \times P(\text{HIV}) + P(\text{&quot;+&quot;|no HIV}) \times P(\text{no HIV})}\]</span></p>
-<p><span class="math display">\[P(\text{HIV|&quot;+&quot;}) = \frac{0.9999 \times 0.000428}{0.0005279144} = 0.8106564\]</span>
+<p><span class="math display">\[\tiny P(\text{HIV|&quot;+&quot;}) = \frac{P(\text{&quot;+&quot;|HIV}) \times P(\text{HIV})}{P(\text{&quot;+&quot;|HIV}) \times P(\text{HIV}) + P(\text{&quot;+&quot;|no HIV}) \times P(\text{no HIV})}\]</span></p>
+<p><span class="math display">\[\scriptsize P(\text{HIV|&quot;+&quot;}) = \frac{0.9999 \times 0.000428}{0.0005279144} = 0.8106564\]</span>
 Note, that the probability that the subject has HIV is about <span class="math inline">\(81\%\)</span>. This is due to the relevantly small prevalence of a disease in a population. Even though the test has high sensitivity it doesn’t guarantee that you have a disease in <span class="math inline">\(99.99\%\)</span> of cases.</p>
 </div>
 </div>
@@ -289,17 +291,18 @@ p &lt;- BayesRuleProba(
 <li><span class="math inline">\(H_1\)</span>: Subject has HIV</li>
 <li><span class="math inline">\(H_2\)</span>: Subject doesn’t have HIV</li>
 </ul>
-<p>You want to check if there is enough evidence against one of the hypothesis to reject or accept it. This can be achieved using the <strong>Bayes factor</strong> <a href="#12">[12]</a>, which can be found as:</p>
-<p><span class="math display">\[BF(H_1:H_2) = \frac{\text{Posterior Odds}}{\text{Prior Odds}}\]</span>
-<span class="math display">\[\text{Prior Odds} = PrO(H_1:H_2) = \frac{P(H_1)}{P(H_2)}\]</span>
-<span class="math display">\[\text{Posterior Odds} = PO(H_1:H_2) = \frac{P(H_1|\text{data})}{P(H_2|\text{data})}\]</span>
+<p>You want to check if there is enough evidence against one of the hypothesis to reject or accept it. This can be achieved using the <strong>Bayes factor</strong><a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a>, which can be found as:</p>
+<p><span class="math display">\[\scriptsize BF(H_1:H_2) = \frac{\text{Posterior Odds}}{\text{Prior Odds}}\]</span>
+<span class="math display">\[\scriptsize \text{Prior Odds} = PrO(H_1:H_2) = \frac{P(H_1)}{P(H_2)}\]</span>
+<span class="math display">\[\scriptsize \text{Posterior Odds} = PO(H_1:H_2) = \frac{P(H_1|\text{data})}{P(H_2|\text{data})}\]</span>
 In our case <span class="math inline">\(\text{data}\)</span> is the test result.</p>
 <p>Coming back to initial state when the subject didn’t do the test we can calculate <span class="math inline">\(\text{Prior Odds}\)</span>:</p>
 <ul>
 <li><span class="math inline">\(H_1\)</span>: Subject has HIV; <span class="math inline">\(P(H_1) = 0.000428\)</span> (prevalance of HIV)</li>
-<li><span class="math inline">\(H_2\)</span>: Sudject doesn’t have HIV; <span class="math inline">\(P(H_2) = 1 - \text{Prevalance} = 1 - 0.000428 = 0.999572\)</span></li>
+<li><span class="math inline">\(H_2\)</span>: Sudject doesn’t have HIV; <span class="math inline">\(P(H_2) = 1 - \text{Prevalance}\)</span>, <span class="math inline">\(P(H_2) = 1 - 0.000428 = 0.999572\)</span></li>
 </ul>
-<p><span class="math display">\[PrO(H_1:H_2) = \frac{P(H_1)}{P(H_2)}=\frac{0.000428}{0.999572} \approx 0.00043\]</span></p>
+<p><span class="math display">\[\scriptsize PrO(H_1:H_2) = \frac{P(H_1)}{P(H_2)}\]</span>
+<span class="math display">\[\scriptsize =\frac{0.000428}{0.999572} \approx 0.00043\]</span></p>
 <pre class="r"><code>prevalance &lt;- 42.8/100000
 p_H1 &lt;- prevalance
 p_H2 &lt;- 1 - prevalance
@@ -314,7 +317,8 @@ print(paste0(&quot;Prior Odds (H1:H2): &quot;, round(prior_odds, 6)))</code></pr
 <p>Assume that subject did the test and it came out <strong>positive</strong>. We can calculate <span class="math inline">\(\text{Posterior Odds}\)</span> using the numbers from above.</p>
 <p><span class="math display">\[P(H_1|\text{&quot;+&quot;}) = P(\text{HIV|&quot;+&quot;}) = 0.8107\]</span>
 <span class="math display">\[P(H_2|\text{&quot;+&quot;}) = P(\text{no HIV|&quot;+&quot;}) = 0.1893\]</span>
-<span class="math display">\[PO(H_1:H_2) = \frac{P(H_1|\text{&quot;+&quot;})}{P(H_2|\text{&quot;+&quot;})} = \frac{0.8107}{0.1893} \approx 4.2814\]</span></p>
+<span class="math display">\[PO(H_1:H_2) = \frac{P(H_1|\text{&quot;+&quot;})}{P(H_2|\text{&quot;+&quot;})}\]</span>
+<span class="math display">\[= \frac{0.8107}{0.1893} \approx 4.2814\]</span></p>
 <pre class="r"><code>p_H1_given_pos &lt;- BayesRuleProba(
   p_D = prevalance,
   sensitivity = sensitivity,
@@ -335,7 +339,8 @@ posterior_odds = p_H1_given_pos / p_H2_given_pos
 print(paste0(&quot;Posterior Odds (H1:H2): &quot;, round(posterior_odds, 6)))
 ## [1] &quot;Posterior Odds (H1:H2): 4.281404&quot;</code></pre>
 <p>Now we can find the Bayes Factor:</p>
-<p><span class="math display">\[BF(H_1:H_2) = \frac{\text{Posterior Odds}}{\text{Prior Odds}} = \frac{4.281404}{0.000428} = 9999\]</span></p>
+<p><span class="math display">\[BF(H_1:H_2) = \frac{\text{Posterior Odds}}{\text{Prior Odds}}\]</span>
+<span class="math display">\[= \frac{4.281404}{0.000428} = 9999\]</span></p>
 <pre class="r"><code>bayes_factor &lt;- posterior_odds / prior_odds
 print(paste0(&quot;Bayes Factor (H1:H2): &quot;, round(bayes_factor, 6)))</code></pre>
 <pre><code>## [1] &quot;Bayes Factor (H1:H2): 9999&quot;</code></pre>
@@ -348,18 +353,23 @@ print(paste0(&quot;Bayes Factor (H1:H2): &quot;, round(bayes_factor, 6)))</code>
 <div id="references" class="section level2">
 <h2><a name="ref">References</a></h2>
 <ul>
-<li><a name="1">[1]:</a> <a href="https://en.wikipedia.org/wiki/Prevalence" class="uri">https://en.wikipedia.org/wiki/Prevalence</a></li>
-<li><a name="2">[2]:</a> <a href="https://phc.org.ua/en" class="uri">https://phc.org.ua/en</a></li>
-<li><a name="3">[3]:</a> <a href="https://phc.org.ua/kontrol-zakhvoryuvan/vilsnid/statistika-z-vilsnidu" class="uri">https://phc.org.ua/kontrol-zakhvoryuvan/vilsnid/statistika-z-vilsnidu</a></li>
-<li><a name="4">[4]:</a> <a href="https://en.wikipedia.org/wiki/HIV" class="uri">https://en.wikipedia.org/wiki/HIV</a></li>
-<li><a name="5">[5]:</a> <a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity" class="uri">https://en.wikipedia.org/wiki/Sensitivity_and_specificity</a></li>
-<li><a name="6">[6]:</a> <a href="https://en.wikipedia.org/wiki/Conditional_probability" class="uri">https://en.wikipedia.org/wiki/Conditional_probability</a></li>
-<li><a name="7">[7]:</a> <a href="https://apteka911.com.ua/shop/test-cito-test-tsito-test-vich-dlya-diagnostiki-vich-infektsii-dlya-samokontrolya-1-sht-p69784" class="uri">https://apteka911.com.ua/shop/test-cito-test-tsito-test-vich-dlya-diagnostiki-vich-infektsii-dlya-samokontrolya-1-sht-p69784</a></li>
-<li><a name="8">[8]:</a> <a href="https://en.wikipedia.org/wiki/Bayes%27_theorem" class="uri">https://en.wikipedia.org/wiki/Bayes%27_theorem</a></li>
-<li><a name="9">[9]:</a> <a href="https://en.wikipedia.org/wiki/Decision_tree" class="uri">https://en.wikipedia.org/wiki/Decision_tree</a></li>
-<li><a name="10">[10]:</a> <a href="https://en.wikipedia.org/wiki/Complementary_event" class="uri">https://en.wikipedia.org/wiki/Complementary_event</a></li>
-<li><a name="11">[11]:</a> <a href="https://en.wikipedia.org/wiki/Joint_probability_distribution" class="uri">https://en.wikipedia.org/wiki/Joint_probability_distribution</a></li>
-<li><a name="12">[12]:</a> <a href="https://en.wikipedia.org/wiki/Bayes_factor" class="uri">https://en.wikipedia.org/wiki/Bayes_factor</a></li>
-<li>(Not listed before, but a great example of probability trees using <code>Rgraphviz</code>): <a href="http://www.harrysurden.com/wordpress/archives/292" class="uri">http://www.harrysurden.com/wordpress/archives/292</a></li>
+<li><em>(Not listed before, but a great example of probability trees using <code>Rgraphviz</code>)</em>: <a href="http://www.harrysurden.com/wordpress/archives/292">link</a></li>
 </ul>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://en.wikipedia.org/wiki/Prevalence">Prevalence - Wikipedia</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://phc.org.ua/en">Центр громадського здоров’я України | МОЗ</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p><a href="https://phc.org.ua/kontrol-zakhvoryuvan/vilsnid/statistika-z-vilsnidu">Статистика з ВІЛ/СНІДу | Центр громадського здоров’я</a><a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p><a href="https://en.wikipedia.org/wiki/HIV">HIV - Wikipedia</a><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p><a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity">Sensitivity and specificity - Wikipedia</a><a href="#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p><a href="https://en.wikipedia.org/wiki/Conditional_probability">Conditional probability - Wikipedia</a><a href="#fnref6" class="footnote-back">↩︎</a></p></li>
+<li id="fn7"><p><a href="https://apteka911.com.ua/shop/test-cito-test-tsito-test-vich-dlya-diagnostiki-vich-infektsii-dlya-samokontrolya-1-sht-p69784">Тест CITO TEST (Цито тест)</a><a href="#fnref7" class="footnote-back">↩︎</a></p></li>
+<li id="fn8"><p><a href="https://en.wikipedia.org/wiki/Bayes%27_theorem">Bayes’ theorem - Wikipedia</a><a href="#fnref8" class="footnote-back">↩︎</a></p></li>
+<li id="fn9"><p><a href="https://en.wikipedia.org/wiki/Decision_tree">Decision tree - Wikipedia</a><a href="#fnref9" class="footnote-back">↩︎</a></p></li>
+<li id="fn10"><p><a href="https://en.wikipedia.org/wiki/Complementary_event">Complementary event - Wikipedia</a><a href="#fnref10" class="footnote-back">↩︎</a></p></li>
+<li id="fn11"><p><a href="https://en.wikipedia.org/wiki/Joint_probability_distribution">Joint probability distribution - Wikipedia</a><a href="#fnref11" class="footnote-back">↩︎</a></p></li>
+<li id="fn12"><p><a href="https://en.wikipedia.org/wiki/Bayes_factor">Bayes factor - Wikipedia</a><a href="#fnref12" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>

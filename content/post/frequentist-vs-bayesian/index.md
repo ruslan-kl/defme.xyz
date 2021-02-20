@@ -493,18 +493,18 @@ As I told at the beginning, the purpose of this overview was not to distinguish 
 
 If you would like to learn more about Frequentist and Bayesian approaches here are some resources I personally like:
 
-1. Online book: **An Introduction to Bayesian Thinking. A Companion to the Statistics with R Course**, Merlise Clyde, Mine Cetinkaya-Rundel, Colin Rundel, David Banks, Christine Chai, Lizzy Huang, 2020. https://statswithr.github.io/book/
-2. Online book:  **An Introduction to Bayesian Data Analysis for Cognitive Science**, Bruno Nicenboim, Daniel Schad, and Shravan Vasishth, 2020. https://vasishth.github.io/bayescogsci/book/
-3. Coursera specialization: **Statistics with R Specialization** by Duke University. https://www.coursera.org/specializations/statistics
-4. Coursera course: **Bayesian Statistics: From Concept to Data Analysis** by University of California, Santa Cruz. https://www.coursera.org/learn/bayesian-statistics/
-5. YouTube videos: **Bayesian statistics: a comprehensive course**. https://www.youtube.com/playlist?list=PLFDbGp5YzjqXQ4oE4w9GVWdiokWB9gEpm
-6. Keysers, C., Gazzola, V. & Wagenmakers, EJ. Using Bayes factor hypothesis testing in neuroscience to establish evidence of absence. *Nat Neurosci* 23, 788–799 (2020). https://doi.org/10.1038/s41593-020-0660-4
+1. Online book: **An Introduction to Bayesian Thinking. A Companion to the Statistics with R Course**, Merlise Clyde, Mine Cetinkaya-Rundel, Colin Rundel, David Banks, Christine Chai, Lizzy Huang, 2020: [link](https://statswithr.github.io/book/)
+2. Online book:  **An Introduction to Bayesian Data Analysis for Cognitive Science**, Bruno Nicenboim, Daniel Schad, and Shravan Vasishth, 2020: [link](https://vasishth.github.io/bayescogsci/book/)
+3. Coursera specialization: **Statistics with R Specialization** by Duke University: [link](https://www.coursera.org/specializations/statistics)
+4. Coursera course: **Bayesian Statistics: From Concept to Data Analysis** by University of California, Santa Cruz:  [link](https://www.coursera.org/learn/bayesian-statistics/)
+5. YouTube videos: **Bayesian statistics: a comprehensive course**: [link](https://www.youtube.com/playlist?list=PLFDbGp5YzjqXQ4oE4w9GVWdiokWB9gEpm)
+6. Keysers, C., Gazzola, V. & Wagenmakers, EJ. Using Bayes factor hypothesis testing in neuroscience to establish evidence of absence. *Nat Neurosci* 23, 788–799 (2020). `https://doi.org/10.1038/s41593-020-0660-4`
 
 ## References
 
-[^1]: https://www.who.int/hiv/topics/mtct/en/
-[^2]: https://en.wikipedia.org/wiki/P-value
-[^3]: https://en.wikipedia.org/wiki/Bayes_factor
-[^4]: https://en.wikipedia.org/wiki/Conjugate_prior
-[^5]: https://en.wikipedia.org/wiki/Beta-binomial_distribution
-[^6]: https://statswithr.github.io/book/
+[^1]: [WHO | Mother-to-child transmission of HIV](https://www.who.int/hiv/topics/mtct/about/en/)
+[^2]: [p-value - Wikipedia](https://en.wikipedia.org/wiki/P-value)
+[^3]: [Bayes factor - Wikipedia](https://en.wikipedia.org/wiki/Bayes_factor)
+[^4]: [Conjugate prior - Wikipedia](https://en.wikipedia.org/wiki/Conjugate_prior)
+[^5]: [Beta-binomial distribution - Wikipedia](https://en.wikipedia.org/wiki/Beta-binomial_distribution)
+[^6]: [An Introduction to Bayesian Thinking](https://statswithr.github.io/book/)

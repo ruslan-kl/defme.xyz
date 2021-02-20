@@ -27,7 +27,7 @@ tags: ["Statistics", "Probability", "R", "Bayesian Inference"]
 
 ## <a name="termoinology">Terminology</a>
 
-* **Prevalence** in epidemiology is the proportion of a particular population found to be affected by a medical condition [[1]](#1). For example, according to the Public Health Center of Ukraine [[2]](#2) HIV/AIDS review (01.04.2019) [[3]](#3) 42,8 of 100000 people in Ukraine have HIV [[4]](#4). Prevalence of HIV if that case is going to equal: 
+* **Prevalence** in epidemiology is the proportion of a particular population found to be affected by a medical condition[^1]. For example, according to the Public Health Center of Ukraine[^2] HIV/AIDS review (01.04.2019)[^3] 42,8 of 100000 people in Ukraine have HIV[^4]. Prevalence of HIV if that case is going to equal: 
 
  $$\text{Prevalence} = \frac{42.8}{100000} = 0.000428$$
 
@@ -35,7 +35,7 @@ tags: ["Statistics", "Probability", "R", "Bayesian Inference"]
 
  * **Sensitivity** (also called *the true positive rate*, *the recall*, or *probability of detection* in some fields) measures the proportion of actual positives that are correctly identified as such (e.g., the percentage of sick people who are correctly identified as having the condition).
 
- * **Specificity** (also called *the true negative rate*) measures the proportion of actual negatives that are correctly identified as such (e.g., the percentage of healthy people who are correctly identified as not having the condition). [[5]](#5)
+ * **Specificity** (also called *the true negative rate*) measures the proportion of actual negatives that are correctly identified as such (e.g., the percentage of healthy people who are correctly identified as not having the condition).[^5]
 
  For example, we tested 1000 people who have HIV and 1000 people who don't have HIV with a Test "X". The rest showed the following results:
 
@@ -57,9 +57,9 @@ tags: ["Statistics", "Probability", "R", "Bayesian Inference"]
 
  We will denote it as $P(\text{"-"|no HIV})$ - the probability of negative test result given that person doesn't have HIV.
 
- This is co-called **conditional probability** [[6]](#6). We assume that event after the $|$ sign has occurred and measure the probability of a new event (before the $|$ sign).
+ This is co-called **conditional probability**[^6]. We assume that event after the $|$ sign has occurred and measure the probability of a new event (before the $|$ sign).
 
- Usually, tests provide sensitivity and specificity scores from the manufacturer. For example, express HIV test CITO TEST claims to have $99.99\%$ sensitivity and $99.99\%$ specificity [[7]](#7).
+ Usually, tests provide sensitivity and specificity scores from the manufacturer. For example, express HIV test CITO TEST claims to have $99.99\%$ sensitivity and $99.99\%$ specificity[^7].
  
 
 ## <a name="measure">Measuring the probability of having a disease</a>
@@ -76,7 +76,7 @@ Now, the subject has taken the express CITO test and it resulted in **positive**
 
 ### <a name="bayes-update">Updating probability using Bayes's Rule</a>
 
-> In probability theory and statistics, **Bayes’s theorem** (alternatively Bayes’s law or Bayes’s rule) describes the probability of an event, based on prior knowledge of conditions that might be related to the event. [[8]](#8)
+> In probability theory and statistics, **Bayes’s theorem** (alternatively Bayes’s law or Bayes’s rule) describes the probability of an event, based on prior knowledge of conditions that might be related to the event.[^8]
 
 Imagine, we have to dependent events $A$ and $B$. We want to measure the probability that event $B$ will occur **given** that event $A$ has occurred. According to the Bayes's Rule:
 
@@ -90,8 +90,8 @@ where:
 
 In our HIV test example we want to know what is the probability that a person actually has HIV, given that he was tested positive. Using Bayes's rule:
 
-$$P(\text{HIV|"+"}) = \frac{P(\text{"+"|HIV}) \times P(\text{HIV})}{P(\text{"+"})}$$
-We have the values of the numerator, however, we don't have the value in the denumerator (probability of being tested positive). We can easily calculate it using **probability trees** [[9]](#9).
+$$\scriptsize P(\text{HIV|"+"}) = \frac{P(\text{"+"|HIV}) \times P(\text{HIV})}{P(\text{"+"})}$$
+We have the values of the numerator, however, we don't have the value in the denumerator (probability of being tested positive). We can easily calculate it using **probability trees**[^9].
 
 ### <a name="prob-trees">Probability trees</a>
 
@@ -106,18 +106,19 @@ Let's look at the `Disease` node. At this point we say that person **has** HIV (
 1) a person will be tested **positive** ($P(\text{"+"|HIV})$, the sensitivity of a test)
 2) a person will be tested **negative** ($P(\text{"-"|HIV})$, unknown).
 
-We don't have $P(\text{"-"|HIV})$, however, we can easily calculate it since these two events are **complementary** [[10]](#10). Hence:
+We don't have $P(\text{"-"|HIV})$, however, we can easily calculate it since these two events are **complementary**[^10]. Hence:
 
 $$P(\text{"-"|HIV}) = 1 - P(\text{"+"|HIV})$$
 $$P(\text{"-"|HIV}) = 1 - 0.9999 = 0.0001$$
 
 We can do the following for the `no Disease` node.
 
-The last step would be calculating the **joint probabilities** [[11]](#11).
+The last step would be calculating the **joint probabilities**[^11].
 
 For the `"+" given Disease` node we multiply $P(\text{HIV}) \times P(\text{"+"|HIV})$ and get:
 
-$$P(\text{"+" &  HIV)} = P(\text{HIV}) \times P(\text{"+"|HIV}) = 0.000428 \times 0.0.9999 = 0.0004279572$$
+$$\scriptsize P(\text{"+" &  HIV)} = P(\text{HIV}) \times P(\text{"+"|HIV})$$
+$$\scriptsize = 0.000428 \times 0.0.9999 = 0.0004279572$$
 
 This is the probability of having HIV **and** ($\cap$, $\&$) being tested positive. 
 
@@ -125,18 +126,19 @@ We can do the same for the rest three nodes.
 
 Since we need the probability of being tested positive ($P(\text{"+"})$) we add two probabilities together which contain "+":
 
-$$P(\text{"+"}) = P(\text{"+" &  HIV)} + P(\text{"+" &  no HIV)}$$
-$$P(\text{"+"}) = 0.0004279572 + 0.0000999572 = 0.0005279144$$
+$$\scriptsize P(\text{"+"}) = P(\text{"+" &  HIV)} + P(\text{"+" &  no HIV)}$$
+$$\scriptsize P(\text{"+"}) = 0.0004279572 + 0.0000999572 $$
+$$= 0.0005279144$$
 In other words, the probability of being tested **positive** is $\approx 0.0005 \approx 0.05\%$, regardless of the HIV status.
 
 Now we can calculate the desired probability:
 
-$$P(\text{HIV|"+"}) = \frac{P(\text{"+"|HIV}) \times P(\text{HIV})}{P(\text{"+"})}$$
+$$\scriptsize P(\text{HIV|"+"}) = \frac{P(\text{"+"|HIV}) \times P(\text{HIV})}{P(\text{"+"})}$$
 We could also rewrite this equation for the general case:
 
-$$P(\text{HIV|"+"}) = \frac{P(\text{"+"|HIV}) \times P(\text{HIV})}{P(\text{"+"|HIV}) \times P(\text{HIV}) + P(\text{"+"|no HIV}) \times P(\text{no HIV})}$$
+$$\tiny P(\text{HIV|"+"}) = \frac{P(\text{"+"|HIV}) \times P(\text{HIV})}{P(\text{"+"|HIV}) \times P(\text{HIV}) + P(\text{"+"|no HIV}) \times P(\text{no HIV})}$$
 
-$$P(\text{HIV|"+"}) = \frac{0.9999 \times 0.000428}{0.0005279144} = 0.8106564$$
+$$\scriptsize P(\text{HIV|"+"}) = \frac{0.9999 \times 0.000428}{0.0005279144} = 0.8106564$$
 Note, that the probability that the subject has HIV is about $81\%$. This is due to the relevantly small prevalence of a disease in a population. Even though the test has high sensitivity it doesn't guarantee that you have a disease in $99.99\%$ of cases.
 
 ## <a name="r">Using R</a>
@@ -286,19 +288,20 @@ Imagine you have two hypotheses:
 * $H_1$: Subject has HIV
 * $H_2$: Subject doesn't have HIV
 
-You want to check if there is enough evidence against one of the hypothesis to reject or accept it. This can be achieved using the **Bayes factor** [[12]](#12), which can be found as:
+You want to check if there is enough evidence against one of the hypothesis to reject or accept it. This can be achieved using the **Bayes factor**[^12], which can be found as:
 
-$$BF(H_1:H_2) = \frac{\text{Posterior Odds}}{\text{Prior Odds}}$$
-$$\text{Prior Odds} = PrO(H_1:H_2) = \frac{P(H_1)}{P(H_2)}$$
-$$\text{Posterior Odds} = PO(H_1:H_2) = \frac{P(H_1|\text{data})}{P(H_2|\text{data})}$$
+$$\scriptsize BF(H_1:H_2) = \frac{\text{Posterior Odds}}{\text{Prior Odds}}$$
+$$\scriptsize \text{Prior Odds} = PrO(H_1:H_2) = \frac{P(H_1)}{P(H_2)}$$
+$$\scriptsize \text{Posterior Odds} = PO(H_1:H_2) = \frac{P(H_1|\text{data})}{P(H_2|\text{data})}$$
 In our case $\text{data}$ is the test result.
 
 Coming back to initial state when the subject didn't do the test we can calculate $\text{Prior Odds}$:
 
 * $H_1$: Subject has HIV; $P(H_1) = 0.000428$ (prevalance of HIV)
-* $H_2$: Sudject doesn't have HIV; $P(H_2) = 1 - \text{Prevalance} = 1 - 0.000428 = 0.999572$
+* $H_2$: Sudject doesn't have HIV; $P(H_2) = 1 - \text{Prevalance}$, $P(H_2) = 1 - 0.000428 = 0.999572$
 
-$$PrO(H_1:H_2) = \frac{P(H_1)}{P(H_2)}=\frac{0.000428}{0.999572} \approx 0.00043$$
+$$\scriptsize PrO(H_1:H_2) = \frac{P(H_1)}{P(H_2)}$$
+$$\scriptsize =\frac{0.000428}{0.999572} \approx 0.00043$$
 
 ```{r}
 prevalance <- 42.8/100000
@@ -316,7 +319,8 @@ Assume that subject did the test and it came out **positive**. We can calculate 
 
 $$P(H_1|\text{"+"}) = P(\text{HIV|"+"}) = 0.8107$$
 $$P(H_2|\text{"+"}) = P(\text{no HIV|"+"}) = 0.1893$$
-$$PO(H_1:H_2) = \frac{P(H_1|\text{"+"})}{P(H_2|\text{"+"})} = \frac{0.8107}{0.1893} \approx 4.2814$$
+$$PO(H_1:H_2) = \frac{P(H_1|\text{"+"})}{P(H_2|\text{"+"})}$$
+$$= \frac{0.8107}{0.1893} \approx 4.2814$$
 ```{r collapse=TRUE}
 p_H1_given_pos <- BayesRuleProba(
   p_D = prevalance,
@@ -337,7 +341,8 @@ print(paste0("Posterior Odds (H1:H2): ", round(posterior_odds, 6)))
 ```
 Now we can find the Bayes Factor:
 
-$$BF(H_1:H_2) = \frac{\text{Posterior Odds}}{\text{Prior Odds}} = \frac{4.281404}{0.000428} = 9999$$
+$$BF(H_1:H_2) = \frac{\text{Posterior Odds}}{\text{Prior Odds}}$$
+$$= \frac{4.281404}{0.000428} = 9999$$
 ```{r}
 bayes_factor <- posterior_odds / prior_odds
 print(paste0("Bayes Factor (H1:H2): ", round(bayes_factor, 6)))
@@ -352,16 +357,17 @@ $BF(H_1:H_2) > 100$, therefore we have decisive evidence for $H_1$ (subject has 
 
 ## <a name="ref">References</a>
 
-* <a name="1">[1]:</a> https://en.wikipedia.org/wiki/Prevalence
-* <a name="2">[2]:</a> https://phc.org.ua/en
-* <a name="3">[3]:</a> https://phc.org.ua/kontrol-zakhvoryuvan/vilsnid/statistika-z-vilsnidu
-* <a name="4">[4]:</a> https://en.wikipedia.org/wiki/HIV
-* <a name="5">[5]:</a> https://en.wikipedia.org/wiki/Sensitivity_and_specificity
-* <a name="6">[6]:</a> https://en.wikipedia.org/wiki/Conditional_probability
-* <a name="7">[7]:</a> https://apteka911.com.ua/shop/test-cito-test-tsito-test-vich-dlya-diagnostiki-vich-infektsii-dlya-samokontrolya-1-sht-p69784
-* <a name="8">[8]:</a> https://en.wikipedia.org/wiki/Bayes%27_theorem
-* <a name="9">[9]:</a> https://en.wikipedia.org/wiki/Decision_tree
-* <a name="10">[10]:</a> https://en.wikipedia.org/wiki/Complementary_event
-* <a name="11">[11]:</a> https://en.wikipedia.org/wiki/Joint_probability_distribution
-* <a name="12">[12]:</a> https://en.wikipedia.org/wiki/Bayes_factor
-* (Not listed before, but a great example of probability trees using `Rgraphviz`): http://www.harrysurden.com/wordpress/archives/292
+* *(Not listed before, but a great example of probability trees using `Rgraphviz`)*: [link](http://www.harrysurden.com/wordpress/archives/292)
+
+[^1]: [Prevalence - Wikipedia](https://en.wikipedia.org/wiki/Prevalence)
+[^2]: [Центр громадського здоров’я України | МОЗ](https://phc.org.ua/en)
+[^3]: [Статистика з ВІЛ/СНІДу | Центр громадського здоров’я](https://phc.org.ua/kontrol-zakhvoryuvan/vilsnid/statistika-z-vilsnidu)
+[^4]: [HIV - Wikipedia](https://en.wikipedia.org/wiki/HIV)
+[^5]: [Sensitivity and specificity - Wikipedia](https://en.wikipedia.org/wiki/Sensitivity_and_specificity)
+[^6]: [Conditional probability - Wikipedia](https://en.wikipedia.org/wiki/Conditional_probability)
+[^7]: [Тест CITO TEST (Цито тест)](https://apteka911.com.ua/shop/test-cito-test-tsito-test-vich-dlya-diagnostiki-vich-infektsii-dlya-samokontrolya-1-sht-p69784)
+[^8]: [Bayes' theorem - Wikipedia](https://en.wikipedia.org/wiki/Bayes%27_theorem)
+[^9]: [Decision tree - Wikipedia](https://en.wikipedia.org/wiki/Decision_tree)
+[^10]: [Complementary event - Wikipedia](https://en.wikipedia.org/wiki/Complementary_event)
+[^11]: [Joint probability distribution - Wikipedia](https://en.wikipedia.org/wiki/Joint_probability_distribution)
+[^12]: [Bayes factor - Wikipedia](https://en.wikipedia.org/wiki/Bayes_factor)

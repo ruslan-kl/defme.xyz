@@ -142,11 +142,11 @@ ggplot() +
 <li>Blue area is the <strong>power</strong> of a test. It’s the probability of rejecting the null hypothesis when it is false.</li>
 </ul>
 <p>In such case we could find the power by finding the area under the curve of the observed data:</p>
-<p><span class="math display">\[\text{Power} = P \left( X \geq Z_{crit} \mid \mu = 4.5, \sigma = \frac{1}{\sqrt{15}} \right)\]</span></p>
+<p><span class="math display">\[\scriptsize \text{Power} = P \left( X \geq Z_{crit} \mid \mu = 4.5, \sigma = \frac{1}{\sqrt{15}} \right)\]</span></p>
 <p>Critical value of <span class="math inline">\(Z\)</span> can be found as:</p>
-<p><span class="math display">\[Z_{crit} = Q_{0.95} \times \frac{\sigma}{\sqrt{n}}  + \mu_0\]</span></p>
+<p><span class="math display">\[\scriptsize Z_{crit} = Q_{0.95} \times \frac{\sigma}{\sqrt{n}}  + \mu_0\]</span></p>
 <p>Where <span class="math inline">\(Q_{0.95}\)</span> is the 0.85 quantile of the standard normal distribution.</p>
-<p><span class="math display">\[Z_{crit} = 1.645 \times \frac{1}{\sqrt{15}} + 4 = 4.425\]</span></p>
+<p><span class="math display">\[\scriptsize Z_{crit} = 1.645 \times \frac{1}{\sqrt{15}} + 4 = 4.425\]</span></p>
 <p>Now, the power of the test can be find using R (instead of calculating the integral):</p>
 <pre class="r"><code>Z_crit &lt;- qnorm(0.95) * se + mu_null
 power &lt;- pnorm(Z_crit, mean = mu_alt, sd = se, lower.tail = FALSE)
@@ -230,9 +230,9 @@ power_arr &lt;- results$power</code></pre>
 <div id="effect-size" class="section level2">
 <h2>Effect Size</h2>
 <p>Usually for calculating the sample size and power of the two sample test, one uses <strong>effect size</strong> instead of the absolute difference between null and alternative values. The most frequently used type of an effect size is <strong>Cohen’s <span class="math inline">\(d\)</span></strong>, which can be defined asthe difference between two means divided by a standard deviation for the data:</p>
-<p><span class="math display">\[d = \frac{\bar{x_1} - \bar{x_2}}{s_{pooled}} = \frac{\mu_1 - \mu_2}{s_{pooled}}\]</span></p>
+<p><span class="math display">\[\scriptsize d = \frac{\bar{x_1} - \bar{x_2}}{s_{pooled}} = \frac{\mu_1 - \mu_2}{s_{pooled}}\]</span></p>
 <p><span class="math inline">\(s_{pooled}\)</span> - pooled standard deviation.</p>
-<p><span class="math display">\[s_{pooled} = \sqrt{\frac{(n_1 -1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 -2}}\]</span></p>
+<p><span class="math display">\[\scriptsize s_{pooled} = \sqrt{\frac{(n_1 -1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 -2}}\]</span></p>
 <p>The magnitude of Cohen’s <span class="math inline">\(d\)</span> are usually referred as:</p>
 <table>
 <thead>
@@ -481,12 +481,12 @@ As we can see, both examples lead to a small p-value <span class="math inline">\
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p><a href="https://defme.xyz/post/null-hypothesis-significance-testing-part-1/" class="uri">https://defme.xyz/post/null-hypothesis-significance-testing-part-1/</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p><a href="https://defme.xyz/post/null-hypothesis-significance-testing-part-2/" class="uri">https://defme.xyz/post/null-hypothesis-significance-testing-part-2/</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
-<li id="fn3"><p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3444174/" class="uri">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3444174/</a><a href="#fnref3" class="footnote-back">↩︎</a></p></li>
-<li id="fn4"><p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3444174/" class="uri">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3444174/</a><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
-<li id="fn5"><p><a href="https://rpsychologist.com/d3/cohend/" class="uri">https://rpsychologist.com/d3/cohend/</a><a href="#fnref5" class="footnote-back">↩︎</a></p></li>
-<li id="fn6"><p><a href="https://rpsychologist.com/d3/nhst/" class="uri">https://rpsychologist.com/d3/nhst/</a><a href="#fnref6" class="footnote-back">↩︎</a></p></li>
-<li id="fn7"><p><a href="https://cran.r-project.org/web/packages/pwr/vignettes/pwr-vignette.html" class="uri">https://cran.r-project.org/web/packages/pwr/vignettes/pwr-vignette.html</a><a href="#fnref7" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p><a href="https://defme.xyz/post/null-hypothesis-significance-testing-part-1/">Null Hypothesis Significance Testing, part 1 | RK</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://defme.xyz/post/null-hypothesis-significance-testing-part-2/">Null Hypothesis Significance Testing, part 2 | RK</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>Sullivan, G. M., &amp; Feinn, R. (2012). Using Effect Size-or Why the P Value Is Not Enough. <em>Journal of graduate medical education</em>, 4(3), 279–282. <code>https://doi.org/10.4300/JGME-D-12-00156.1</code><a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>Sullivan, G. M., &amp; Feinn, R. (2012). Using Effect Size-or Why the P Value Is Not Enough. <em>Journal of graduate medical education</em>, 4(3), 279–282. <code>https://doi.org/10.4300/JGME-D-12-00156.1</code><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p><a href="https://rpsychologist.com/d3/cohend/">Interpreting Cohen’s d | R Psychologist</a><a href="#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p><a href="https://rpsychologist.com/d3/nhst/">Understanding Statistical Power and Significance Testing — an Interactive Visualization</a><a href="#fnref6" class="footnote-back">↩︎</a></p></li>
+<li id="fn7"><p><a href="https://cran.r-project.org/web/packages/pwr/vignettes/pwr-vignette.html">pwr package</a><a href="#fnref7" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>

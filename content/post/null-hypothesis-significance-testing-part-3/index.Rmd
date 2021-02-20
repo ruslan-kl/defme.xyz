@@ -184,15 +184,15 @@ Let's look deeper at this plot:
 
 In such case we could find the power by finding the area under the curve of the observed data:
 
-$$\text{Power} = P \left( X \geq Z_{crit} \mid \mu = 4.5, \sigma = \frac{1}{\sqrt{15}} \right)$$
+$$\scriptsize \text{Power} = P \left( X \geq Z_{crit} \mid \mu = 4.5, \sigma = \frac{1}{\sqrt{15}} \right)$$
 
 Critical value of $Z$ can be found as:
 
-$$Z_{crit} = Q_{0.95} \times \frac{\sigma}{\sqrt{n}}  + \mu_0$$
+$$\scriptsize Z_{crit} = Q_{0.95} \times \frac{\sigma}{\sqrt{n}}  + \mu_0$$
 
 Where $Q_{0.95}$ is the 0.85 quantile of the standard normal distribution. 
 
-$$Z_{crit} = 1.645 \times \frac{1}{\sqrt{15}} + 4 = 4.425$$
+$$\scriptsize Z_{crit} = 1.645 \times \frac{1}{\sqrt{15}} + 4 = 4.425$$
 
 Now, the power of the test can be find using R (instead of calculating the integral):
 
@@ -327,11 +327,11 @@ As we can see, the power of a test increases as the sample size increases.
 
 Usually for calculating the sample size and power of the two sample test, one uses **effect size** instead of the absolute difference between null and alternative values. The most frequently used type of an effect size is **Cohen's $d$**, which can be defined asthe difference between two means divided by a standard deviation for the data:
 
-$$d = \frac{\bar{x_1} - \bar{x_2}}{s_{pooled}} = \frac{\mu_1 - \mu_2}{s_{pooled}}$$
+$$\scriptsize d = \frac{\bar{x_1} - \bar{x_2}}{s_{pooled}} = \frac{\mu_1 - \mu_2}{s_{pooled}}$$
 
 $s_{pooled}$ - pooled standard deviation.
 
-$$s_{pooled} = \sqrt{\frac{(n_1 -1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 -2}}$$
+$$\scriptsize s_{pooled} = \sqrt{\frac{(n_1 -1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 -2}}$$
 
 The magnitude of Cohen's $d$ are usually referred as:
 
@@ -525,9 +525,9 @@ More examples of `pwr` package can be found at CRAN[^6].
 
 ## References
 
-[^1]: https://defme.xyz/post/null-hypothesis-significance-testing-part-1/
-[^2]: https://defme.xyz/post/null-hypothesis-significance-testing-part-2/
-[^3]: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3444174/
-[^4]: https://rpsychologist.com/d3/cohend/
-[^5]: https://rpsychologist.com/d3/nhst/
-[^6]: https://cran.r-project.org/web/packages/pwr/vignettes/pwr-vignette.html
+[^1]: [Null Hypothesis Significance Testing, part 1 | RK](https://defme.xyz/post/null-hypothesis-significance-testing-part-1/)
+[^2]: [Null Hypothesis Significance Testing, part 2 | RK](https://defme.xyz/post/null-hypothesis-significance-testing-part-2/)
+[^3]: Sullivan, G. M., & Feinn, R. (2012). Using Effect Size-or Why the P Value Is Not Enough. *Journal of graduate medical education*, 4(3), 279–282. `https://doi.org/10.4300/JGME-D-12-00156.1`
+[^4]: [Interpreting Cohen's d | R Psychologist](https://rpsychologist.com/d3/cohend/)
+[^5]: [Understanding Statistical Power and Significance Testing — an Interactive Visualization](https://rpsychologist.com/d3/nhst/)
+[^6]: [pwr package](https://cran.r-project.org/web/packages/pwr/vignettes/pwr-vignette.html)

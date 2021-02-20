@@ -228,7 +228,9 @@ Another type of test would be **two-tailed** significance test. In this way we w
 
 As you can see, under the two-tailed testing we are not concerned about the direction of alternative hypothesis.
 
-In our example outcome of 0 Heads (5 Tails) out of 5 flips has the same probability as observed probability of 5 Heads out of 5 flips. Hence, $\text{p-value} = P(0) + P(5) = 0.0313 + 0.0313 = 0.0616$.
+In our example outcome of 0 Heads (5 Tails) out of 5 flips has the same probability as observed probability of 5 Heads out of 5 flips. Hence, 
+
+$$\scriptsize \text{p-value} = P(0) + P(5) = 0.0313 + 0.0313 = 0.0616$$
 
 ```{r echo=FALSE, fig.align='center', fig.height=3, fig.width=5}
 fill[1] <- "darkblue"
@@ -249,7 +251,7 @@ Since now $\text{p-value} > \alpha$ we would fail to reject the null hypothesis 
 
 In this section we are going to look at a significance testing for the population mean. The general formula looks as following:
 
-$$\text{Statistic} = \frac{\text{Point Estimate} - \text{Null Value}}{\text{SE}}$$
+$$\scriptsize \text{Statistic} = \frac{\text{Point Estimate} - \text{Null Value}}{\text{SE}}$$
 
 * Point Estimate - the data we have observed (one sample mean, a difference in two means, etc)
 * Null Value - the value under the null hypothesis
@@ -573,7 +575,7 @@ islander_data %>%
 
 Test statistic can be calculated in the same way:
 
-$$t_{\text{calc}} = \frac{\text{Point Estimate} - \text{Null Estimate}}{SE}$$
+$$\scriptsize t_{\text{calc}} = \frac{\text{Point Estimate} - \text{Null Estimate}}{SE}$$
 
 * Point estimate is the difference of two sample means: $\bar{x}_{\text{Alprozam}} - \bar{x}_{\text{Placebo}}$;
 * Null estimate is the value under the null hypothesis: $\mu_{\text{Alprozam}} - \mu_{\text{Placebo}} = 0$
@@ -857,7 +859,7 @@ ggplot() +
 ```
 
 {{% alert note %}}
-p-value is 0.8, which is greater than $\alpha$, that's why failed to reject the null hypothesis. In other words, there is not enough evidence to claim that there is a difference in memory test results before and after 0.75mg of Triazolam.
+p-value is 0.8, which is greater than alpha, that's why failed to reject the null hypothesis. In other words, there is not enough evidence to claim that there is a difference in memory test results before and after 0.75mg of Triazolam.
 {{% /alert %}}
 
 ## Comparing More than Two Means (ANOVA)
@@ -1115,8 +1117,8 @@ I hope that you have a better understanding of algorithms for inference for a po
 
 ## References
 
-[^1]: https://www.kaggle.com/steveahn/memory-test-on-drugged-islanders-data
-[^2]: https://en.wikipedia.org/wiki/Student%27s_t-distribution
-[^3]: https://en.wikipedia.org/wiki/Student%27s_t-test
-[^4]: http://www.real-statistics.com/students-t-distribution/two-sample-t-test-uequal-variances/
-[^5]: https://en.wikipedia.org/wiki/F-distribution
+[^1]: [Memory Test on Drugged Islanders Data | Kaggle](https://www.kaggle.com/steveahn/memory-test-on-drugged-islanders-data)
+[^2]: [Student's t-distribution - Wikipedia](https://en.wikipedia.org/wiki/Student%27s_t-distribution)
+[^3]: [Student's t-test - Wikipedia](https://en.wikipedia.org/wiki/Student%27s_t-test)
+[^4]: [Two Sample t Test: unequal variances | Real Statistics Using Excel](http://www.real-statistics.com/students-t-distribution/two-sample-t-test-uequal-variances/)
+[^5]: [F-distribution - Wikipedia](https://en.wikipedia.org/wiki/F-distribution)

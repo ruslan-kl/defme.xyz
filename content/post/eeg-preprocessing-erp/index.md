@@ -1,8 +1,8 @@
 ---
 title: "EEG Data Analysis"
-subtitle: "Preprocessing & Event-related potential (ERP) of EEG data taken from Cavanagh et al (2019) experiment."
+subtitle: "Preprocessing & Event-related potential (ERP) of EEG data taken from Cavanagh et al. (2019) experiment."
 date: "2021-02-19"
-summary: Preprocessing & Event-related potential (ERP) of EEG data taken from Cavanagh et al (2019) experiment.
+summary: Preprocessing & Event-related potential (ERP) of EEG data taken from Cavanagh et al. (2019) experiment.
 image:
   caption: ''
   focal_point: ""
@@ -29,7 +29,7 @@ tags: ["Neuroscience", "Python", "EEG"]
 
 ## Background
 
-Two years ago I have been working on EEG data (found at Kaggle[^1]) from an object recognition task experiment that was performed to investigate the genetic predisposition to alcoholism[^2]. My analysis was a pure mess since I didn't know a lot about EEG data processing/analysis. Time has passed, I still don't know much, but after finishing Mike X Cohen's course "Complete neural signal processing and analysis: Zero to hero" on Udemy[^3] (which I cannot recommend highly enough), I decided to get more practice with the help of publicly available data from Cavanagh et al (2019)[^4]. I used `MNE` Python package[^5] for this and tried to do it in a bit "tutorial" style for two reasons. First, it will be easier for me to remember after some time what the hell was I doing here. Second, I hope that other people who also start their journey in the EEG analysis can benefit from this.
+Two years ago I have been working on EEG data (found at Kaggle[^1]) from an object recognition task experiment that was performed to investigate the genetic predisposition to alcoholism[^2]. My analysis was a pure mess since I didn't know a lot about EEG data processing/analysis. Time has passed, I still don't know much, but after finishing Mike X Cohen's course "Complete neural signal processing and analysis: Zero to hero" on Udemy[^3] (which I cannot recommend highly enough), I decided to get more practice with the help of publicly available data from Cavanagh et al. (2019)[^4]. I used `MNE` Python package[^5] for this and tried to do it in a bit "tutorial" style for two reasons. First, it will be easier for me to remember after some time what the hell was I doing here. Second, I hope that other people who also start their journey in the EEG analysis can benefit from this.
 
 **Disclaimer**
 
@@ -566,11 +566,11 @@ In the next part I am going to perform a time-frequency analysis for both subjec
 
 ## References
 
-[^1]: https://archive.ics.uci.edu/ml/datasets/eeg+database
-[^2]: https://github.com/ruslan-kl/EEG-data-analysis
-[^3]: https://www.udemy.com/course/solved-challenges-ants/
+[^1]: [UCI Machine Learning Repository: EEG Database Data Set	](https://archive.ics.uci.edu/ml/datasets/eeg+database)
+[^2]: [GitHub - ruslan-kl/EEG-data-analysis: analysis of EEG data of alcoholic and control groups](https://github.com/ruslan-kl/EEG-data-analysis)
+[^3]: [Complete neural signal processing and analysis: Zero to hero | Udemy](https://www.udemy.com/course/solved-challenges-ants/)
 [^4]: Cavanagh, J. F., Bismark, A. W., Frank, M. J., & Allen, J. J. B. (2019). Multiple Dissociations Between Comorbid Depression and Anxiety on Reward and Punishment Processing: Evidence From Computationally Informed EEG. *Computational Psychiatry*, 3, 1–17. DOI: http://doi.org/10.1162/CPSY_a_00024
-[^5]: https://mne.tools/stable/index.html
-[^6]: http://computationalpsychiatry.org/
-[^7]: https://www.sciencedirect.com/topics/neuroscience/independent-component-analysis
-[^8]: https://www.sciencedirect.com/topics/neuroscience/event-related-potential
+[^5]: [MNE — MNE 0.22.0 documentation](https://mne.tools/stable/index.html)
+[^6]: [cpsy](http://computationalpsychiatry.org/)
+[^7]: [Independent Component Analysis - an overview | ScienceDirect Topics ScienceDirect](https://www.sciencedirect.com/topics/neuroscience/independent-component-analysis)
+[^8]: [Event-Related Potential - an overview | ScienceDirect Topics ScienceDirect](https://www.sciencedirect.com/topics/neuroscience/event-related-potential)
