@@ -100,10 +100,7 @@ $$y = \beta_0 + \beta_1 x \tag{1}$$
 
 The equation $(1)$ can be also referred as a **population regression line**. In other words, we assume that salary of **all** engineers can be perfectly predicted by this equation.
 
-You can check how different values of intercept and slope affect the line in this interactive demo:
-
-
-<iframe src="https://phet.colorado.edu/sims/html/graphing-slope-intercept/latest/graphing-slope-intercept_en.html" width="700" height="500" scrolling="no" allowfullscreen></iframe>
+You can check how different values of intercept and slope affect the line in this [interactive demo](https://phet.colorado.edu/sims/html/graphing-slope-intercept/latest/graphing-slope-intercept_en.html)
 
 
 ## General Form
