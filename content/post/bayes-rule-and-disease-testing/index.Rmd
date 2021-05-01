@@ -1,7 +1,7 @@
 ---
-title: "Bayes's Rule and Disease Testing"
+title: "Bayes Rule and Disease Testing"
 date: "2020-03-30"
-summary: Learn how you can update your prior beliefs using Bayes's rule with the disease testing as an example.
+summary: Learn how you can update your prior beliefs using Bayes rule with the disease testing as an example.
 image:
   caption: 'Image credit: <a style="background-color:black;color:white;text-decoration:none;padding:4px 6px;font-family:-apple-system, BlinkMacSystemFont, &quot;San Francisco&quot;, &quot;Helvetica Neue&quot;, Helvetica, Ubuntu, Roboto, Noto, &quot;Segoe UI&quot;, Arial, sans-serif;font-size:12px;font-weight:bold;line-height:1.2;display:inline-block;border-radius:3px" href="https://unsplash.com/@_louisreed?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge" target="_blank" rel="noopener noreferrer" title="Download free do whatever you want high-resolution photos from Louis Reed"><span style="display:inline-block;padding:2px 3px"><svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:auto;position:relative;vertical-align:middle;top:-2px;fill:white" viewBox="0 0 32 32"><title>unsplash-logo</title><path d="M10 9V0h12v9H10zm12 5h10v18H0V14h10v9h12v-9z"></path></svg></span><span style="display:inline-block;padding:2px 3px">Louis Reed</span></a>'
   focal_point: ""
@@ -18,7 +18,7 @@ tags: ["Statistics", "Probability", "R", "Bayesian Inference"]
 - [Terminology](#terminology) 
 - [Measuring the probability of having a disease](#measure) 
   - [Initial State](#init0) 
-  - [Updating Probability Using Bayes's Rule](#bayes-update)
+  - [Updating Probability Using Bayes Rule](#bayes-update)
   - [Probability Trees](#prob-trees)
 - [Using R](#r)
 - [One More Example](#another-example)
@@ -74,11 +74,11 @@ $$P(\text{HIV}) = 0.000428$$
 
 Now, the subject has taken the express CITO test and it resulted in **positive**. As we have seen before, the sensitivity of that test is high ($99.99\%$), however, does it really mean that this subject has HIV?
 
-### <a name="bayes-update">Updating probability using Bayes's Rule</a>
+### <a name="bayes-update">Updating probability using Bayes Rule</a>
 
 > In probability theory and statistics, **Bayes’s theorem** (alternatively Bayes’s law or Bayes’s rule) describes the probability of an event, based on prior knowledge of conditions that might be related to the event.[^8]
 
-Imagine, we have to dependent events $A$ and $B$. We want to measure the probability that event $B$ will occur **given** that event $A$ has occurred. According to the Bayes's Rule:
+Imagine, we have to dependent events $A$ and $B$. We want to measure the probability that event $B$ will occur **given** that event $A$ has occurred. According to the Bayes Rule:
 
 $$P(\text{B|A}) = \frac{P(\text{A|B}) \times P(\text{B})}{P(\text{A})}$$
 
@@ -88,7 +88,7 @@ where:
 - $P(\text{B})$, $P(\text{A})$ - prior probabilities of events $B$ and $A$;
 - $P(\text{A|B})$ - the likelihood 
 
-In our HIV test example we want to know what is the probability that a person actually has HIV, given that he was tested positive. Using Bayes's rule:
+In our HIV test example we want to know what is the probability that a person actually has HIV, given that he was tested positive. Using Bayes rule:
 
 $$\scriptsize P(\text{HIV|"+"}) = \frac{P(\text{"+"|HIV}) \times P(\text{HIV})}{P(\text{"+"})}$$
 We have the values of the numerator, however, we don't have the value in the denumerator (probability of being tested positive). We can easily calculate it using **probability trees**[^9].
@@ -218,7 +218,7 @@ p <- BayesRuleProba(
   statistic = statistic)
 ```
 
-After the second test the probability that person has HIV is around $99.9\%$. So after getting more data (test) we update the probability with Bayes's Rule and this lead to better inference.
+After the second test the probability that person has HIV is around $99.9\%$. So after getting more data (test) we update the probability with Bayes Rule and this lead to better inference.
 
 ## <a name="another-example">One more example</a>
 
