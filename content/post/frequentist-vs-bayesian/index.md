@@ -240,9 +240,9 @@ We were unable to reject the hypothesis that MTCT ratio is 50%, but at the same 
 
 ### Confidence Intervals
 
-We could also build a Frequentist confidence interval to show our uncertainty about the ratio of MTCT. For the large amount of $n$ in binomial trials, we can say that random variable $X$ follows a normal distribution with the mean $\hat{p}$ and standard error $\frac{\hat{p}(1-\hat{p})}{n}$.
+We could also build a Frequentist confidence interval to show our uncertainty about the ratio of MTCT. For the large amount of $n$ in binomial trials, we can say that random variable $X$ follows a normal distribution with the mean $\hat{p}$ and standard error $\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$.
 
-$$X \sim \mathcal{N} \big( \mu = \hat{p}, SE = \frac{\hat{p}(1-\hat{p})}{n} \big)$$
+$$X \sim \mathcal{N} \big( \mu = \hat{p}, SE = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}} \big)$$
 
 Once we have a normal distribution we can easily calculate 95% CI:
 
@@ -250,7 +250,7 @@ $$(1-\alpha) \text{% CI}: \mu \pm Z_{1-\alpha/2} \cdot SE$$
 
 * $\hat{p} = \frac{k}{n}=0.42$
 * $Z_{1-0.05/2} = 1.96$
-* $SE = \frac{0.42(1-0.42)}{50} \approx 0.07$
+* $SE = \sqrt{\frac{0.42(1-0.42)}{50}} \approx 0.07$
 
 $$95\text{% CI}: (0.28, 0.56)$$
 
@@ -484,6 +484,7 @@ As I told at the beginning, the purpose of this overview was not to distinguish 
 
 | Frequentist Approach | Bayesian Approach |
 |:--|:--|
+| Establishes the probability of a data given model | Establishing the probability of a model given data |
 | Doesn't rely on prior information about the unknown | Relies on prior information about the unknown (but prior beliefs become less significant as the sample size increases) |
 | Sensitive to the null hypothesis | Is not sensitive to hypotheses |
 | Estimates the degree of uncertainty using confidence intervals | Estimates the degree of uncertainty using credible intervals |

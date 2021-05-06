@@ -63,8 +63,8 @@ class AboutMe:
     
 RK = AboutMe(name='Ruslan Klymentiev')
 RK.me(life_credo='Never stop learning')
-RK.add_interest('neuroscience')
-RK.add_interest('healthcare')
+RK.add_interest('computational psychiatry')
+RK.add_interest('decision making')
 RK.preferences(r=True, python=True)
 print(RK.love_is_equal)
 >> True
