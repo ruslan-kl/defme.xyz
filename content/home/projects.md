@@ -26,8 +26,8 @@ subtitle = ""
     tag = "*"
   
   [[content.filter_button]]
-    name = "Probability"
-    tag = "Probability"
+    name = "Reinforcement Learning"
+    tag = "Reinforcement Learning"
   
   [[content.filter_button]]
     name = "Statistics"

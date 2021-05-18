@@ -5,7 +5,7 @@ image:
   preview_only: true
 summary: " "
 categories: ["Machine Learning"]
-tags: ["Shiny App", "Machine Learning"]
+tags: ["Shiny App", "Machine Learning", "Statistics"]
 title: ROC Curve Simulation
 ---
 
